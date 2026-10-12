@@ -220,6 +220,21 @@
       }
     },
     {
+      "url": "/blog/podcast/coffee-futures-origin",
+      "series": "podcast",
+      "slug": "coffee-futures-origin",
+      "file": "podcast/coffee-futures-origin.mdx",
+      "cover": "/blog/covers/coffee-futures-origin.webp",
+      "locales": {
+        "zh-CN": {
+          "title": "冷知识盲盒：一杯咖啡背后的赌局，咖啡期货是怎么来的",
+          "description": "从1880年纽约咖啡商逼仓爆仓、巴西烧咖啡、国际咖啡协定瓦解，到1975年黑霜和这两年的创纪录行情，讲讲咖啡期货的由来和趣事。",
+          "author": "Jens",
+          "date": "2026-10-12"
+        }
+      }
+    },
+    {
       "url": "/blog/podcast/common-thinking-fallacies",
       "series": "podcast",
       "slug": "common-thinking-fallacies",
