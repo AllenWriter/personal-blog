@@ -1,36 +1,7 @@
 .workspace/
-.env
-.env.*
-!.env.example
-node_modules/
 dist/
-build/
-out/
-*.log
-*.tmp
-.DS_Store
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-
-# Build output and framework caches
-.react-router/
-build/
+node_modules/
 .wrangler/
-.dev.vars
-node-compile-cache/
-packages/*/lib/
-*.tgz
-
-# Playwright
-test-results/
-playwright-report/
-blob-report/
-e2e/.generated-*.sql
-e2e/*-snapshots/*.png.diff.*
-
-# Copied from frontend/content/{blog,docs} at build; served via ASSETS.
-frontend/public/blog/mdx/
-frontend/public/docs/mdx/
+.env
+.DS_Store
+*.log

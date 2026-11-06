@@ -1,133 +1,69 @@
-<div align="center">
-  <img src="frontend/public/icons/whale-brand.png" alt="dsh.fish logo" width="96" />
-  <h1>dsh.fish</h1>
-  <p><strong>The plugin registry for <a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness</a>.<br/>Discover, trust, and install plugins — from the web, the terminal, or your agent.</strong></p>
+# 小举人
 
-  <p>
-    <a href="https://dsh.fish"><img src="https://img.shields.io/badge/hub-dsh.fish-0b6bcb" alt="dsh.fish hub" /></a>
-    <a href="https://github.com/stvlynn/dsh.fish/actions/workflows/ci.yml"><img src="https://github.com/stvlynn/dsh.fish/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
-    <a href="https://www.npmjs.com/package/@dsh-fish/cli"><img src="https://img.shields.io/npm/v/@dsh-fish/cli" alt="npm @dsh-fish/cli" /></a>
-    <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT license" /></a>
-    <a href="https://discord.gg/PwZDHH4mv3"><img src="https://img.shields.io/badge/discord-join-5865F2?logo=discord&logoColor=white" alt="Discord" /></a>
-  </p>
+Jens 的个人杂志：《冷知识盲盒》节目文稿，以及关于 AI、产品、生活和钱的手记。
+线上地址：<https://adjens.com>
 
-  <p>
-    <strong>English</strong> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.ja.md">日本語</a>
-  </p>
+整个站点是一个**零依赖的静态站**：只要装了 Node 20+，不用 `npm install`。
 
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/home-dark.png" />
-    <img src=".github/assets/home-light.png" alt="dsh.fish catalog home page" width="900" />
-  </picture>
-</div>
+## 本地预览
 
+```sh
+npm run dev          # http://localhost:4321，改文章会自动重新生成
+```
+
+## 写一篇新文章
+
+在 `content/blog/<栏目>/` 下新建一个 `.mdx` 文件，文件名就是网址：
+
+```md
+---
+title: "冷知识盲盒：标题"
+description: "一两句话的摘要，会出现在列表、搜索结果和分享卡片里。"
+author: Jens
+date: 2026-11-08
+cover: /blog/covers/文件名.webp
+series: podcast
 ---
 
-DeepSeek Harness is built on "everything is a plugin" but ships no registry — its
-README asks authors to tag repositories with the `dsh-plugin` topic and leaves
-discovery there. dsh.fish turns that topic into a searchable, multilingual
-catalog with a shared, machine-executable install plan.
+正文用普通 Markdown 写。
+```
 
-## Features
+- 栏目：`podcast`（冷知识盲盒）、`tech`、`finance`、`life`、`travel`、`wechat`（剪报）。栏目配置在 `site/config.mjs`。
+- 封面放在 `public/blog/covers/`，正文配图放在 `public/blog/<栏目>/<文章名>/`。
+- 图片下面紧跟一行 `*斜体*`，就会变成图注。
+- 冷知识盲盒的期数按日期自动编号。
+- 手册（`content/docs/`）的顺序和分组在 `content/docs/meta.json` 里。
 
-- **Typed catalog** — bundles, profiles, skills, and agent presets, classified by probing what the harness can actually load, not by self-declared tags.
-- **Transparent trust signals** — every artifact carries a public, reproducible quality score (S/A/B/C), a maintenance status, and 7d/30d star velocity. The formula is served at [`GET /api/v1/scoring`](https://dsh.fish/api/v1/scoring), not buried in a blog post.
-- **Rising, not just popular** — per-sweep metrics snapshots power a `rising` sort that surfaces what is gaining stars this week.
-- **One install plan, three surfaces** — the same domain-owned plan renders as a copy-pasteable command on the web, executes in the CLI, and runs inside the harness via the hub plugin. They cannot drift apart.
-- **Commit-pinned provenance** — each artifact shows the exact commit it was indexed at, linked back to GitHub.
-- **Community ratings from the harness** — a 1–5 scale with comments, written only from the dsh CLI or hub plugin (`dsh-fish rate`, `hub_rate`) where the rater actually used the artifact. The web renders the average, the distribution and every comment read-only, and republishes the aggregate as `aggregateRating` structured data.
-- **A real API** — versioned REST endpoints plus a full-catalog snapshot with an ETag sync contract for mirrors and bots.
-- **Three languages, first-class** — per-locale SSR pages and Atom feeds, hreflang and structured data on every plugin page, machine-translated READMEs, per-plugin OG cards and shields-style README badges.
-
-## Screenshots
-
-<div align="center">
-  <img src=".github/assets/browse-rising-light.png" alt="Browsing the catalog sorted by rising" width="700" />
-  <p><em>Browse by kind, category, popularity — or what is rising right now.</em></p>
-  <img src=".github/assets/plugin-detail-light.png" alt="A plugin detail page with score, install panel and README badge" width="700" />
-  <p><em>Every plugin page: quality score, install panel, commit provenance, and a copyable README badge.</em></p>
-</div>
-
-## Quick start
-
-**Browse** the catalog at **[dsh.fish](https://dsh.fish)** — search, filter by kind
-and category, read the install plan, copy the command.
-
-**Terminal** — the CLI applies the plan for you:
+## 发布
 
 ```sh
-npx @dsh-fish/cli add <artifact-id>
+npm run deploy       # 生成正式版、检查，然后上传到主机
+npm run indexnow     # 可选：通知 Bing 等搜索引擎有更新
 ```
 
-`add` / `find` / `list` / `remove` / `update` match the [skills CLI](https://github.com/vercel-labs/skills)
-vocabulary and actually write skills, presets, bundles and profiles into
-`$DSH_HOME`.
+## 目录
 
-**Inside the harness** — add the hub plugin once:
+| 路径 | 内容 |
+|---|---|
+| `content/` | 文章和手册（Markdown） |
+| `public/` | 图片、封面、图标，原样复制到站点 |
+| `site/` | 生成器：`build.mjs` 生成、`markdown.mjs` 渲染、`templates.mjs` 页面、`styles.css` 样式、`check.mjs` 检查 |
+| `dist/` | 生成结果（不进 git） |
+| `deploy/` | 主机上的 nginx 配置和上传脚本 |
 
-```sh
-dsh plugin --profile web add @dsh-fish/hub
-```
+## 线上架构
 
-It registers `hub_search`, `hub_show`, `hub_install`, `hub_list`, `hub_remove`,
-`hub_update` and `hub_account`, so an agent can discover and install artifacts
-without leaving the session. Signing in uses the OAuth device flow.
+- 域名 `adjens.com` 托管在 Cloudflare，**必须开代理（橙色云朵）**：主机防火墙只允许 Cloudflare 的 IP 访问 80/443。
+- 主机 `103.27.187.131` 上，`/opt/xiaojuren-blog/site` 放生成好的站点，由 `xiaojuren-blog` 容器（nginx）提供，监听 `172.18.0.1:8081`。
+- 总入口 `wordpress-yy-proxy-1` 里的 `conf.d/adjens.com.conf` 负责把 adjens.com 转给博客容器，内容和 `deploy/adjens.com.conf` 一致。
+- Cloudflare 回源用的是主机上的自签证书（`/opt/wordpress-yy/certs/adjens-*.pem`，有效期 10 年），所以 Cloudflare 的 SSL 模式要选 Full，不能选 Full (strict)。
+- 部署密钥在 `.workspace/deploy_key`（不进 git），公钥登记在主机 root 的 `authorized_keys` 里，标注为 `xiaojuren-blog-deploy`。
 
-`<profile>` is whichever profile the harness boots. A desktop build has its own:
-[Local DSH](https://github.com/stvlynn/local-dsh) runs `local-dsh`, so use its
-bundled launcher and name that profile.
+## 搜索引擎
 
-```sh
-dsh plugin --profile local-dsh add @dsh-fish/hub
-```
+- `sitemap.xml`、`robots.txt`、`feed.xml` 都由构建自动生成。
+- 剪报栏目是转载内容，不进首页、往期和 RSS。默认带 `noindex`；`site/config.mjs` 里 `indexAccounts` 列出的公众号（目前是二小姐后花园）例外，可以进谷歌。
+- 旧的多语言地址（`/zh-CN/...`、`/en/...`、`/ja/...`）会 301 跳到新的中文地址。
+- 英文、日文读者用页面顶部的「译」走谷歌翻译，不再维护机翻稿。
 
-**Publishing a plugin?** Tag your repository with the **`dsh-plugin`** topic. The
-hourly crawl inspects its `package.json`, `SKILL.md` or `agent.cordis.yml` and
-classifies what the harness can actually load. See
-[docs/project/architecture.md](docs/project/architecture.md#how-a-repository-becomes-a-row)
-for the probe order.
-
-## What it indexes
-
-| Kind             | What it is                                        | How it installs                             |
-| ---------------- | ------------------------------------------------- | ------------------------------------------- |
-| **Bundle**       | npm package declaring `dsh.bundle.patch`          | `dsh plugin --profile <p> add <spec>`       |
-| **Profile**      | ordered `dsh.profile.bundles` stack               | one `add` per bundle, in order              |
-| **Skill**        | `SKILL.md` bundle or flat Markdown                | files written under `$DSH_HOME/skills`      |
-| **Agent preset** | directory holding one `agent.cordis.yml`          | written to `$DSH_HOME/.agent-presets/<id>`  |
-
-## Repository layout
-
-```
-backend/    Domain-Driven Design: domain, application, infrastructure, interfaces
-frontend/   Feature-Sliced Design: app, pages, widgets, features, entities, shared
-packages/
-  dsh-plugin-hub/   `@dsh-fish/hub` — the bundle users install into their harness
-  dsh-cli/          `@dsh-fish/cli` — `npx @dsh-fish/cli add <id>`
-docs/       architecture, layer conventions, operations, ADRs
-```
-
-Both halves deploy as **one Cloudflare Worker**: Hono at `/api/*`, React Router
-SSR everywhere else, D1 for the catalog, KV for sessions, and a Cron Trigger
-that re-crawls every hour.
-
-## Development
-
-```sh
-pnpm install
-pnpm run dev    # http://localhost:5173
-```
-
-Quality gates: `pnpm run typecheck && pnpm run test && pnpm run test:e2e && pnpm run build`.
-
-Deployment, bindings and secrets: [`docs/operations/deployment.md`](docs/operations/deployment.md).
-Conventions and architecture: [`AGENTS.md`](AGENTS.md), [`docs/project/architecture.md`](docs/project/architecture.md), [`docs/decisions/`](docs/decisions/README.md).
-
-## Community
-
-- **Source and issues** — [github.com/stvlynn/dsh.fish](https://github.com/stvlynn/dsh.fish)
-- **Discord** — [discord.gg/PwZDHH4mv3](https://discord.gg/PwZDHH4mv3)
-
-## License
-
-[MIT](LICENSE)
+收录排查和 Search Console 提交步骤见 [`SEO.md`](SEO.md)。
