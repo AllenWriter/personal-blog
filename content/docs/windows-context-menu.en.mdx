@@ -1,0 +1,165 @@
+---
+title: "Customizing the Windows Right-Click Menu"
+description: "Customize the Windows right-click menu through the registry: CMD, VS Code and more."
+coverWord: "Context menu"
+---
+
+Why did I write this post? Because every time I want to change the right-click menu, I have to search online and follow the steps one by one. Even while writing this post, I searched online again. Next time I forget, I can just look at my own notes and be done with it (maybe writing it down will help me remember).
+
+## Getting started
+
+### Opening the registry
+
+To change the contents of the right-click menu, you need to open the registry. Editing the registry lets you add entries to the right-click menu.
+
+Open Run (Windows key + R), type `regedit`, and click OK to open the registry.
+
+​ ![image-20200908114639158](https://img.kuizuo.cn/image-20200908114639158.png)
+
+I suggest right-clicking File -> Export first, so that if you make a mistake you can restore the original configuration.
+
+Then you can use Edit -> Find (Ctrl+F) to search for the relevant keywords. Enter the value you're looking for; the details are explained below.
+
+![image-20200908154701753](https://img.kuizuo.cn/image-20200908154701753.png)
+
+### Opening CMD from the right-click menu
+
+The end result: right-click on an empty area and you can open CMD, as shown below.
+
+![image-20200908152557371](https://img.kuizuo.cn/image-20200908152557371.png)
+
+This lets you type cmd commands directly in the current folder, without the hassle of `cd`. My personal recommendation is to set this up. Copy the code below, then create a `1.reg` file (the file name doesn't matter, as long as the extension is reg). **Make sure to save it as ANSI**, otherwise Chinese characters will turn into garbled text. Double-click to run it. A prompt will appear; don't worry, it's completely safe. After that, right-click on an empty area and you'll see the "Open CMD" option. Click it to open a cmd window.
+
+```shell
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\background\shell\cmd_here]
+
+@="打开 CMD"
+"Icon"="cmd.exe"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\background\shell\cmd_here\command]
+
+@="\"C:\\Windows\\System32\\cmd.exe\""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\shell\cmdPrompt]
+
+@="打开 CMD"
+"Icon"="cmd.exe"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\shell\cmdPrompt\command]
+
+@="\"C:\\Windows\\System32\\cmd.exe\" \"cd %1\""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\shell\cmd_here]
+
+@="打开 CMD"
+"Icon"="cmd.exe"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\shell\cmd_here\command]
+
+@="\"C:\\Windows\\System32\\cmd.exe\""
+```
+
+### Menu entries on empty space
+
+Sometimes you install a development tool and accidentally tick something like `Open Folder as …`, and then you get the situation shown below.
+
+![image-20200908115455647](https://img.kuizuo.cn/image-20200908115455647.png)
+
+But sometimes I don't need such a long entry, or I just want to rename it so it's shorter. In that case, open the registry again. This entry appears when you right-click on empty space inside a folder (the desktop is also a folder, at a path like C:\Users\<username>\Desktop), so the corresponding registry location is `Computer\HKEY_CLASSES_ROOT\Directory\Background\shell` (or search for the keyword). After you enter that, the location looks like the screenshot below.
+
+![image-20200908151408855](https://img.kuizuo.cn/image-20200908151408855.png)
+
+See the IDEA entry boxed in the screenshot? That's the right-click menu IDEA added for the user during installation. If I don't want this menu anymore, I can just delete the whole folder (I recommend deleting it, since it takes up a lot of space). But if I only want to rename the right-click entry so it isn't so long, right-click the (Default) value there, choose Modify, and enter the new name. The Icon value below is the icon path, which points to the exe. If the icon disappears, this is usually the cause.
+
+Then, under `IntelliJ IDEA`, there's also a `command` subkey. It contains only a default value, which is the command to execute. You'll see a file path, and possibly a parameter like `"%V"`, which means that if the program is launched without any argument, it uses the current working directory. For more on this, see the [Windows help](https://superuser.com/questions/136838/which-special-variables-are-available-when-writing-a-shell-command-for-a-context).
+
+### Menu entries when right-clicking a folder
+
+![image-20200908152835802](https://img.kuizuo.cn/image-20200908152835802.png)
+
+I thought I'd set things up above and removed the ridiculously long `Open Folder as IntelliJ IDEA Project` folder, but to my surprise, right-clicking a folder shows it too. Never mind, I'll just locate it where it is. The path is `Computer\HKEY_CLASSES_ROOT\Directory\shell`. Oh, it turns out it's just a little below the folder from the previous step. Here's where I ended up:
+
+![image-20200908153930520](https://img.kuizuo.cn/image-20200908153930520.png)
+
+Then I did the same as in the previous step. Here I just change the name. I'll set a shorter name, `Open Folder as IDEA`. The result looks like this:
+
+![image-20200908154339744](https://img.kuizuo.cn/image-20200908154339744.png)
+
+### Menu entries for programs
+
+Since you already know how to do the steps above, right-clicking a program's menu works the same way. Navigate to the path `Computer\HKEY_CLASSES_ROOT\*\shell\`. Here's a screenshot of the path:
+
+![image-20200908164515142](https://img.kuizuo.cn/image-20200908164515142.png)
+
+### Adding a new right-click entry by hand
+
+Now that you know how to find existing right-click entries, and how to modify or delete them, let's add a new one manually.
+
+As a `vscode` user, it's a must to have `Open with Code` in the right-click menu. If you installed `vscode` and don't see `Open with Code`, it means you didn't tick those two options during installation.
+
+![20190530203030700](https://img.kuizuo.cn/20190530203030700.png)
+
+Of course, you can also search online for how to add vscode to the right-click menu, and you'll find operations similar to the `Open CMD` one I gave above. I'll paste the corresponding code here as well, but you *need to change the vscode path and the right-click menu name*, and replace every single backslash with a double backslash to avoid escaping. For example, if the right-click menu name is `Open with Code` and my `Code.exe` path is `E:\VSCode\Code.exe`, I'd change it to `E:\\VSCode\\Code.exe`. You only need to change it to your own path.
+
+Note: some of the paths below have a `\` right after `Code.exe`. That's an escape for the `"` character, so don't delete it. Honestly, this is so much trouble that it's easier to just uninstall and reinstall, ticking those two options.
+
+Save it as a `1.reg` file in the same way and double-click to run it:
+
+```shell
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\*\shell\VSCode]
+@="Open with Code"
+"Icon"="E:\\VSCode\\Code.exe"
+
+[HKEY_CLASSES_ROOT\*\shell\VSCode\command]
+@="\"E:\\VSCode\\Code.exe" \"%1\""
+
+[HKEY_CLASSES_ROOT\Directory\shell\VSCode]
+@="Open with Code"
+"Icon"="E:\\VSCode\\Code.exe"
+
+[HKEY_CLASSES_ROOT\Directory\shell\VSCode\command]
+@="\"E:\\VSCode\\Code.exe\" \"%V\""
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode]
+@="Open with Code"
+"Icon"="E:\\VSCode\\Code.exe"
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode\command]
+@="\"E:\\VSCode\\Code.exe\" \"%V\""
+```
+
+Here's how to do it by hand. Take a look at the GIF first:
+
+![demo](https://img.kuizuo.cn/demo.gif)
+
+In the GIF, I've already set up VSCode, so I changed the S to a B to show the steps. The data is the same as what I explained above. In general there's no need to add entries by hand: there's always a corresponding `.reg` file, so just double-click it to run.
+
+## Bonus tip
+
+The right-click menu has a custom folder that is basically useless, and you can remove it through the registry:
+
+#### 1. First, open the registry
+
+#### 2. Navigate to `Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer`
+
+#### 3. Then right-click to create a new DWORD named `NoCustomizeWebView` with a value of 1.
+
+![image-20200908163225915](https://img.kuizuo.cn/image-20200908163225915.png)
+
+#### 4. Open Task Manager, find Windows Explorer, right-click it and choose Restart. Open the menu again and you'll find the custom folder is gone from the right-click menu.
+
+![image-20200908163415434](https://img.kuizuo.cn/image-20200908163415434.png)
+
+## Summary
+
+- The registry path for right-clicking an empty area in a folder is `Computer\HKEY_CLASSES_ROOT\Directory\Background\shell`
+
+- The registry path for right-clicking a folder is `Computer\HKEY_CLASSES_ROOT\Directory\shell`
+
+- The registry path for right-clicking a program is `Computer\HKEY_CLASSES_ROOT\*\shell`
+
+- **Whether to add or change entries depends on your needs.**

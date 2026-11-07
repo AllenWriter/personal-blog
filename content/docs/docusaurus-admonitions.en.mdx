@@ -1,0 +1,51 @@
+---
+title: "Admonition Blocks"
+description: "tip / info / warning blocks in the docs. Write ```tip to render one, no need to paste Infima classes."
+coverWord: "Admonitions"
+---
+
+To highlight information, use an admonition block instead of drawing your own border. All three syntaxes look the same.
+
+## Recommended syntax
+
+Write the type name as the fence language:
+
+```tip
+This is a tip. Good for next steps, shortcuts, or "it can actually be simpler than this".
+```
+
+```info
+General information. Adds background without interrupting the main narrative.
+```
+
+```warning
+Limits to watch out for, compatibility issues, or pitfalls you may run into.
+```
+
+```danger
+Operations that can cause accidents. Deleting a database, overwriting config, irreversible steps.
+```
+
+```success
+You've done it right, you can move on to the next step.
+```
+
+## You can also use blockquotes
+
+GitHub alert syntax:
+
+> [!NOTE]
+> Same as ```note, it gets collected into an admonition block.
+
+Or the older Docusaurus habit, with the type name on the first line:
+
+> **tip**
+> This is a tip block.
+
+## The code block itself
+
+Regular code is still a fence with a header bar and a copy button:
+
+```ts
+export const n = 1
+```

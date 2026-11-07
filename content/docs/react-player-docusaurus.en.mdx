@@ -1,0 +1,59 @@
+---
+title: "How to Use react-player Controls in Docusaurus?"
+description: "Embedding video in Docusaurus Markdown with ReactPlayer is simpler than piling up iframes."
+---
+## Introduction
+
+There are many ways to insert video into an md file in the Docusaurus framework. My favorite, though, is the ReactPlayer component. This component can reference video files directly.
+
+> The method originally came from Stack Overflow. Here's the [original link](https://stackoverflow.com/questions/69179910/docusaurus-2-inclusion-of-a-video-file-in-a-markdown-file).
+
+## What Are react-player Controls?
+
+ReactPlayer is a React component that makes it easy to embed video in a React application. It supports YouTube, Vimeo, Dailymotion, SoundCloud, and files (mp4, ogg, webm). It supports progressive download, so large files can start playing while loading.
+
+Its main features include:
+
+- Multiple formats: supports links from mainstream video sites such as YouTube, Facebook, Twitch, SoundCloud, Streamable, and Vimeo, and also supports HLS and DASH video streams.
+- Simple to use: you only need to pass a video link or stream address to start playback.
+- Responsive design: you can set a wrapper to fit players of different sizes.
+- Flexible configuration: you can configure autoplay, looping, whether to show the control bar, and more.
+- Lightweight: it's small and easy to integrate into a React project.
+- Good documentation: it has detailed [English documentation](https://www.npmjs.com/package/react-player) and sample code.
+- Open source and free: it's published on GitHub under the MIT license.
+
+## Prerequisites
+
+First, install the package in your project: `npm install react-player`. Then add the following code to your CSS file:
+
+```css
+// 引入 ReactPlayer
+.react-player {
+  width: 100% !important;
+  height: auto !important;
+}
+```
+
+## Getting Started
+
+At the top of the document that needs the video, insert the import statement: `import ReactPlayer from 'react-player'`. This usually goes below the `---` lines.
+
+For example:
+
+```md
+---
+title: xxxx
+description: xxxx
+---
+
+import ReactPlayer from 'react-player'
+
+## Introduction
+
+Your words.
+```
+
+Then insert the code `<ReactPlayer playing controls url='video.mp4' />` into the document, and you're done.
+
+> **secondary**
+> Remember to replace `video.mp4` with your real video path.

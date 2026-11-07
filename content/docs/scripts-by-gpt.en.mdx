@@ -1,0 +1,94 @@
+---
+title: "Automation Scripts"
+description: "Automation scripts that AI wrote for my work, saved so I can grab and tweak them next time."
+coverWord: "Scripts"
+---
+
+This post keeps track of the automation scripts AI gave me while I was working. I hope they help you with similar problems. If you have other needs, feel free to get in touch.
+
+> WeChat: admilk47
+
+## Automatically deleting files with extra prefixes
+
+Scenario: a folder is full of stray files, all with a `._` prefix, for example:
+
+After asking ChatGPT, I got a Python script that works really well:
+
+In about a second, it wiped out all the clutter and left only the files I needed. So satisfying!
+
+### Code
+
+The code needs to run in a Python environment.
+
+```python
+import os
+import re
+
+# Prepare a regular expression pattern to match filenames with a "._" prefix
+pattern = re.compile(r'^\._')
+
+# List all files and subfolders under the target folder
+root_dir = './'
+for dirpath, dirnames, filenames in os.walk(root_dir):
+    # Go through all files in the current directory
+    for filename in filenames:
+        # Build the path
+        path = os.path.join(dirpath, filename)
+
+        # If the filename starts with "._", delete the file
+        if re.match(pattern, filename):
+            os.remove(path)
+            print(f"{path} deleted")
+
+```
+
+## Automatically extracting all URLs from a static site
+
+If you've built a static site and aren't sure whether all of its URLs open correctly, you can use the code below to pull every URL out, then check them in bulk with a tool.
+
+> I now use [claude.ai](https://claude.ai) to write my scripts instead. It's a free AI service that's just as good as GPT-4.
+
+### Code
+
+```py
+import xml.etree.ElementTree as ET
+import os
+
+# Find and read the sitemap.xml file
+sitemap_path = os.path.join('build', 'sitemap.xml')
+tree = ET.parse(sitemap_path)
+root = tree.getroot()
+
+# Extract all url elements
+urls = []
+for url in root.findall('{http://www.sitemaps.org/schemas/sitemap/0.9}url'):
+    urls.append(url.find('{http://www.sitemaps.org/schemas/sitemap/0.9}loc').text)
+
+# Write the URLs to a file
+with open('redirect.md', 'w') as f:
+    f.write('# Redirects\n')
+    for url in urls:
+        f.write(f'- [{url}]({url})\n')
+
+print('Extracted URLs saved to redirect.md')
+```
+
+The extracted links all come out in the `` format. If you want to keep only the bare links, you can use the following code to strip them down:
+
+```py
+import re
+
+with open('your-file.md') as f:
+  content = f.read()
+
+# Use a regular expression to match the URLs inside []
+pattern = r'\[(.*?)\]'
+urls = re.findall(pattern, content)
+
+# Write the URLs to a new file
+with open('done.md', 'w') as f:
+  for url in urls:
+    f.write(url + '\n')
+
+print('URLs extracted to old-urls.txt')
+```

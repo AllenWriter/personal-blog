@@ -1,0 +1,106 @@
+---
+title: "Turn Notion Notes into an AI Assistant with Dify"
+description: "Connect your Notion knowledge base to Dify and train a chat app that can answer questions, instead of letting your notes sit in the library"
+---
+## Notes sitting in the library are not the same as usable notes
+
+Notion is great as a personal knowledge base, and it's also good for editing drafts together with other people. The pages are flexible, there are plenty of extensions, and many people put everything they've accumulated over the years in there.
+
+But by default, that content is static. To use it, you have to search for it yourself, open the page, and read until you find the one sentence you need. The bigger the library, the less this feels like having an "assistant" and the more it feels like doing the retrieval for yourself.
+
+I've always wanted an assistant that has read my Notion: one that can help me review what's in the library, chat along like a butler, and even answer other people's questions on my behalf.
+
+## Building it with Dify
+
+[Dify](https://dify.ai/) is an open-source LLMOps platform. Models like ChatGPT and Claude can already learn from the text you provide. What's usually missing isn't the model itself, but a way to turn the pages in Notion into context it can use.
+
+Without Dify, you'd probably have to assemble LangChain yourself: chunking, vectors, retrieval, conversation memory, and you'd have to manage every piece. Dify brings the datasets, training, prompts and chat apps together into one interface.
+
+## Five steps to finish
+
+The process isn't long:
+
+1. Log in to Dify
+2. Create a dataset
+3. Sync Notion into it
+4. Start training
+5. Create an app and attach this dataset
+
+### 1. Log in to Dify
+
+Open [dify.ai](https://dify.ai/) and sign in with GitHub or Google. If you go with GitHub, feel free to give [langgenius/dify](https://github.com/langgenius/dify) a star while you're there. It helps this open-source project.
+
+### 2. Create a dataset
+
+Click **Datasets** in the top bar, then click **Create Dataset**.
+
+### 3. Connect Notion
+
+Choose **Sync from Notion** and click **Connect**.
+
+Your browser will jump to the Notion login page. After you log in, review the permissions Dify is asking for, then click **Select pages**.
+
+Tick the pages you want to sync, then click **Allow access**.
+
+### 4. Start training
+
+Specify the pages the model should learn from, then click Next.
+
+For chunking, I chose **Automatic**. For index quality, I chose **High Quality**, then **Save & Process**. Training takes a little while, long enough for a cup of coffee, so you don't need to stare at it.
+
+### 5. Create the app
+
+A dataset won't talk on its own. Go back to the console, click **Create new APP**, and just use a Chat App.
+
+Open **Prompt Eng.** and attach the Notion dataset you just created under **context**.
+
+It's worth writing a preset prompt. If your notes are mainly about troubleshooting, you could write something like:
+
+> Please act as an IT expert in my Notion workspace, and use your knowledge of computers, networking, these notes and security to solve problems.
+
+I also add a welcome message so people know what they can ask. Speech-to-text can be turned on too, which is handy for speaking your question.
+
+Click **Publish** in the top right. The public link on the Overview page is the entry point to the conversation.
+
+## Connecting it to your own projects through the API
+
+Every app on Dify comes with an API. The models and retrieval stay in Dify, and your front end only sends messages, acting like a Backend-as-a-Service layer.
+
+On the Overview page, open **API Reference** and treat it as the interface documentation for this app.
+
+### Generate a key
+
+Create a separate API secret for the app. Don't reuse a key that has already leaked into client code.
+
+### Get a session ID
+
+Chat for a round in the interface first, then find the session id under **Logs & Ann.**
+
+### Send a request
+
+The docs include an example. Replace the key with yours. The first time, you can leave `conversation_id` empty, and once the response returns an id, fill it in for the next round.
+
+```bash
+curl --location --request POST 'https://api.dify.ai/v1/chat-messages' \
+--header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "inputs": {},
+    "query": "eh",
+    "response_mode": "streaming",
+    "conversation_id": "",
+    "user": "abc-123"
+}'
+```
+
+If it works, you'll see a streaming response:
+
+Carry the returned `conversation_id` into your next request for the same conversation. The full record is still on the Logs page.
+
+## Keeping it in sync with Notion
+
+After you edit a page, sync it in Dify from time to time, so the assistant learns the new content.
+
+## What you're left with
+
+What you really keep isn't "an AI wrapper around Notion." It's a dataset you can refresh, a prompt you can edit, and an API you can call from your existing projects. Dify just saves you the part of assembling LangChain by hand.

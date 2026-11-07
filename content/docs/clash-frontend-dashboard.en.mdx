@@ -1,0 +1,208 @@
+---
+title: "Building a Clash Subscription Converter Frontend"
+description: "Skip the BaoTa panel. Use Vercel and a single VPS to set up a Clash subscription converter frontend."
+coverWord: "Subscription Converter"
+---
+
+> **tip**
+> If you just want to use a Clash conversion platform and don't care how it works, you can deploy the converter frontend yourself by following the steps below.
+
+## [Preface](#preface)
+
+Online you'll find plenty of tutorials for setting up a Clash frontend with the complicated BaoTa panel, and they almost all require you to go through BaoTa. For beginners these tutorials can be followed, but they're still not "fast" enough. If you don't yet know what Clash is, please read [What Is Clash?](/docs/what-is-clash) first.
+
+> **caution**
+> The China edition of BaoTa also asks you to enter a mobile phone number.
+
+Besides, this goes against first principles. My goal is clear, so why install an extra service I don't need?
+
+We now have the powerful [Vercel platform](https://vercel.com/dashboard), which is more than enough for simple web applications. You can deploy directly from a GitHub repository with one click. You only need to configure a domain for the frontend and pull a container for the backend. The key point is that it's also free and lasts.
+
+## Prerequisites
+
+- A GitHub account
+- A VPS
+- [Nginx Proxy Manager](https://nginxproxymanager.com/) deployed on the VPS
+- A domain for the frontend
+- A domain for the backend
+
+## Getting Started
+
+So how many steps does it take to set up a conversion platform?
+
+1. Set up the frontend page
+2. Deploy the backend service
+3. Configure the domains
+
+The Clash conversion platform consists mainly of a frontend page and a backend service. The frontend page is mainly provided by [sub-web](https://github.com/CareyWang/sub-web), and the backend service can run directly as a Docker container, which is more convenient.
+
+## 1. Set Up the Frontend Page
+
+Now find the source project behind every conversion platform, the famous [CareyWang/sub-web](https://github.com/CareyWang/sub-web), then click the Fork button in the upper right corner. "Fork" means to take a copy: put it on your own plate! (Haha, here Fork is used as a verb. To be more professional, it means "branch": copy it into your own repository.)
+
+### Modify the Configuration Code
+
+We need to write our own domain and some extra settings into the configuration code, so that the "public" open-source project becomes "your own" application. On GitHub, find the `/sub-web/src/views/Subconverter.vue` file and click the edit button in the upper right corner to start modifying it.
+
+Change the `url` inside `backendOptions:` on line 298 to your resolved domain. You can follow the screenshot below to make the change. Be sure to keep the `/sub?` suffix.
+
+Then add the following parameters to `remoteConfig` on line 299. This will expand the conversion options available in your frontend.
+
+```vue
+{
+            label: "ACL4SSR",
+            options: [
+              {
+                label: "ACL4SSR_Online Default version, comprehensive groups (synced with GitHub)",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online.ini"
+              },
+              {
+                label: "ACL4SSR_Online_AdblockPlus More ad blocking (synced with GitHub)",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_AdblockPlus.ini"
+              },
+              {
+                label: "ACL4SSR_Online_NoAuto No automatic speed testing (synced with GitHub)",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_NoAuto.ini"
+              },
+              {
+                label: "ACL4SSR_Online_NoReject No ad-blocking rules (synced with GitHub)",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_NoReject.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Mini Lite version (synced with GitHub)",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Mini_AdblockPlus.ini Lite version, more ad blocking (synced with GitHub)",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_AdblockPlus.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Mini_NoAuto.ini Lite version, no automatic speed testing (synced with GitHub)",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_NoAuto.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Mini_Fallback.ini Lite version, with failover (synced with GitHub)",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_Fallback.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Mini_MultiMode.ini Lite version, automatic speed testing, failover, load balancing (synced with GitHub)",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_MultiMode.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Full Full groups for heavy users (synced with GitHub)",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Full_NoAuto.ini Full groups, no automatic speed testing, for heavy users (synced with GitHub)",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Full_AdblockPlus Full groups for heavy users, more ad blocking (synced with GitHub)",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_AdblockPlus.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Full_Netflix Full groups for heavy users, full Netflix rules (synced with GitHub)",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_Netflix.ini"
+              },
+              {
+                label: "ACL4SSR Local Default version, comprehensive groups",
+                value: "config/ACL4SSR.ini"
+              },
+              {
+                label: "ACL4SSR_Mini Local Lite version",
+                value: "config/ACL4SSR_Mini.ini"
+              },
+              {
+                label: "ACL4SSR_Mini_NoAuto.ini Local Lite version + no automatic speed testing",
+                value: "config/ACL4SSR_Mini_NoAuto.ini"
+              },
+              {
+                label: "ACL4SSR_Mini_Fallback.ini Local Lite version + fallback",
+                value: "config/ACL4SSR_Mini_Fallback.ini"
+              },
+              {
+                label: "ACL4SSR_BackCN Local Mainland China return",
+                value: "config/ACL4SSR_BackCN.ini"
+              },
+              {
+                label: "ACL4SSR_NoApple Local No Apple routing",
+                value: "config/ACL4SSR_NoApple.ini"
+              },
+              {
+                label: "ACL4SSR_NoAuto Local No automatic speed testing ",
+                value: "config/ACL4SSR_NoAuto.ini"
+              },
+              {
+                label: "ACL4SSR_NoAuto_NoApple Local No automatic speed testing & no Apple routing",
+                value: "config/ACL4SSR_NoAuto_NoApple.ini"
+              },
+              {
+                label: "ACL4SSR_NoMicrosoft Local No Microsoft routing",
+                value: "config/ACL4SSR_NoMicrosoft.ini"
+              },
+              {
+                label: "ACL4SSR_WithGFW Local GFW list",
+                value: "config/ACL4SSR_WithGFW.ini"
+              }
+            ]
+          },
+```
+
+If you don't want to use the default backend conversion address, you can change the parameter after `const defaultBackend` to your own domain. For example:
+
+```vue
+const defaultBackend = "https://your-domin.xyz" + '/sub?'
+```
+
+### Commit the Code
+
+After you finish the changes, remember to commit them on GitHub.
+
+## 2. Publish to Vercel
+
+This step is very simple. Visit the [Vercel platform](https://vercel.com/new), then Import the Clash repository you just modified.
+
+Then click Deploy. Wait a moment, and unless something goes wrong, it will report an error.
+
+That's because Vercel's default Node version is 20 or higher, while this project doesn't need such a high Node version. So you need to go into the project settings and change it. Go to Settings → General and switch the Node.js Version.
+
+After deployment finishes, Vercel will assign you a free domain by default. It's still recommended that you bind your own frontend domain under Domains. This step takes you to your domain management console, where you point the domain at the address Vercel gives you.
+
+## 3. Deploy the Backend
+
+Pull the following Docker image on your VPS:
+
+```bash
+docker run -d --restart=always -p 25500:25500 tindy2013/subconverter:latest
+```
+
+After the image finishes installing, use the following command to check whether the service is running:
+
+```bash
+curl http://localhost:25500/version
+```
+
+If it returns `subconverter vx.x.x backend`, the service is running.
+
+## 4. Point the Backend Domain to the Service Port
+
+Log in to the Nginx Proxy Manager (NPM) admin page, then add a `Proxy` and enter your backend domain. For the IP, don't fill in `127.0.0.1`. Instead, use the VPS's public IP plus the port number, for example `214.124.214.25`, and set the Forward Port to 25500.
+
+Also enable the SSL certificate.
+
+Once the binding is complete, visit your backend domain. If the page that appears is not an Nginx error message, your backend is set up successfully.
+
+That's it. You can now happily use your own Clash subscription conversion platform.

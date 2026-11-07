@@ -1,0 +1,1128 @@
+---
+title: "Crazy Saturday Offline: Product and Investment Philosophy in the AI Era"
+description: "Live notes from an offline event on AI products, the rhythm of investing, and how to actually get things done."
+---
+## Opening: What Should We Care About in the AI Era?
+
+It's a Saturday afternoon. In a café in Shanghai, a group of young people sits together, ready to start a conversation about AI, investing, and independent development. Some are developers who just moved from the securities industry to a big tech company. Some are college seniors trying to build their first iOS app with AI tools. And some are product managers and founders who are curious about AI agent tools like OpenCloud.
+
+Over three-plus hours, the talk starts with the philosophical questions of AI safety, moves through the underlying logic of US stock investing, and finally lands on a real case of indie iOS development. It's not just a tech talk. It feels more like a collective exploration of how we should think and act in an era that changes so fast.
+
+## Part 1: Philosophical Reflections on OpenCloud and AI Safety
+
+**Speaker:** Steven
+
+**Time:** 00:34:05 - 00:42:48
+
+### Starting from a Real Case
+
+Steven turned on the projector and first shared a real case he had just seen on social media:
+
+"I want to start with privacy and security. Earlier, Eric mentioned that if you deploy an on-device model yourself, that would solve OpenCloud's security problems. But I don't think that's really true."
+
+He described a situation that shocked everyone: "I just saw someone on social media who was using OpenCloud. He uploaded his entire AI configuration, including the API token and all sorts of encryption settings, straight to GitHub, publicly. His API token leaked, just like that."
+
+Someone in the room gasped. Steven went on: "So you see, even if the model runs on-device, you still can't fully control what it does. You can repeatedly write 'don't upload sensitive information' in every skill doc and every system prompt, but the generative nature of AI models means their memory can get tangled, and they can do all kinds of uncontrollable things."
+
+### The Uncontrollability of Technology and the Barrier to Entry
+
+Steven then explained the contradiction in tools like OpenCloud:
+
+"OpenCloud is actually expensive and hard to use. Even if you can deploy it on Docker or a VPS, if you do, you lose its most powerful ability, which is operating your browser, handling your files, and sending WeChat messages for you. But if you deploy it on your own computer, it could delete your files or share your private information at any moment."
+
+"This is because, at the code level and given how uncontrollable AI generative models are, there's no way to completely rule this out at this early stage. That's why everyone is buying Mac Minis." (Laughter in the room.)
+
+### Do We Really Care About Security?
+
+But the discussion quickly turned to a deeper question. Steven paused and said:
+
+"But you know what? I think Chinese people (老中) don't really care that much about data security. That's the first point. The second point: if today were the last day you were alive in this world, and you were asking whether this product is good, you wouldn't think about security at all. You'd only think about what it can actually do."
+
+This hypothetical made the room go quiet for a few seconds. Steven continued:
+
+"Based on these two points, I think the way we're discussing this, as a group like us, carries a huge elitist bias. Because you could do something, the kind of thing Indian founders might do: use a crawler to scrape all of OpenCloud's GitHub issues, find the common problems clustered in those issues, and look for market opportunities or build a better project."
+
+"But doing that... how should I put it? I wouldn't call it stupid, but it isn't that smart. The real problem is this: the people who know about OpenCloud but aren't using it, their problems are the real problems. The people filing issues on GitHub are only a very small part of the picture."
+
+### The Market Education Value of OpenCloud
+
+Steven raised an interesting point:
+
+"OpenCloud now has 170K stars. Out of those 170K stars, something might emerge in April or August of 2026 that's better than it, or that fixes some of its flaws. But the bigger question is why half of the people are still unaware of it. (He meant the potential user market.)"
+
+"So I think it contributes a lot. Just like how it helped everyone order bubble tea earlier, it's doing market education, showing people what the future looks like. It may only be a transitional state, but more products will grow out of it at some stage in the future and solve the concerns people have today."
+
+### OpenCloud Still Fundamentally Depends on the Model
+
+Steven offered a sharp judgment:
+
+"How amazing is it, really? If you swap it onto a really terrible model, say Kimi 1.5, or the models from early 2024, you'll find it isn't magical at all. Its ability to complete tasks might not even match the basic research-level thinking mode OpenAI had back then."
+
+He used a metaphor: "So OpenCloud is most likely just a shell around the model, like a car's body. Whether it's impressive still depends on its battery and its engine, meaning the underlying model."
+
+### Optimism from a Long-Term View
+
+Near the end of the discussion, Steven reached a relatively optimistic conclusion:
+
+"Most of the problems we worry about now probably won't exist in the future. Data issues will persist, that's certain. But I don't think people will develop that deep a sense of security awareness. The people in this room might, but the people outside it won't necessarily. Our elders and our children probably won't."
+
+"And besides, fully controlling AI behavior is also very hard. We want the model, our 'kids,' to follow exactly the instructions I give them, but they can make mistakes, and they'll emerge. They'll do things we didn't expect."
+
+He paused, then stated a more radical view:
+
+"Many parents don't want their kids to play games. They may have a strong desire for control. But that social attitude will shift to some degree over time. I think we have to allow for this deviation. Even from an accelerationist standpoint, we may have to accept that we ourselves will no longer be the center of this society."
+
+"The relationship between humans and AI may slowly move from today's 'ten to zero' to 'eight to two,' or even 'nine to one.' That slider will keep moving. I think this is a reality we have to accept."
+
+## Part 2: OpenCloud's Productization and Its Capability Boundaries
+
+**Discussion time:** 00:40:06 - 00:47:25
+
+**Participants:** Steven, community members
+
+### The Core Problem of Productization
+
+A classmate working in product and business raised a very practical question:
+
+"Many of us who work in product and business care a lot about where OpenCloud's capability boundaries lie. If it's truly productized, how will ordinary people use it?"
+
+He described a concrete pain point: "When we chat with ChatGPT or Claude, we have to explicitly say 'use such-and-such skill for me.' But ordinary users express themselves as 'I want to get something done,' and they expect the AI to call the right skills on its own. So I'm wondering whether it has really done a good job on intent recognition. That's the first problem."
+
+"The second problem is that even for very simple questions, it still tries to call skills. There's a lot of thinking involved, and the cost of those calls adds up, eating a lot of tokens. For that problem, it's not the optimal path. It might even be worse than just using a large model directly."
+
+He finally asked: "Is there a way to optimize its way of thinking, or its calling path, so it makes real progress on token consumption and intent recognition? That way, we could use it in general, everyday scenarios too."
+
+### Stretch the Timeline and None of This Matters
+
+After hearing this, Steven gave an answer that surprised many people:
+
+"I think that's just how it looks from where you're standing right now. If you stretch the timeline infinitely, you'll find that none of this matters."
+
+He gave an example: "Think back to 2023, the GPT-3 era, when the context window was only a few dozen tokens. I forget the exact number, but it was very small. Looking at it now, it doesn't seem like such a big deal. Even whether RAG (retrieval-augmented generation) needs to exist has become unimportant."
+
+"What I mean is that as capabilities keep being unlocked, you can just analyze a big chunk all at once without worrying about token consumption, which is a very minor detail. So I still think it depends on the car engine and the car battery, using the metaphor I mentioned, and on their iteration. As for that framework, which is like the car's shell, it's... not that important."
+
+"The framework-level problems we have right now matter less than model iteration."
+
+### A Three-Factor Framework in Practice
+
+Another participant added that they had recently been testing OpenCloud's limits and had summed up three factors:
+
+**First, the choice of model.**
+
+"A friend of mine told me, 'I installed OpenCloud too, but it feels dumb and hard to use.' So I asked which model he was using, and he said Pinyin, a weak model. Meanwhile, I've been using Claude 4.5 the whole time, now 4.6, and the experience is completely different. **The model is the most important thing.**"
+
+**Second, how clean the context is.**
+
+"OpenCloud's design seems to make you forget that 'context' is even a concept. Unlike ChatGPT or other tools, there's no explicit 'new chat' button. But given what current models can do, starting a new conversation is still very important."
+
+"In OpenCloud, I personally use two commands very often: **`neo` (reset the context) and `C` (compress the context)**. `neo` flips the page and resets the context. `C` compresses the context and rewrites it. This helps it understand your next task better. If you're using very little of the context window, your next command will run a little better."
+
+**Third, prompt design.**
+
+"Prompt design has three layers:
+
+- **System prompt**: defines what kind of assistant the AI is and what role it plays. It's loaded in every conversation.
+- **User prompt**: the user's command, which decisively defines the task and the strategy and approach to take.
+- **Memory**: not necessarily loaded every time. Memory is a database the model chooses whether to search."
+
+"Together, these three pieces are what bring OpenCloud to the state you want and make it solve problems in a suitable way. So these three are quite important."
+
+## Part 3: Will AI Tools Make Hardware More Expensive?
+
+**Discussion time:** 00:45:18 - 00:52:17
+
+### An Interesting Economics Question
+
+Someone raised a concern about the hardware market:
+
+"I'd like to ask a question that's more about consumers. Do you think tools like OpenCloud could cause the kind of price swings we're seeing with memory today, for Mac Minis or other machines that host this service? If the hardware price swings caused by AI really spread into the personal computer market, what would that look like?"
+
+His logic was: "Say my SaaS product suddenly sells really well. Won't the hardware it runs on go up in price too?"
+
+### The Real Share of the Personal Market
+
+Steven offered a figure that surprised people:
+
+"I think this is a very interesting question. But if you analyze it through economics, **it doesn't mean that just because something sells well, its price goes up.**"
+
+"After that three-hour session (meaning a certain AI product) went viral, the resources on Google Cloud and Amazon Cloud all tilted toward it. After that tilt, there's something in economics called the 'concentration effect,' and it won't become more expensive."
+
+He explained further: "Why? Because what gets the most expensive is **one person's demand**. The demand from 100 people, 10,000 people, or 100,000 people actually goes down. Of course, if the demand you're meeting has to go through chips, computing power, or rare elements constrained by the laws of physics, then it could be expensive. But if it's something current capacity can already supply, it's not necessarily expensive, and it may keep getting cheaper."
+
+Then he laid out a key premise:
+
+"**Personal market demand, compared with data center and office business demand, may not even reach 10%.** That's the simple premise. Given that premise, personal demand only affects the retail price ceiling. In other words, what price you can buy at depends on which channels and sales outlets you can reach."
+
+"For example, you might buy on JD.com, but JD's supply is limited, or Apple's share of sales is limited, so within the existing pool of resources, the price could go up. But don't worry, **supply will naturally catch up**. If demand isn't especially urgent, then with our current supply capacity, you can get as much as you need."
+
+### The Truth About Rising Memory Prices
+
+Someone pressed further: "Then why are memory prices going up?"
+
+Steven gave a very clear answer:
+
+"Memory prices are going up because **Micron switched its capacity, the capacity that used to serve personal PCs, entirely over to data centers and to big customers like NVIDIA.**"
+
+"So the reason manufacturers don't want to expand is that they have to judge whether this demand is short-term or long-term. That's why there will be shortages in the short run. But don't worry. Given Apple's expansion capability, **the supply capacity of all Apple devices is tied to China's industrial capacity**, so it can supply whatever it wants. At most it affects some channel prices. As for retail prices, you might wait two weeks at most."
+
+### OpenCloud's Barrier to Entry Is Still High
+
+Steven summed up at the end:
+
+"And honestly, **OpenCloud's barrier to entry is still very high.** You can't get everything done with a single sentence. This market is nowhere near the level of 'everyone uses it.' So I think the impact on hardware demand is negligible."
+
+"The bigger forces are still changes in enterprise and data center demand. The personal market? If more people knew about this thing... but honestly, our circle is very 'involuted' (卷). In China, the undergraduate education rate is only 4 to 5 percent, and the quality of that is even lower. I don't think many people have this need."
+
+He offered an analogy: "Today everyone is grabbing red envelopes, fighting over 1,000 red envelopes worth 2.5 yuan each, and more people will go for those. But most people really don't... If you affect the existing needs of most people, those needs aren't as rigid as the need to grab train tickets during Spring Festival travel."
+
+The room erupted in laughter.
+
+## Part 4: Surfing the Money, the Investment Philosophy of a Former Coder-Turned-Trader
+
+**Speaker:** Evan (Ailun)
+
+**Time:** 00:53:49 - 01:47:15
+
+### Opening and Self-Introduction
+
+Steven handed the mic to Evan: "I think about 90% of the topics we discussed earlier are hard to turn into real execution, hard to turn into action in the real world. But the stock market is a simple thing where you can make money through cognition. If you know the answer to a question before 51% of people do, you can make money. I think Evan can answer this question. Please welcome Evan, who will share on US stocks."
+
+Evan walked up on stage and adjusted the projector.
+
+"Uh, do you all like this standing style, or do you prefer sitting?" (Laughter in the room.) "Never mind, let's sit. Let me get my setup adjusted..."
+
+He opened his laptop and started screen-sharing. Someone joked, "First-person perspective, immersive experience." Evan laughed: "Right, right, a body camera."
+
+After the laughter, he formally began:
+
+"Alright, let me start this way. Last time, I gave a brief talk about options. This time it's also going to revolve around the skills we already have and the use of some tools."
+
+"**Researching tools is something you can never finish learning.** Every new tool comes out and gets updated very fast. You can't rely on tools to make money. This is the conclusion I reached after going through some things. **The logic of making money and the thinking behind resource allocation are actually far more important.**"
+
+"We need to know what the market is. When you're at the table, you need to be clear about whether you're a player or the one being played. So understanding the situation and finding ways to profit is quite important."
+
+### Personal Background
+
+"Let me introduce myself first. I graduated with a bachelor's degree in 2019. When I graduated, I was quite interested in Futu (a brokerage) and started teaching myself coding in my junior year. Then I went through some ups and downs. Well, not really ups and downs. I wanted to join Futu, which is the US brokerage I'm using now, but it didn't work out. Then I went to Huatai Securities as an intern, and worked there for my first year."
+
+"After that, I realized the brokerage business was not what I had imagined, and I thought I might as well be writing code. Luckily I had a coding background, so I switched careers seamlessly and joined ByteDance. Then I went to Horizon Robotics, and after leaving Horizon, I'm now at a certain factory. I won't say which factory." (Laughter in the room.)
+
+"That's my work history. But my main 'core business' is actually **writing articles**. I just switch topics. At the brokerage I wrote investment articles, and when I was on US stocks, coding, and at Horizon, I wrote technical articles. So I've written quite a lot."
+
+"My main job is really content output, and I don't know how good it is. So I won't start by going over the most basic data. That's all very natural. And since AI came along, **tools have become less of the main thing. I still want to emphasize the logic and motivation behind what we do, and how we actually play this game. That matters a lot.**"
+
+### Interaction: Everyone's Investing Experience
+
+Evan started an interactive segment:
+
+"First, I'd like to ask: how many of you have invested in stocks before? Alipay funds count too."
+
+About half the room raised their hands.
+
+"OK, that's the first layer. Now, not counting actual trading for the moment, how many of you know about US stocks, know the paths into US stocks, and understand what it takes to get there?" 
+
+A few more hands went up.
+
+"Wow... those are all non-mainstream people, haha. Then, how many of you have actually traded, placed your first real order, whether or not you made money?"
+
+"One, two, three... one, two, three..." he counted. "Good, I'm satisfied. OK, next: how many of you have experience with financial derivatives? Things like futures, options, leverage, or contracts?"
+
+A few people raised their hands.
+
+Evan laughed: "Oh my, very good, very good... you're all impressive! OK, fine. Then today I'll still sort things out from some more basic concepts. I also hope... it's not really a lecture, just a sharing session."
+
+"I believe that no matter what industry you're in, AI or business or anything else, you're interested in money. So the first thing we're going to talk about today is getting money clear. How can we find growth opportunities, and how can we use some AI to strengthen this understanding."
+
+He paused: "Before that, would anyone be willing to share a tip for making money? It doesn't have to be investing. Anything goes, science is fine, the reverse approach is fine too."
+
+"Making money in reverse?" (Laughter.) "Yes, it's really just a matter of forward and reverse. Either works."
+
+"Who wants to go first? Feel free to come up."
+
+### A Story About a Liquidation
+
+After a few seconds, one audience member volunteered:
+
+"I'll go. This is an idea I had, not a current one; I started thinking about it in high school. Around 2019, which was a huge bull market. I opened a 3x leveraged position, starting from roughly... when BTC was around 30,000 to 40,000 dollars. Then it kept going up, and by the time it reached its next peak, my assets had multiplied several times."
+
+"But then I didn't buy the dip. At the time, I thought the 'BTC will hit 100,000' that many people were hyping would happen. And it did eventually hit 100,000, but not at that moment. I just didn't hold on, and then it kept falling day after day, and in the end I got liquidated. What a painful lesson."
+
+"After that, I stopped touching forex-related investments and started studying US stocks."
+
+Evan nodded: "Yes, that's how it is. Everyone, please manage your risk, haha. Anyone else? OK, I think maybe I'll share a successful case instead."
+
+He summed up with a smile: "Actually, to succeed you first have to go a little crazy. It's the same logic. You definitely have to go through some setbacks and some beatings before you know what growth is and what patterns are. You can't teach this. You can't teach someone to do it. It's better to just actually trade and lose a hundred thousand or so, right?" (Laughter in the room.)
+
+### The Nature of Money: A Resource Dispatch System
+
+"Really, what we call growth or making money, I'd like to return to a most fundamental question: **what is money, at its core?**"
+
+Evan said: "This isn't some high school politics class. Anyway, money is this thing, and I have a word for it... When I was playing *Battlefield* (the game), in the scene where you rob a bank, people shout 'Take your vote!' **In English, 'vote' doesn't just mean a ballot. It stands for a kind of choice, a kind of right to allocate resources.**"
+
+"Money isn't just paper notes. **At its core, it's a voucher for allocating resources.** Once you build that way of thinking, a lot of things become clear."
+
+He went on: "Because once you turn money into a resource dispatch order, I feel it's no longer so mysterious to me. Then I keep asking myself: **are the losses and the so-called money we lose actually burned?** In the market, we often see news like, 'the other day, some market lost trillions of dollars, and its market cap evaporated.' Did your money really evaporate? Do you think that wealth really vanished into thin air?"
+
+"In fact, it didn't. Because there's a basic judgment: a crash just means someone sold, and someone turned the 'goods,' the stock, into cash. The money all left, so the price of the stock fell. **It's really just a transfer. The money wasn't burned. It just moved from one place to another.**"
+
+"It may have pulled out of tech and software, and gone into real estate, bonds, and many other places. Only: **do you know where it went?** That's what matters."
+
+"If you're just an ordinary small retail investor, a leek, you see the drop and can only curse a few times: 'It's down again, when will I get out of this?' And then you just wait. But I think we can think a step further. It's really only when you lose a lot that you start to reflect, to rethink."
+
+### Investing Is Surfing
+
+Evan introduced a core metaphor:
+
+"If money isn't created out of nothing, and if money has the property of flowing, then what we see as ups and downs is really **a model of resource allocation**. Money flows. Why do we say the US stock market puts so much emphasis on 'liquidity'? High liquidity means everyone is pouring into that place, into that industry."
+
+"Why do we say finance, the internet, and high-paying industries make money? Because resources are concentrated there. The money isn't sitting in someone's pocket or in a current account. And precisely because of liquidity, precisely because we have reform and opening up and global flows of resources, we get continuous growth and development."
+
+He paused, then said the core metaphor of the day:
+
+"**So if you want to make money through investing, in my view right now, it's not all that different from surfing the internet. It's very much like it.**"
+
+"It's like a topic you see blowing up on Twitter, where everyone's attention is on it. The logic in the stock market is the same. Gold surged before, and silver was doing well before that. That shows everyone is putting their liquidity votes into that place. It represents something."
+
+"And it's just like surfing. When the wave is high, how do you judge whether this wave is truly low or whether it's going to do something else? Your logical judgment of the whole trend, I think, is a process that can positively build a foundation."
+
+"So I now treat investing as surfing, a basic kind of surfing, and we think through it from there."
+
+### The Mathematical Model of Growth
+
+Evan offered a technical yardstick:
+
+"If we want to use tools and have AI understand what I intend, say, 'pick ten stocks that will grow for me,' it will certainly give you something. But it doesn't mean anything to you, because **you need to know what the mathematical relationship behind that growth is**, so that you can build the logic yourself."
+
+"A basic concept I really like using now is: **how do you measure whether something is growing all the time?** It's actually just a very simple derivative from high school math. **As long as dt is greater than zero, meaning in the positive interval, you won't have much trouble.**"
+
+"That means someone is continuously investing in it, continuously throwing money into it. Naturally, we would think AI, or some hot industries, or gold, are essentially growth assets."
+
+"So whether it's a zero-sum game or some other kind of game, we really just need to put ourselves in the situation where **dt is greater than zero**."
+
+### The Essence of Information Asymmetry
+
+"This also relates to a saying we hear a lot: **information asymmetry.** When many people first start trading stocks, they talk about 'whose buy I should follow' or 'who's really good, I'll copy his trades.' I think that kind of thing is, at its core, still..."
+
+Evan paused: "Backwards logic. Why? The most basic reason is simple: what do you have that would make someone willing to make money for you? What's in it for them?"
+
+"I don't think that logic holds up. So if you haven't built the right attitude toward money, or the right logic about resources and business, then it's actually quite dangerous. Even if you make money from some piece of news, the news won't keep coming forever, unless you actually know insiders, or you're a born heir yourself. But that... isn't that just another game? What I'm talking about is the game of ordinary people. That's how it's played. Most of us did come up from ordinary people, step by step."
+
+### A Line from Elon Musk
+
+Evan shared an idea he found interesting:
+
+"Elon Musk once said something I think is very true. He said: 'Compared to Musk, the distance between all of you and a hundred million dollars is shorter than the distance between Musk and a hundred million dollars.'"
+
+Some people in the room laughed.
+
+"Why? Because for us to make a hundred million dollars, we just need to earn a hundred million. But he has hundreds of billions of dollars now, which means he would have to spend hundreds of billions before he got down to a hundred million. So he's farther from a hundred million." (Huge laughter.)
+
+"So when I say this, I completely understand it. Because **in this world, it's not the case that the more money you have, the more you can throw into it, say tens or twenty trillion, and you'll definitely get to Mars.** Without adding any news, I think that if he wants to go to Mars, money alone is nowhere near enough. Because there are plenty of rich people in this world, but they can't build something like SpaceX either. You can't just throw money at it and get it."
+
+"If you can find a suitable, reasonable path, allocate resources sensibly, find a scientific method, and put money into the right research and AI, so that it helps you find materials that can best withstand external pressure, then you can actually pull this off."
+
+"So this is also why I think making money and the capital markets, along with their logic, are such an attractive area. Right, now let's get back to making money."
+
+### Why the US Stock Market?
+
+"To make money, you first have to know how to buy and sell. Buying and selling means exchanging. Money's essence is price. Buying and selling, the stock price is the most basic balanced value of a trade, a signal point."
+
+"Now, for us ordinary people, most people's approach to earning money is going to work, which basically means selling your time, your knowledge, your existing resources, your content, and for some, your labor. **So is it possible that we sell a bit of our own small amount of money to earn more money?** It's just like playing a game. Could ten thousand dollars turn into a return of a hundred thousand, or even two or three hundred thousand?"
+
+"That's the reason investing is so interesting to me."
+
+Evan then started on the most important choice:
+
+"OK, so once we have this basic framework, if we're going to start investing, the first step is to **choose a suitable market**. In that market, setting aside all the data, and not worrying about foreign exchange controls or local policies, **which market has the biggest waves, or the most resources?**"
+
+He paused and said: "**Without any doubt, it's the US market.**"
+
+"Why does the US market go up year after year? What's the underlying logic? I'll get you involved. You tell me, why does the US stock market keep growing at a high rate every year?" He pointed into the audience.
+
+Someone replied, "I have no idea." (Laughter.)
+
+Another person said, "Everyone's money keeps flowing in?"
+
+Someone else added, "Because, say, the US has been using dollars to settle oil and so on, and then the dollars printed flow back into the US market, since you can only trade US stocks in dollars."
+
+Evan nodded: "Yes, I think that's the most direct one. **Capital continuously flowing into this market is a very big contribution.**"
+
+### The Asset Allocation Choice of the World's Rich
+
+"So basically, the US market... let me put it plainly: **as long as you were born on this planet, as long as you aren't cut off, as long as you're connected to the international internet and international communications, and once you've achieved a little success, your investment advisors and every government fund guidance will tell you the same thing: you need to allocate your money to the United States.**"
+
+"**The inflow into the US market every year is an astronomical number.** It's flowing in every moment. Whether rates are rising or falling, and the rate change does have a bigger impact, the basic logic is: **the rich people of the world all put their money in the US.**"
+
+"So when I analyze this, I think that if I want to make money, I'll definitely go to the pool with the biggest flow."
+
+### The Invention of Stocks: The Dutch East India Company Story
+
+Evan told a historical story:
+
+"Here's a bit of knowledge: **how were stocks invented?**"
+
+"The Dutch East India Company invented them to take on the Age of Discovery, to spread out all the risks of sending ships, hiring crews, and building vessels. The Netherlands wasn't a big country, and it didn't have many natural resources either, but through this financial mechanism, stocks, **it could put the resources of the entire society into the profitable age of ocean voyages**."
+
+"And the Dutch East India Company, for its own citizens, if you had bought its shares back then, you'd have been very happy in the 17th and 18th centuries, because **its dividends kept paying out for 200 years**, roughly speaking."
+
+"So if it keeps making you money for 200 years, that's very satisfying. Even though, yes, we all talk about the colonial era, the slave trade, and the opium trade, that doesn't change the fact that this mechanism was invented. It's a very good way of spreading out the risks of the unknown."
+
+### Comparing US Stocks and Crypto in Scale
+
+Evan showed a comparison chart:
+
+"This data is for reference. I checked it with AI and some search tools. Right now, crypto is roughly somewhere between 380 billion and 2.5 trillion dollars. The market has flows both in and out."
+
+"After all that, we can finally come back to the main topic. I also went through many of these logical deductions before deciding: **since my understanding has reached this point, will I use this understanding to put some of my allocated money into the US market?**"
+
+"The answer: yes, I will."
+
+## Part 4 (continued): Trading Strategies and Tool Practice
+
+**Time:** 01:17:29 - 01:47:15
+
+### Four Basic Trading Strategies
+
+"I talked a bit long on this before, so I'll try to go through it quickly." Evan switched to the next slide.
+
+"Since we've chosen to trade in a market with a big flow pool, when we open this game, what we see can roughly be summarized into these four:
+
+**1. Long-term investing (Buy and Hold)**
+
+"The simplest one: I buy it, I hold it, and I ignore it. That's the most basic. You can buy a house or gold bars this way too. It's the simplest strategy."
+
+**2. Day trading**
+
+"The second is day trading. You buy today and sell tomorrow, or sell within a week. You trade frequently and make money through many, many small fluctuations."
+
+**3. Swing trading**
+
+"The third is swing trading. You catch a medium-term trend, maybe hold for one, two, or three months, and then when you feel the trend is over, you exit."
+
+**4. Algorithmic trading / quantitative trading**
+
+"The fourth is algorithmic trading. You write code and let the machine trade for you automatically. This requires programming ability and mathematical modeling skill."
+
+Evan said: "**The strategy I use now is mainly a combination of the first and the third.** That means I keep part of my capital invested for the long term to capture the market's average return. The other part, I adjust based on the market's swings."
+
+### The QQQ Strategy: A Concrete Backtest
+
+"I did a backtest earlier that was quite interesting. It's: **what would happen if I had started dollar-cost averaging into QQQ (the Nasdaq 100 ETF) every month from 2010 and held until now?**"
+
+He opened an Excel sheet and started showing the data:
+
+"I used data from TradingView, and then wrote a simple Python script to backtest it. Assume you invest 1,000 dollars every month, starting from January 2010 and continuing through December 2024."
+
+"The result? **The total invested is about 180,000 dollars, and the final market value is about 540,000 dollars, a return of close to 200%.**"
+
+Someone in the audience gasped.
+
+"But!" Evan emphasized, "this is only the simplest strategy. If you're a bit smarter and **reduce your investment when the market is obviously overheated, and increase it when the market is in panic**, your returns will be even higher."
+
+"For example, in March 2020, when the pandemic broke out, QQQ fell 30%. If you had dared to double down at that moment, your returns could have doubled."
+
+### Toolchain: TradingView + Longbridge + MCP
+
+"So how do you actually do this? The toolchain I use right now looks like this:"
+
+**Step 1: TradingView for charts and backtesting**
+
+"TradingView is a very powerful charting tool. Not only can it show real-time quotes, but you can also write strategies with Pine Script and run backtests."
+
+"For example, say I want to test a simple moving average strategy: buy when the 50-day moving average crosses above the 200-day moving average, and sell in the opposite case. I can write the code directly in TradingView and see how the strategy performed over the past ten years."
+
+"The advantage of TradingView is that its data is very complete, and you can operate it right in the browser without downloading any software."
+
+**Step 2: Placing orders with Longbridge Securities**
+
+"After looking at the charts, I place orders with Longbridge Securities. Longbridge is a US stock brokerage that supports Hong Kong and US stock trading. Its fees are relatively low, and it supports a Chinese interface, which is friendly to domestic users."
+
+"Another advantage of Longbridge is that it has an API. In other words, you can write code to place orders automatically. This is very useful for people who want to do algorithmic trading."
+
+**Step 3: Using AI for assisted analysis**
+
+"Finally, I use some AI tools to help with my analysis. For example, I feed financial reports and news data to AI and have it summarize the key information for me."
+
+"Or I ask AI to write simple backtesting scripts for me. For example, 'Write me a Python script to backtest a monthly dollar-cost averaging strategy on QQQ,' and AI can give me runnable code directly."
+
+"This greatly improves my efficiency. Before, I might have spent an hour writing code, debugging, and plotting. Now it may only take ten minutes."
+
+### Applying MCP (Model Context Protocol)
+
+"I'm also trying something very new lately, called MCP." Evan said, "MCP is a protocol launched by Anthropic (the company behind Claude), which lets AI directly call various tools and APIs."
+
+"For example, I can write an MCP server that lets Claude call Longbridge's API directly to check my holdings, place orders, and view market quotes. That way, I can say in the chat box, 'Buy 100 shares of Apple for me,' and Claude will automatically call the API to complete the operation."
+
+"Of course, this is still in the testing stage. I don't recommend that people use AI to place orders directly, since it involves real money. But I think this is a very interesting direction."
+
+### Risk Control: Never Go All In
+
+At this point in the discussion, Evan emphasized a very important principle:
+
+"**No matter what strategy you use, the most important point is: never go All In.**"
+
+"I've seen too many people who put all their money in when the market is good, and even add leverage. Then the market pulls back, they get liquidated, and they lose everything."
+
+"My own principle is: **I only put 20 to 30 percent of my total assets into the stock market, and within that 20 to 30 percent, I further diversify across different targets.**"
+
+"For example, I put 50% into a broad-based ETF like QQQ, 30% into some individual stocks I'm bullish on, and keep 20% as cash for management, so I can buy the dip at any time."
+
+"That way, even if the market drops 50%, I'd lose at most 10 to 15 percent of my total assets. It won't cripple me."
+
+### Interaction: Everyone's Holdings
+
+Evan asked the audience: "Who here is holding positions right now? What are your main holdings? Would you share?"
+
+Someone said, "I mainly hold QQQ and SPY (the S&P 500 ETF)."
+
+Another person said, "I bought some tech stocks, like NVIDIA, Microsoft, and Apple."
+
+Someone else said, "I bought some Chinese concept stocks, like Alibaba and Pinduoduo."
+
+Evan nodded: "All of those are fine. QQQ and SPY are the most stable choices. Tech stocks can deliver higher returns if you pick well, but they're more volatile. As for Chinese concept stocks... I personally don't recommend them much, because the policy risk is too high."
+
+"But the most important thing is, **you need to know why you're buying this asset**. Is it because you like its fundamentals? Or because you think it's going up? Or because someone else recommended it?"
+
+"If you can't even explain why you're buying, then you'd better not buy."
+
+### Choosing Information Sources
+
+Someone asked: "Evan, what news do you usually read? How do you get your information?"
+
+Evan answered: "I mainly look at a few:
+
+- **Bloomberg**: the most authoritative source of financial news, but it requires a subscription.
+- **The Wall Street Journal**: also very authoritative, with very high-quality reporting.
+- **Twitter/X**: this is what I use most. A lot of important news often spreads on Twitter first. I follow some well-known investors, analysts, and journalists.
+- **Reddit**: especially r/wallstreetbets and r/investing, where you can see the sentiment of retail investors.
+- **Seeking Alpha**: an investment analysis community with many high-quality analysis articles."
+
+"But, **the most important thing is not to get drowned in information**. There's too much information now. If you look at everything, you'll get lost. My advice is: **find three to five sources you trust, check them regularly, and ignore the rest.**"
+
+### Final Advice
+
+Evan wrapped up:
+
+"What I shared today is really all very basic material. But I think **the basics are often the most important.**"
+
+"A lot of people want to jump straight to advanced techniques, to learn options, leverage, and algorithmic trading. But if you're not clear on the most basic questions, like 'why does the market go up' and 'how does money flow,' then learning more techniques won't help."
+
+"My advice is: **start with the simplest dollar-cost averaging, gradually accumulate experience, and gradually build your own investing system.**"
+
+"**Investing is a marathon, not a sprint.** You don't need to earn 100% a year. You only need to steadily earn 10 to 20% per year, and with long-term compounding, your returns will be very impressive."
+
+"Last, **never invest money you can't afford to lose.** If losing this money would affect your life, then you shouldn't be investing."
+
+The room broke into applause.
+
+## Part 5: Building an iOS App from Zero to One: An Indie Developer's AI Practice
+
+**Speaker:** Leo (a college senior and indie iOS developer)
+
+**Time:** 01:47:15 - 02:34:52
+
+### Opening and Self-Introduction
+
+Steven handed the mic to Leo: "Next, please welcome Leo to share his iOS development experience. Leo is a senior in college, but he has already used AI tools to develop a very interesting iOS app. I think his experience is very instructive for classmates who want to do indie development."
+
+Leo walked up on stage, looking a bit nervous. He smiled and said: "Hi everyone, I'm Leo. Today I want to share **how I, as a student with no computer science background, used AI tools to build an iOS app from zero.**"
+
+"Let me start with my background. My undergraduate major was International Economics and Trade, which has nothing to do with computers. But starting in my junior year, I became interested in programming and started teaching myself."
+
+"At first I learned Python, because people online say Python is simple. But after a while, I realized I didn't know what to use Python for. Web scraping? Data analysis? Neither was really what I wanted."
+
+"Then it suddenly occurred to me: **I use my phone every single day. If I could make an app that I myself use, wouldn't that be cool?** So I decided to learn iOS development."
+
+### Why iOS Development?
+
+"A lot of people might ask: why iOS, instead of Android or the web?"
+
+Leo explained: "There are a few main reasons:
+
+- **I use an iPhone myself**, so I'm more familiar with the iOS ecosystem and it's easier for me to think of needs.
+- **The iOS development experience is better.** Xcode is a bit clunky, but overall it's still nicer to use than Android Studio.
+- **iOS users are more willing to pay.** If I want to commercialize the app later, iOS is a better choice.
+- **SwiftUI has lowered the barrier.** Before, to learn iOS development, you had to learn Objective-C or UIKit, which was very complicated. But with SwiftUI, the learning curve is much gentler."
+
+### First Attempt: A Painful Failure
+
+"My initial idea was very simple: **make a to-do list app.** I felt that the to-do apps on the market didn't really fit my needs, and I wanted to make one that was simpler and more suited to my habits."
+
+"So I started learning Swift and SwiftUI. I watched a lot of tutorials, bought some courses, and spent about two months finishing the basics."
+
+"But **when I really started writing code, I found I had no idea where to begin.**"
+
+"I knew how to create a button, and I knew how to show a list, but I didn't know how to combine these things into a complete app."
+
+"I was stuck at this stage for a long time, about a month, with no progress at all. At one point I even thought about giving up."
+
+### The Turning Point: AI Tools Step In
+
+"The turning point came last October. I came across an article about how to use ChatGPT to assist with programming."
+
+"At first I approached it with a try-it-and-see mindset, and I asked ChatGPT a question: 'I want to make a to-do list app. Where should I start?'"
+
+"ChatGPT gave me a very detailed answer, including:
+
+- The main screens needed (a list screen, a detail screen, a settings screen)
+- The data models needed (a Todo model and a Category model)
+- How to store the data (Core Data, UserDefaults, CloudKit)
+- The features to implement (add, delete, edit, search, sort)"
+
+"This answer made me suddenly realize: **the reason I didn't know how to start before was that I didn't have a clear architecture.**"
+
+"Once I had this architecture, I started implementing features one by one. Whenever I ran into something I didn't know, I asked ChatGPT, which gave me code examples, and I then modified them to fit my needs."
+
+"That's how, in about two weeks, I finished the first version of the to-do app."
+
+### Problems with the First Version
+
+"But when I actually started using this app, I found a lot of problems:
+
+- **Poor performance.** When there were more than 100 to-do items, scrolling the list would stutter.
+- **Ugly UI.** Although everything worked, it looked very amateurish.
+- **Missing lots of details.** For example, there were no gesture operations, no animations, and no sound cues.
+- **Data sync issues.** I used iCloud sync, but data often got lost or duplicated."
+
+"This made me realize: **making an app that works and making an app that's pleasant to use are completely different things.**"
+
+### Second Iteration: Learning from Great Apps
+
+"I started studying the great to-do apps on the market, like Things, Todoist, and OmniFocus. I analyzed their interaction design, visual design, and feature design, and looked at how they solve problems."
+
+"Then I found that **these great apps share some common traits:**
+
+- **The interaction is very smooth.** Every animation and every gesture has been carefully designed.
+- **The visuals are very clean.** There are no superfluous elements, and every pixel has a purpose.
+- **The features are just right.** They don't pile on functions; they push the core features to the extreme.
+- **The details are thoughtful.** For example, long-pressing gives haptic feedback, and deleting asks for confirmation, and so on."
+
+"I started redesigning my app based on these standards."
+
+### AI's Role in the Second Iteration
+
+"In the second iteration, AI played a very important role. **I treated AI as a full-stack assistant** and had it help me with all sorts of tasks:
+
+**1. Code refactoring**
+
+"I paste the code I wrote into AI and say: 'Help me optimize this code so it's more efficient and readable.' AI gives me some suggestions, such as:
+
+- Extracting repeated code into functions
+- Using more efficient algorithms
+- Following Swift best practices"
+
+**2. UI design**
+
+"I describe the interface I want, and then have AI generate the SwiftUI code. For example: 'I want a card-style list, where each card has rounded corners and a shadow, with a checkbox on the left and the title and time on the right.'"
+
+"AI gives me a piece of SwiftUI code, and I adjust it based on how it looks."
+
+**3. Animation implementation**
+
+"Animation is one of the harder parts of iOS development. I tell AI, 'I want an animation that slides in from the right,' and AI gives me the code and explains what each line does."
+
+**4. Troubleshooting**
+
+"When I run into a bug, I paste the error message and the related code into AI and ask it to help analyze the cause. Many times, AI can point directly to the problem."
+
+**5. Documentation lookup**
+
+"The iOS API documentation is enormous, and I can't memorize all of the APIs. When I want to implement something but don't know which API to use, I ask AI, and it tells me which class and which method to use."
+
+### From ChatGPT to Claude to Cursor
+
+"I started out using ChatGPT, but later I found that **for programming tasks, Claude is often better.**"
+
+"Claude gives more complete code and more detailed explanations, and it hallucinates less."
+
+"Later, I discovered Cursor, an AI editor based on VS Code. It lets you call AI directly inside the editor, which is very convenient."
+
+"The advantage of Cursor is that **it can see your entire project structure, so the suggestions it gives fit your project's style better.**"
+
+"For example, when I'm writing a new feature, Cursor automatically suggests which files I should create, where the code should go, and how it should integrate with the existing code."
+
+"This greatly improved my development efficiency. **Before, a feature might have taken me a full day; now it takes about half a day.**"
+
+### The Final Product: An App with Warmth
+
+"After roughly three months of iteration, I finally made a version I was happy with."
+
+Leo took out his phone, mirrored it to the big screen, and showed his app.
+
+"This is my app, called 'Focus Flow.' Its core idea is: **help you focus on what matters most right now.**"
+
+"Its main features are:
+
+- **Smart sorting**: automatically sorts to-do items by deadline, priority, and estimated time.
+- **Pomodoro timer integration**: every to-do item can start a Pomodoro timer.
+- **Statistics**: records how many to-dos you finished each day and how much time you spent.
+- **Widget support**: shows the three most important things for today on your home screen.
+- **iCloud sync**: automatic sync across multiple devices."
+
+"But most importantly, **every single detail of this app is something I polished with care.**"
+
+"For example, when you complete a to-do, there's a pleasant animation, paired with haptic feedback, which gives you a sense of accomplishment."
+
+"Another example: when you haven't completed any to-dos for a long time, the app gently reminds you, 'Want to take a break?' instead of coldly pushing you."
+
+"**I want this app to be not just a tool, but a friend that keeps you company.**"
+
+### The Experience of Getting onto the App Store
+
+"After finishing the app, I decided to publish it on the App Store."
+
+"This process wasn't easy either. I needed to:
+
+- **Register an Apple Developer account**: 99 US dollars a year.
+- **Prepare all sorts of materials**: app icon, screenshots, promotional video, app description.
+- **Handle the privacy policy**: the App Store requires you to have a privacy policy page.
+- **Submit for review**: waiting for Apple's review usually takes one to three days."
+
+"When I submitted for the first time, I got rejected. The reason: **my privacy policy wasn't detailed enough.**"
+
+"I spent another day using AI to generate a detailed privacy policy, resubmitted, and this time it passed."
+
+"When I saw my app appear on the App Store for real, the sense of accomplishment was truly hard to describe. **This was the first time I made a real product, not just a practice project.**"
+
+### User Feedback and Iteration
+
+"After the app launched, I started promoting it in some communities, like Sspai and V2EX."
+
+"The response was pretty good. In the first week, there were about 200 downloads. It's not many, but for me it was already very satisfying."
+
+"More importantly, **I received a lot of user feedback.** Some people said they liked the design, some asked for certain features, and some found bugs."
+
+"I take every piece of feedback seriously. If it's a good suggestion, I consider adding it in the next version. If it's a bug, I fix it as quickly as I can."
+
+"**This feeling of communicating directly with users makes me feel that I'm not making a cold product, but creating a kind of connection.**"
+
+### Thinking About Commercialization
+
+"Someone asked me: how do you plan to make money?"
+
+"Honestly, at first I didn't think much about making money. **I made this app mainly to learn, and to prove to myself that I could make a complete product.**"
+
+"But later, as more users came, I started thinking about the possibility of commercialization."
+
+"I studied the revenue models of some indie developers, and there are roughly these:
+
+- **Paid download**: users have to pay before they can download.
+- **In-app purchase**: the app is free, but advanced features require payment.
+- **Subscription**: charged monthly or yearly.
+- **Ads**: showing ads inside the app."
+
+"In the end, I chose **subscription**, because:
+
+- **It lets users try it for free first**, lowering the cost of trying.
+- **Continuous revenue** can support my ongoing development and maintenance.
+- **It doesn't hurt the user experience**, unlike ads, which can be disruptive."
+
+"I designed a Pro version at 3 dollars a month or 25 dollars a year. The Pro features include:
+
+- Unlimited to-do items (the free version is capped at 20)
+- More themes and icons
+- Advanced statistics
+- Priority customer support"
+
+"Currently, about 5% of users have bought the Pro version. The revenue isn't much, but it's enough to cover my server costs and the Apple Developer account fee, with a little left over."
+
+"**For me, this is already very satisfying. I never planned to get rich off this app. As long as it can sustain itself and keep me motivated to keep going, that's enough.**"
+
+### The Limits of AI-Assisted Development
+
+"I've talked a lot about the benefits of AI, but I also want to talk about its limits."
+
+"**AI is not all-powerful.** It can help you write code, but it can't make decisions for you."
+
+"For example:
+
+- **Product direction**: what kind of product you want to make and what problem it solves. AI can't answer that.
+- **Design taste**: what makes a design good, what makes an interaction feel comfortable. That takes your own judgment.
+- **Code architecture**: how to organize the code and how to design modules. That requires some programming experience.
+- **Bug investigation**: some complicated bugs AI may not be able to pin down accurately, and you have to debug them yourself."
+
+"So, **AI is a powerful assistant, but not a replacement. You still need to learn, think, and practice.**"
+
+### Advice for People Who Want to Learn iOS Development
+
+Leo summed up:
+
+"If you also want to learn iOS development, my advice is:
+
+**1. Don't chase perfection**
+
+"Your first app will almost certainly be rough, and that's normal. Don't try to make a perfect product right away. Make it first, then improve it gradually."
+
+**2. Start with small projects**
+
+"Don't start with a very complicated app. Begin with a simple feature, like a counter, a calculator, or a notes app. Build a solid foundation before taking on more complex projects."
+
+**3. Read other people's code**
+
+"There are many excellent open-source iOS projects on GitHub. Look at how others write, and learn their coding style and architecture design."
+
+**4. Make good use of AI tools**
+
+"AI can greatly lower the barrier to learning, but don't rely on it too much. Try on your own first, and only ask AI when you really can't solve it."
+
+**5. Be patient**
+
+"Learning to program doesn't happen overnight. It takes time and practice. It's normal to run into difficulties, so don't give up easily."
+
+**6. Build the product you want to use yourself**
+
+"**Most importantly, make the product you truly want to use.** Only then will you have the ongoing motivation to refine it, instead of giving up halfway through."
+
+The room broke into applause again.
+
+## Epilogue: On Creating and Acting
+
+**Time:** 02:34:52 - 02:41:18
+
+### Steven's Summary
+
+Steven walked up on stage and gave the final summary:
+
+"Thanks to Evan and Leo for their wonderful talks. I think the three topics today, AI tools, investing, and indie development, look unrelated, but they actually share one theme: **how we should think and act in this era of rapid change.**"
+
+"**First, stay curious.** Whether it's a new tool like OpenCloud, the US stock market, or iOS development, if you don't try it, you'll never know what it can bring you."
+
+"**Second, learn by doing.** Evan is right. Losing a hundred thousand or so teaches you more than listening to a hundred lectures. Leo also truly learned iOS development by actually building a project. Theory can never replace practice."
+
+"**Third, embrace uncertainty.** The pace of AI development far exceeds what we imagine, and market swings often surprise us too. We can't predict the future, but what we can do is: **keep learning, keep adapting, keep acting.**"
+
+"**Finally, find what you truly care about.** Whether you're building products, investing, or creating content, if you're doing it only to make money or to finish a task, it's very hard to persist. Only when you truly care will you be willing to put in time and energy, and have the patience to polish every detail."
+
+"That's all for today's sharing. I hope everyone can find their own 'wave,' and bravely ride it."
+
+### Final Interaction
+
+After the formal session ended, people didn't leave right away. They gathered together and kept talking.
+
+Some were asking Evan about options, some were asking Leo for details on SwiftUI, and some were discussing the future of AI with Steven.
+
+The lights in the café gradually dimmed, but the enthusiasm for discussion stayed high.
+
+This is the charm of Crazy Saturday: a group of young people full of passion for technology and the future, exchanging ideas here, sparking each other's thinking, and then heading off with new inspiration and drive.
+
+**[End of text]**
+
+## Appendix: Key Takeaways
+
+### OpenCloud
+
+- **Core value**: market education, helping more people understand the possibilities of AI agents
+- **Main problems**: uncontrollable security, high barrier to use, fundamentally dependent on the underlying model
+- **Usage tips**:
+  - Choose the strongest model (Claude 4.6)
+  - Use `neo` (reset) and `C` (compress) frequently
+  - Carefully design the system prompt, user prompt, and memory
+
+### Investing
+
+- **Core philosophy**: surf the flow of money and find growth curves where dt > 0
+- **Why US stocks**: continuous global capital inflows, the strongest liquidity
+- **Basic strategies**:
+  - Long-term holding of broad-based ETFs (QQQ, SPY)
+  - Invest only 20 to 30% of your assets in the stock market
+  - Never go All In
+- **Toolchain**: TradingView (charts and backtesting) + Longbridge Securities (trading) + AI (assisted analysis)
+
+### iOS Development
+
+- **Learning path**:
+  - Learn the basics of Swift and SwiftUI
+  - Use AI to get started quickly
+  - Practice with small projects
+  - Study the design of great apps
+  - Keep iterating and polishing the details
+- **AI tools**: ChatGPT → Claude → Cursor
+- **Commercialization**: subscription, free plus a Pro version
+- **Most important**: make the product you truly want to use
+
+**Recorded and compiled on:** February 8, 2025
+
+**Editor's note:** This document is based on a transcript of the live recording. It tries to faithfully reproduce the original remarks of the speakers, the conversations, and the technical discussion. Some colloquial expressions have been retained to preserve authenticity.
+
+The discussion began with a rather sharp topic. Steven had just come across a case on social media: a user, excited to try OpenCloud, uploaded his entire AI configuration file, including his API token and various encryption keys, straight to GitHub, publicly. This real case set off a debate among everyone present: is on-device AI tooling really safe?
+
+### The Uncontrollability of Technology
+
+"Even if your model is deployed locally, you still can't fully control its behavior." Steven's remark made the mood a little heavy. He explained that even if you repeatedly stress in various system prompts and skill docs "do not upload sensitive information," the generative nature of AI models means it can get "tangled in memory" and carry out operations you never expected.
+
+The core of the problem is this: **the very power of tools like OpenCloud is also the source of their danger.** They can operate your browser, read and write files, and send WeChat messages. That "can do anything" capability brings convenience, but it also means the tool could delete your important files or share your private information at any moment.
+
+If you deploy it on Docker or a VPS, these risks drop, but you also give up its most valuable local capabilities. It's a classic paradox: the freedom you want and the safety you want often contradict each other.
+
+### Do We Really Care About Security?
+
+But the discussion quickly turned to a deeper question. "To be honest, I think most Chinese people really don't care that much about data security." Steven's observation struck a chord. He went on to explain: **if today were the last day you were alive in this world, and you were asking whether this product is good, you wouldn't consider security at all. You'd only consider what it can do.**
+
+This hypothetical actually reveals a fundamental problem in product design. When we tech practitioners sit here discussing privacy, security, and data leaks, have we fallen into some kind of "elitist bias"? Do our parents, our children, and the vast majority of ordinary users who aren't in this room really care about these things the way we do?
+
+"We may need to allow for this deviation to exist." Steven said, "From an accelerationist perspective, we may even have to allow ourselves to no longer be the center of society. The relationship between humans and AI may slowly shift from today's 'ten to zero' to 'eight to two,' or even 'nine to one.' That slider will keep moving. This is a reality we have to accept."
+
+### Optimism from a Long-Term View
+
+By the end of the discussion, everyone reached a consensus: most of the problems we worry about now may not be problems in the future. Just as GPT-3's context window of a few dozen tokens, which we once worried about, has now grown to the millions. Technology will naturally solve many problems that seem unsolvable today.
+
+But data security will persist. It's not something technology alone can fully solve. It's a complex issue that needs social attitudes, laws and regulations, and technical means to evolve together.
+
+## Part Two: The Real Value of OpenCloud, from Tool to Way of Thinking
+
+The discussion naturally turned to OpenCloud's product capabilities. A classmate working in product and business raised a very practical question: "We all care a lot about where OpenCloud's capability boundaries lie. If it really gets productized, how will ordinary users use it?"
+
+### The Dilemma of Intent Recognition
+
+The core problem is this: **right now, when we use ChatGPT or Claude, we have to explicitly say "use such-and-such skill." But ordinary users express themselves as "I want to get something done," and they expect the AI to call the right tools on its own.** This seemingly simple need actually involves complex intent-recognition technology.
+
+What's even more frustrating is that even for simple problems, OpenCloud still calls skills, goes through a long thinking process, and burns a lot of tokens. That path is obviously not optimal, and it may even be slower than using a basic large model directly.
+
+Someone asked whether there's a way to optimize its calling logic, so that it doesn't "use a cannon to kill a chicken" with simple questions, and only activates the full skill-calling mechanism for complex ones.
+
+### The Shell and the Engine of a Car
+
+Steven offered a vivid metaphor on this: "OpenCloud is like a car's shell. What really matters is the engine and the battery, which means the underlying model."
+
+He explained that if you switch OpenCloud to a very weak model, such as Kimi 1.5 or the models from early 2024, you'll find it isn't magical at all. Its ability to complete tasks may even fall short of the basic thinking mode OpenAI had back then. What does that show? **It shows that OpenCloud's value fundamentally still depends on the capabilities of the underlying model.**
+
+"Many of the problems we see now, like token consumption and path optimization, are in my view all 'car shell' level problems. When models improve by another order of magnitude, when the context window goes from millions to billions, these problems may no longer be problems at all. You don't need to care about those minor optimizations."
+
+This view is actually very controversial in tech circles. But it does offer a perspective worth considering: in a fast-iterating technology field, where should we put our energy? Into optimizing the performance of today's tools, or into thinking about more fundamental questions?
+
+### A Three-Factor Framework in Practice
+
+Of course, for people who want to use OpenCloud right now, there are still some practical methods. One participant shared his experience: "When I use it myself, I've found three factors to be very important."
+
+**First, the choice of model.** A friend of his also installed OpenCloud, but used Pinyin or another weak model, and the experience was very poor. He, on the other hand, used Claude 4.5 throughout, and even 4.6, and the experience was completely different. A model's capability is the most fundamental thing.
+
+**Second, how clean the context is.** OpenCloud's design makes you forget the concept of "context": you don't have an explicit "new chat" button. But in practice, given the limits of current models, clearing the context is still very important. He often uses two commands, `neo` (reset context) and `C` (compress context), to help the AI better understand the next task.
+
+**Third, prompt design.** This has three layers: the system prompt (defining the AI's role and capability boundaries), the user prompt (clarifying the specific task and strategy), and memory (a knowledge base the AI can search on demand). These three work together to get the AI to solve problems in an appropriate way.
+
+### The Market Education Value of OpenCloud
+
+In the end, everyone agreed that OpenCloud may only be a transitional product, but its biggest contribution is **market education**. Just as WeChat Pay once trained Chinese people in mobile payment habits, OpenCloud is letting more people see the possibilities of AI agents. There will certainly be more and better products in the future that solve the problems it has today.
+
+"It has to do this market education, so people know what the future looks like. That matters. It may be only a transitional state, but at some stage in the future, truly mature products will grow out of it."
+
+## Part Three: Will AI Tools Trigger a Hardware Price Increase? An Economics Question
+
+Someone in the discussion raised an interesting question: "If tools like OpenCloud really became widespread, would they cause Mac Minis or other personal computer hardware to see the kind of price spikes we saw when Bitcoin mining drove up graphics card prices?"
+
+### The Real Share of Personal Demand
+
+Steven offered a figure that surprised people: "The demand in the personal market, compared with data centers and the enterprise market, may not even reach 10%."
+
+This is an important realization. We tend to overestimate the influence of the individual consumer market. In reality, **what actually drives hardware prices are the large-scale purchases of enterprise customers.** A single data center's purchase volume can be equal to hundreds of thousands of ordinary consumers.
+
+From the perspective of economies of scale, an increase in demand doesn't necessarily lead to higher prices. When something goes from meeting the needs of 100 people to meeting the needs of 10,000 or 100,000 people, prices may actually fall because of scale effects and supply-chain concentration.
+
+"The most expensive thing is one person's demand. When 100, 10,000, or 100,000 people have the same need, the price actually goes down." Steven explained, "Of course, if the demand has to go through chip computing power or is constrained by the laws of physics, it could be expensive. But if it's only at the software level, or can be met by existing capacity, it's not necessarily expensive, and it may even keep dropping."
+
+### The Truth Behind Memory Price Increases
+
+So why are we seeing memory prices rise? Steven gave a very clear answer: "Micron switched its capacity, originally meant for personal PCs, entirely over to data centers, to big customers like NVIDIA."
+
+That's the real reason for the memory price increase. **It's not that personal demand suddenly exploded, but that the allocation of supply-chain resources changed.** When manufacturers find that selling to data centers earns more money, they naturally adjust their capacity. It's a supply-side story, not a demand-side one.
+
+### Apple's Supply Chain Capability
+
+As for whether the Mac Mini will run short, Steven was optimistic: "Apple's expansion capacity is tied to China's industrial capability. There may be short-term inventory tightness, but it can recover in two weeks at most."
+
+He also made an interesting point: **OpenCloud's barrier to entry is still very high.** You can't expect ordinary people to get everything done with a single sentence. This market is far from reaching "everyone uses it" levels. Most people may not have even heard of this tool, let alone used it.
+
+"So I think the impact on hardware demand is minimal. The bigger force still comes from changes in enterprise and data center demand."
+
+## Part Four: Surfing the Money, an Investment Philosophy from a Coder-Turned-Trader
+
+In the afternoon session, things reached the most exciting part. Evan (Ailun) took the stage to share his experience with US stock investing and quantitative trading. He began with a self-introduction: he graduated with a bachelor's degree in 2019 and originally wanted to be a product manager at Futu, but ended up at Huatai Securities. A year later he found the brokerage job wasn't what he had imagined, so he switched to writing code, working at ByteDance and then Horizon Robotics, and is now at a certain factory. But his main line of work has always been writing: first investment articles, and later technical articles.
+
+"I hope today isn't about teaching everyone how to trade stocks, but about sharing more fundamental logic." Evan said, "Tools change, AI changes, but the way of thinking and the understanding of resource allocation are the things that matter more."
+
+### The Essence of Money: A Resource Dispatch System
+
+Evan shared a concept that changed how he thinks about investing. When he was playing the game *Battlefield*, in the scene where you rob a bank, people shout "Take your vote!" In English, "vote" doesn't just mean a ballot. It also stands for a kind of choice, a kind of "resource dispatch order."
+
+"Money isn't just paper bills. At its core, it's a voucher for resource allocation." Evan said, "Once you build this way of thinking, a lot of things become clear."
+
+He gave an example: we often see news saying "some market evaporated trillions of dollars." Did that money really evaporate? Did that wealth really vanish into thin air?
+
+"It didn't. A crash just means people sold stock and turned the 'goods' into cash. The money wasn't burned. It just moved from one place to another. It may have flowed out of tech and into real estate or bonds. The key is: **do you know where it went?**"
+
+If you're just an ordinary small retail investor, seeing a drop, you can only curse a few times and wait to break even. But if you understand the flow of liquidity, you'll start asking: where is the money going? What's going to rise next?
+
+**Investing is like surfing.** You need to know the direction of the current across the whole pool, and know where the biggest waves are. What you need isn't to wait in place, but to actively look for the places where capital is pouring in.
+
+### Why Choose US Stocks?
+
+Evan spent a long time explaining why he chose to invest in US stocks rather than A-shares or crypto.
+
+"What's the underlying logic behind why the US stock market keeps growing year after year?" He asked the audience. Someone answered that it's because of dollar hegemony and oil settlement: the dollars printed eventually flow back into the US market.
+
+Evan nodded: "That's an important reason. But more fundamentally, **the US is the first choice for the world's wealthy to allocate assets.** As long as you have some money on this planet, as long as you're not completely isolated, your investment advisors and financial planners will definitely tell you to put part of your money into the US market."
+
+What does that mean? It means that every moment, an astronomical amount of capital is flowing into US stocks from all over the world. This market receives an enormous inflow of funds. Whether there's a rate hike or a rate cut, whatever short-term fluctuations there are, the long-term trend is upward.
+
+"If you want to make money, you have to go to the pool with the biggest flow. Without a doubt, that's the US market."
+
+### The Invention of Stocks: The Wisdom of Spreading Risk
+
+To illustrate the value of the stock market, Evan told a historical story.
+
+Stocks were first invented by the Dutch East India Company. In the Age of Discovery, building ships, hiring crews, and buying goods all required huge amounts of capital and carried enormous risk: ships could sink, crews could mutiny, cargo could be seized by pirates. No single merchant could bear that kind of risk alone.
+
+So they invented the stock mechanism: **spread the risk across the whole of society.** You buy a share, I buy a share, and we all share the risk and the returns together.
+
+"The Netherlands had no particular resources and wasn't a big country, but through this financial mechanism, it put the resources of the entire society into the Age of Discovery." Evan said, "And if you had bought the Dutch East India Company's shares back then, you'd have been very happy, because it paid dividends for 200 years."
+
+The story shows that **a stock isn't just a piece of paper. It represents a mechanism of risk distribution and resource allocation.** After several hundred years of evolution, this mechanism has become very mature.
+
+### A Mathematical Model of Growth
+
+Evan offered a simple test for judging growth: "How do you measure whether something is growing continuously? High school math taught us: take the derivative and check whether dt is greater than zero. As long as you're in the positive range, you won't run into major trouble."
+
+What does that mean? It means you should look for tracks where people keep investing and capital keeps flowing in. The AI industry is like that, some energy stocks are like that, and gold is too. They all represent some kind of "scarce resource."
+
+"We're not looking for a zero-sum game, we're looking for a positive-sum game. We want to put ourselves in an environment where dt > 0."
+
+### Strategy in Practice: A QQQ Backtest
+
+Evan showed some backtest data for specific trading strategies. Using the Nasdaq 100 index fund QQQ as an example:
+
+If you had held QQQ from 1993 until now, a 26-year stretch, your return would be about 13 times your money. Sounds good, right? But you may have forgotten that **your maximum drawdown could reach 82%.** That means you might go through a period where your account shrinks by more than 80%. Most people simply can't handle that psychological pressure.
+
+So is there a way to keep a respectable return while lowering the risk? Evan shared a simple strategy: add a moving average filter. When QQQ falls below its 200-day moving average, sell immediately, and buy back once it regains the average.
+
+The return of this strategy drops to about 8 times, but the maximum drawdown is greatly reduced. For most people, this may be a more acceptable risk-return ratio.
+
+"If you want to be more aggressive, you can use 2x or 3x leveraged ETFs." Evan said, "The US stock market has many products like this, where fund companies build in leverage. Of course, returns are higher, but so is the risk."
+
+### Tool Choices: Longbridge and TradingView
+
+Evan specifically recommended two tools.
+
+**First is Longbridge Securities.** "I looked at a lot of brokerages, and Longbridge is the most friendly to individual developers. Its API is very open, so you can easily get historical data and run strategy backtests. In comparison, Futu, despite its big name, isn't as good in this respect."
+
+**Second is TradingView.** "This is a backtesting platform for individuals. You don't need any institutional account. As long as you can write a little Python, you can run your strategy and see how it performed historically."
+
+He also specifically pointed out an MCP (Market Context Protocol) tool that can be called directly within Claude to fetch stock data in real time and generate professional analysis reports.
+
+"But I don't recommend letting AI trade for you directly." Evan said with a smile, "Because every US stock trade has commission fees, around 0.02 percent. If AI traded at high frequency, your fees would be terrifying. AI is good as an adviser, but the actual trading still has to be done by you."
+
+### Cognition and Risk
+
+At the end of the session, Evan shared his core view: "Stock investing is fundamentally about making money through cognition. If you can know the answer before 51% of people do, you can make money. But if you're just following trades and listening to tips, that's dangerous. Why would anyone help you make money? What do they get out of it?"
+
+He also reminded beginners in particular: "If you want to get in, I suggest starting with ETFs, and not going straight for high-risk products like options and futures. Losses are the best teacher, but you have to control the size of your losses and not get liquidated in one go."
+
+Someone in the audience asked a sharp question: "Have you made money from stock trading?"
+
+Evan laughed honestly: "I did make some money last year and the year before. But the big drop at the beginning of this year cost me a lot too. That's the market. Nobody can make money forever. What matters is building the right thinking framework and understanding the logic of capital flows. Tools change, markets change, but these fundamentals don't change."
+
+## Part Five: Building a Really Good Product with AI, a Senior Student's Path as an Indie Developer
+
+The final sharing segment was a senior college student's experience developing an iOS app. He seemed a little nervous, but when he talked about his product, there was light in his eyes.
+
+"Hi everyone, I'm... my handle on Twitter is..." He introduced himself first. "In my spare time I independently developed an iOS app called NeoDB. It's also the first app I've made, and it's now on the App Store, with more than 11,000 users, and over 3,000 stars on GitHub."
+
+The room applauded. For a senior student to get results like this on a first app is no small feat.
+
+### Why Build NeoDB?
+
+"NeoDB is an open-source platform for tracking books, films, and shows, a bit like Douban." He showed the app's interface. "You can mark movies you've watched, books you've read, music you've listened to, and games you've played. You can rate them, write reviews, and see other people's recommendations."
+
+Why did he build it? He gave a very simple answer: "Because I have this need myself."
+
+This echoed a line from the afternoon: "Beautiful yourself is the fastest way to beautiful everyone." Making a product for yourself is the fastest path to making a product for everyone.
+
+"NeoDB itself is a website, but it doesn't have an official mobile app. I'm a user of the website myself, and I wanted to use it on my phone, so I decided to make one. That's the best starting point for a product: starting from your own needs."
+
+### The Complexity of a Product: Beneath the Iceberg
+
+He showed several screenshots of the app: the timeline, the discovery page, the marking page, the settings page, search, user profiles, item details... The dense pages made the audience realize that building an app is far more complex than they imagined.
+
+"These pages are really only 20% of the app." He said something that surprised many people.
+
+"Why? Because for every page you build and every new feature you develop, you have to design several states. **The first is the success state, where the page displays normally. The second is the loading state, where data is still being requested. The third is the error state: network errors, server errors, insufficient user permissions... and this may be subdivided into several types.**"
+
+He went on: "That means every feature needs at least three sets of UI. And that's before counting edge cases: what if the user has no network? What if the user switches accounts? What if data sync fails? All of these have to be considered."
+
+"So I say this is only 20%. The other 80% is the polishing and detail work you don't see."
+
+### Four Stages from Zero to Product
+
+He shared his development process, summarized in four stages:
+
+**Stage one: have an idea.** "The idea doesn't need to be very professional. Many good ideas come from outsiders." He gave an example: he knew an artist friend who, after learning about AI, built an app related to music and art. "If you were just an internet practitioner, you might never have thought of this need."
+
+**Stage two: get the core features running.** "Don't try to make a perfect product right away. My first version was very crude and entirely generated by AI. It had only two functions: logging in, and marking items. But once that core feature worked, the MVP was established."
+
+**Stage three: polish the details.** "This is the most time-consuming stage, maybe 70% of the total development time." He said, "Because AI is very good at building a single page, but making the whole app have a unified design language, smooth animations, and consistent interaction logic requires you to adjust it bit by bit."
+
+He particularly emphasized: **change only one color scheme or add only one animation at a time, not a big overhaul all at once.** "Because AI tends to miss details. If you give it too many instructions at once, it may overwrite features you had before. So you must use Git for version control, so you can roll back at any time."
+
+**Stage four: launch and iterate.** "Once you've completed your first release, the road ahead becomes much clearer. Users will give you feedback, and you'll know what to do next."
+
+### AI Is a Tool, People Are the Core
+
+He spent a long time on one point: **in the AI era, the model doesn't matter as much as the person.**
+
+"Models are updated every day. Yesterday Anthropic released Claude 4.6, OpenAI released 5.3, and DeepSeek released 2.5... Models change, but the people who use them don't. Same model, different people, completely different results. Same person, different models, also different results. So the key is the person."
+
+He gave a vivid example: "AI can help you generate pages, write code, and do design, but what's your product called? What problem does it solve? What style are the colors? How fast should the animation be? These decisions all come from people. **AI is your assistant, but it can't replace you in making decisions.**"
+
+He also mentioned an anxiety that resonates with many people: "I often see people on Xiaohongshu saying 'I made an app in three days,' 'listed on the App Store in two days.' I get anxious and wonder whether spending a month polishing details is too slow."
+
+"But later I realized that products churned out in bulk, like articles mass-generated by AI, don't really have any competitive edge. **Truly good products are always people-led and carefully polished, because products are made for people, and only people know what people need.**"
+
+### Aesthetics Is a Long-Term Practice
+
+Someone asked him: how do you develop product taste?
+
+He admitted honestly: "There's no quick way to build taste. It's a long process of accumulation."
+
+His advice: follow excellent designers, experience carefully designed apps, and observe the small details that seem minor but actually matter, like whether the fonts are aligned, whether you can swipe left to go back, and whether the animation speed is just right.
+
+"I'd recommend following some designers on Twitter and watching interviews with developers of great apps. You don't have to fully understand their technology, but by using those apps, you'll gradually build your own taste."
+
+He also recommended a prototyping tool, Excalidraw: "Its lines are imperfect, and that actually helps you focus on the overall structure instead of getting stuck on pixel-level details. Sometimes I sketch a prototype first, and sometimes I have AI generate one directly and then adjust it."
+
+### Thinking About Monetization
+
+On how to make money, he shared his strategy: "Free download plus in-app purchases. Don't charge for the download, because that would drastically lower conversion."
+
+His approach: make the core features free so users can try them. Then set some advanced features, for example, five free uses per day, with payment required starting from the sixth. "Let users form a habit first, then guide them to pay. The conversion rate is higher that way."
+
+Someone asked how to handle taxes on revenue. He said casually: "Apple automatically handles taxes in each country. You only need to collect the money. For a small individual developer like me, with income not very high yet, you don't need to worry too much about it."
+
+### Done Is Better Than Perfect
+
+Near the end of his talk, he said something very powerful: "You have to finish the product and then launch it. Even if it's not perfect, that's fine."
+
+"I've made some products before, but because of perfectionism, I always felt they weren't good enough, so none of them were ever released. This time I forced myself: finish first, launch first, then iterate slowly. **Once you've taken the first step, the road ahead becomes incredibly clear.**"
+
+"Like today, each of us left home and came to this venue. Once you've taken the first step, you've arrived. If you keep sitting at home thinking 'should I go, what if there's traffic, what if the talk isn't any good,' then you'll never get there."
+
+The room applauded warmly.
+
+## Epilogue: People Are the Most Important Variable
+
+Three hours of sharing came to an end, and outside the window it had already grown dark. Nobody rushed to leave. They gathered together to keep talking, exchanging WeChat contacts and sharing their projects.
+
+The topics of this session were broad: from AI safety to product design, from investment philosophy to indie development, from technical tools to business models. But if you had to find one theme running through the whole session, it would be the line Steven said in his final summary:
+
+"**Beautiful everyone is the fastest way to beautiful no one. Beautiful yourself is the fastest way to beautiful everyone.**"
+
+In an age where AI evolves every day and tools update every day, what truly stays the same? It's human needs, human taste, human judgment, and human creativity.
+
+OpenCloud may be replaced by better tools, QQQ strategies may stop working, and NeoDB may be surpassed by other apps. But if you understand the underlying logic, understand how money flows, understand how products are polished, and understand what users really need, then no matter how the outside world changes, you can find your own place.
+
+AI is a tool, and models change, but people don't. In this fast-changing era, **what's scarcest is not technology but judgment; not tools but ways of thinking; not speed but direction.**
+
+The lights in the café were warm and bright. These young people left with their heads full of ideas and inspiration and walked into the Shanghai night. Some of them may really build a product that changes an industry, some may find their own investing approach in the US market, and some may keep exploring the limits of AI.
+
+But what matters more is that they understood one truth: **in the AI era, people are the most important variable.**
+
+**Recorder's note:** This text was compiled from the recording of the Shanghai "Crazy Saturday" offline event on February 7, 2025. For smooth reading, the spoken expressions have been given some literary treatment, but the core views and facts all come from the original recording. Some technical details and figures may deviate due to transcription errors and are for reference only.

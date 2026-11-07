@@ -1,0 +1,94 @@
+---
+title: "自動化スクリプト"
+description: "仕事で AI に書いてもらった自動化スクリプトを記録し、次回すぐに使えるよう手直ししやすくしておく。"
+coverWord: "スクリプト"
+---
+
+この記事では、仕事の中で AI に出してもらった自動化スクリプトを記録しています。同じような場面で困っている方の役に立てば幸いです。別のご要望があれば、お気軽にご連絡ください。
+
+> WeChat: admilk47
+
+## 余分なプレフィックスの付いたファイルを自動削除する
+
+シーン：フォルダに、`._` というプレフィックスが付いた不要なファイルがたくさん混じっています。例えば次のようなものです。
+
+ChatGPT に相談したところ、とても使いやすい Python スクリプトが手に入りました。動作は次のとおりです。
+
+わずか 1 秒ほどで、散らかっていたファイルがすべて消え、必要なファイルだけが残りました。すっきりしました！
+
+### コード
+
+このコードは Python 環境で実行してください。
+
+```python
+import os
+import re
+
+# "._" で始まるファイル名に一致する正規表現パターンを用意する
+pattern = re.compile(r'^\._')
+
+# 対象フォルダ直下のすべてのファイルとサブフォルダを列挙する
+root_dir = './'
+for dirpath, dirnames, filenames in os.walk(root_dir):
+    # 現在のディレクトリ内のすべてのファイルを順に処理する
+    for filename in filenames:
+        # パスを組み立てる
+        path = os.path.join(dirpath, filename)
+
+        # ファイル名が "._" で始まっていれば、そのファイルを削除する
+        if re.match(pattern, filename):
+            os.remove(path)
+            print(f"{path} を削除しました")
+
+```
+
+## 静的サイトのすべての URL を自動抽出する
+
+静的サイトをビルドしたものの、中にある URL がすべて正しく開けるかわからない場合は、次のコードで URL をすべて抜き出し、ツールでまとめてチェックできます。
+
+> 今は [claude.ai](https://claude.ai) でスクリプトを書いてもらっています。GPT-4 に匹敵する性能で、無料で使える AI サービスです。
+
+### コード
+
+```py
+import xml.etree.ElementTree as ET
+import os
+
+# sitemap.xml ファイルを探して読み込む
+sitemap_path = os.path.join('build', 'sitemap.xml')
+tree = ET.parse(sitemap_path)
+root = tree.getroot()
+
+# すべての url 要素を抽出する
+urls = []
+for url in root.findall('{http://www.sitemaps.org/schemas/sitemap/0.9}url'):
+    urls.append(url.find('{http://www.sitemaps.org/schemas/sitemap/0.9}loc').text)
+
+# URL をファイルに書き出す
+with open('redirect.md', 'w') as f:
+    f.write('# Redirects\n')
+    for url in urls:
+        f.write(f'- [{url}]({url})\n')
+
+print('Extracted URLs saved to redirect.md')
+```
+
+抽出されたリンクはすべて `` の形式になります。リンクだけを残したい場合は、次のコードで余計な部分を取り除けます。
+
+```py
+import re
+
+with open('your-file.md') as f:
+  content = f.read()
+
+# 正規表現で [] の中の URL に一致させる
+pattern = r'\[(.*?)\]'
+urls = re.findall(pattern, content)
+
+# URL を新しいファイルに書き出す
+with open('done.md', 'w') as f:
+  for url in urls:
+    f.write(url + '\n')
+
+print('URLs extracted to old-urls.txt')
+```

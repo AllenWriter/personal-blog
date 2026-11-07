@@ -1,0 +1,165 @@
+---
+title: "Windows の右クリックメニューをカスタマイズする"
+description: "レジストリで Windows の右クリックメニューをカスタマイズする方法：CMD、VS Code など。"
+coverWord: "右クリックメニュー"
+---
+
+なぜこの記事を書いたのか。右クリックメニューを変更するたびに、毎回ネットで検索して手順を一つずつなぞっていたからです。この記事を書いている最中にも、やはり検索していました。忘れてしまったときは、自分で書いたものを見れば済むようにしておきたいと思います（書いておけば、そのうち覚えられるかもしれません）。
+
+## 操作を始める
+
+### レジストリを開く
+
+右クリックメニューの内容を変更するには、レジストリを開く必要があります。レジストリを編集することで、右クリックメニューに項目を追加できます。
+
+「ファイル名を指定して実行」（Windows キー ＋ R）を開き、`regedit` と入力して OK を押すと、レジストリエディターが開きます。
+
+​ ![image-20200908114639158](https://img.kuizuo.cn/image-20200908114639158.png)
+
+まず「ファイル」→「エクスポート」を右クリックしておくことをおすすめします。うっかり誤操作をしても、元の設定に戻せるようにするためです。
+
+そのあと「編集」→「検索」（Ctrl+F）で、関連するキーワードを検索できます。探したい値を入力すれば、詳しい操作は後ほど説明します。
+
+![image-20200908154701753](https://img.kuizuo.cn/image-20200908154701753.png)
+
+### 右クリックから CMD を開く
+
+最終的な効果は、空白部分を右クリックすると「CMD を開く」が表示され、下の図のようになります。
+
+![image-20200908152557371](https://img.kuizuo.cn/image-20200908152557371.png)
+
+これを使うと、`cd` などの面倒な操作をせずに、そのフォルダで直接コマンドを入力できます。個人的にはぜひ設定しておくことをおすすめします。下のコードをコピーして `1.reg` ファイルを作成してください（ファイル名は何でも構いません。拡張子が reg であればOKです）。**必ず ANSI 形式で保存してください**。そうしないと、中国語が文字化けしてしまいます。ファイルを実行すると確認のダイアログが出ますが、安全なので心配はいりません。その後、空白部分を右クリックすると「打开 CMD」（CMD を開く）が表示されるので、クリックすると cmd ウィンドウが開きます。
+
+```shell
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\background\shell\cmd_here]
+
+@="打开 CMD"
+"Icon"="cmd.exe"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\background\shell\cmd_here\command]
+
+@="\"C:\\Windows\\System32\\cmd.exe\""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\shell\cmdPrompt]
+
+@="打开 CMD"
+"Icon"="cmd.exe"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\shell\cmdPrompt\command]
+
+@="\"C:\\Windows\\System32\\cmd.exe\" \"cd %1\""
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\shell\cmd_here]
+
+@="打开 CMD"
+"Icon"="cmd.exe"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\shell\cmd_here\command]
+
+@="\"C:\\Windows\\System32\\cmd.exe\""
+```
+
+### 空白部分のメニュー
+
+開発ツールをインストールしたときに、うっかり `Open Folder as …` のようなチェックを入れてしまい、下の図のような状態になることがあります。
+
+![image-20200908115455647](https://img.kuizuo.cn/image-20200908115455647.png)
+
+ただ、そこまで長い項目は必要ない場合や、名前を短くしたい場合もあります。その場合も、もう一度レジストリを開きます。フォルダの空白部分を右クリックしたときに表示されるものなので（デスクトップもフォルダの一つで、パスは C:\Users\<ユーザー名>\Desktop です）、対応するレジストリの場所は `コンピューター\HKEY_CLASSES_ROOT\Directory\Background\shell` です（またはキーワードで検索してください）。そこまで移動すると、下の図のような画面になります。
+
+![image-20200908151408855](https://img.kuizuo.cn/image-20200908151408855.png)
+
+図の枠で囲まれた IDEA が見えるでしょうか。これは IDEA のインストール時にユーザー向けに追加された右クリックメニューです。今後この右クリックメニューが不要なら、フォルダごと削除してしまえば済みます（場所を大きく取るので、削除をおすすめします）。ただ、削除せずに右クリックメニューの名前だけを変えて短くしたい場合は、既定の値を右クリックし、「変更」を選んで新しい名前を入力します。その下の Icon はアイコンのパス、つまり exe のパスです。アイコンが表示されなくなった場合は、たいていここが原因です。
+
+さらに `IntelliJ IDEA` の下には command フォルダもあります。このフォルダには既定の値が一つだけあり、実行するコマンドが入っています。ファイルパスの後ろに `"%V"` というパラメータが付いていることもあります。これは、引数なしで起動されたときに作業ディレクトリを使う、という意味です。詳しくは [Windows のヘルプ](https://superuser.com/questions/136838/which-special-variables-are-available-when-writing-a-shell-command-for-a-context) をご覧ください。
+
+### フォルダを右クリックしたときのメニュー
+
+![image-20200908152835802](https://img.kuizuo.cn/image-20200908152835802.png)
+
+上の手順で、あの長すぎる `Open Folder as IntelliJ IDEA Project` のフォルダを削除したつもりでしたが、驚いたことに、フォルダを右クリックしても同じ項目が出てきます。仕方がないので、場所を探してみましょう。パスは `コンピューター\HKEY_CLASSES_ROOT\Directory\shell` です。なんと、さきほどのフォルダのすぐ下にありました。見つかった場所は次のとおりです。
+
+![image-20200908153930520](https://img.kuizuo.cn/image-20200908153930520.png)
+
+あとは前の手順と同じです。ここでは名前を変えるだけです。もっと短い名前、`Open Folder as IDEA` にしました。結果は次のとおりです。
+
+![image-20200908154339744](https://img.kuizuo.cn/image-20200908154339744.png)
+
+### プログラムを右クリックしたときのメニュー
+
+ここまでの操作がわかれば、プログラムを右クリックしたときのメニューも同じ要領です。パス `コンピューター\HKEY_CLASSES_ROOT\*\shell\` に移動します。パスの図は次のとおりです。
+
+![image-20200908164515142](https://img.kuizuo.cn/image-20200908164515142.png)
+
+### 右クリックメニューを手動で新規追加する
+
+既存の右クリックメニューの見つけ方、変更・削除の方法がわかったところで、今度は手動で新しく追加してみましょう。
+
+`vscode` を使っている人にとっては、右クリックに「Code で開く」がないのは困りものです。vscode をインストールしたのに「Open with Code」が出てこない場合は、インストール時にその二つのオプションにチェックを入れていなかったということです。
+
+![20190530203030700](https://img.kuizuo.cn/20190530203030700.png)
+
+もちろん、「右クリックメニュー 追加 vscode」などで検索すれば、先ほどの「CMD を開く」のような操作方法が見つかります。ここでも対応するコードを載せておきますが、*VS Code のパスと右クリックメニューの名前は必ず変更してください*。また、バックスラッシュ（\）はすべて二重のバックスラッシュ（\\）に置き換えて、エスケープされないようにしてください。例えば右クリックメニューの名前が `Open with Code`、`Code.exe` のパスが `E:\VSCode\Code.exe` の場合は、`E:\\VSCode\\Code.exe` に変更します。ご自身のパスに合わせて変更してください。
+
+注意点として、下のパスの中には `Code.exe` の後ろに `\` が付いているものがあります。これは `"` をエスケープするためのものなので、削除しないでください。とはいえ、ここまで手間がかかるなら、いっそアンインストールして、その二つのオプションにチェックを入れて再インストールした方が早いかもしれません。
+
+同じように `1.reg` ファイルとして保存し、ダブルクリックして実行してください。
+
+```shell
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\*\shell\VSCode]
+@="Open with Code"
+"Icon"="E:\\VSCode\\Code.exe"
+
+[HKEY_CLASSES_ROOT\*\shell\VSCode\command]
+@="\"E:\\VSCode\\Code.exe" \"%1\""
+
+[HKEY_CLASSES_ROOT\Directory\shell\VSCode]
+@="Open with Code"
+"Icon"="E:\\VSCode\\Code.exe"
+
+[HKEY_CLASSES_ROOT\Directory\shell\VSCode\command]
+@="\"E:\\VSCode\\Code.exe\" \"%V\""
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode]
+@="Open with Code"
+"Icon"="E:\\VSCode\\Code.exe"
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\VSCode\command]
+@="\"E:\\VSCode\\Code.exe\" \"%V\""
+```
+
+手作業での方法も紹介しておきます。まずは GIF をご覧ください。
+
+![demo](https://img.kuizuo.cn/demo.gif)
+
+この GIF では VSCode を設定済みのため、操作を見せるために S を B に変えています。データは上で説明したものと同じです。通常は手動で追加する必要はありません。対応する `.reg` ファイルが用意されていることが多いので、ダブルクリックして実行するだけで済みます。
+
+## おまけ
+
+右クリックメニューには「カスタムフォルダー」という項目があり、ほとんど役に立ちません。レジストリで削除できます。
+
+#### 1. まずレジストリを開く
+
+#### 2. `コンピューター\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer` に移動する
+
+#### 3. 右クリックして「新規」→「DWORD (32 ビット) 値」を作成し、名前を `NoCustomizeWebView`、値を 1 にする
+
+![image-20200908163225915](https://img.kuizuo.cn/image-20200908163225915.png)
+
+#### 4. タスクマネージャーを開いて「Windows エクスプローラー」を見つけ、右クリックして「再起動」を選ぶ。再び開くと、右クリックメニューからカスタムフォルダーが消えています。
+
+![image-20200908163415434](https://img.kuizuo.cn/image-20200908163415434.png)
+
+## まとめ
+
+- フォルダの空白部分を右クリックしたときの対応ディレクトリは `コンピューター\HKEY_CLASSES_ROOT\Directory\Background\shell`
+
+- フォルダを右クリックしたときのディレクトリは `コンピューター\HKEY_CLASSES_ROOT\Directory\shell`
+
+- プログラムを右クリックしたときのディレクトリは `コンピューター\HKEY_CLASSES_ROOT\*\shell`
+
+- **項目を追加するか、変更するかは、人それぞれです。**

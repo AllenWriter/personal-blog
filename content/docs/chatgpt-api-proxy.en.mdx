@@ -1,0 +1,94 @@
+---
+title: "Building a ChatGPT API Relay in Three Steps"
+description: "Use Cloudflare Workers to forward requests to api.openai.com, so clients connect through a domain you bind yourself"
+---
+
+## Background
+
+ChatGPT is rare in that it is blocked in both directions: the product itself isn't offered to users in China, and even the web version was put on the blocklist almost as soon as it launched. To use it smoothly, you need an overseas card, an overseas account and an overseas IP all at once, and even the web version is still awkward.
+
+But it offers an API. One key is enough to call it. For people who know how to wrap things, you can package it into your own product. The remaining trouble is the network: calling `api.openai.com` from China is unstable and sometimes completely unreachable. HTTP requests can go through a proxy, and the API is no exception.
+
+I searched around and didn't find many suitable tutorials. The clearest one was in a GitHub project, so I organized its approach into a shorter path: [SnowfallC/chatgpt-api-worker-proxy](https://github.com/SnowfallC/chatgpt-api-worker-proxy).
+
+This article only covers setting up a relay for **yourself** with Cloudflare Workers. Don't treat someone else's personal proxy as a public service. The official entry point is still `https://api.openai.com/v1`, and below you replace it with a hostname you bind yourself.
+
+## How the Proxy Works
+
+First, host your domain on Cloudflare, then forward requests with Workers.
+
+- Workers are essentially backend functions. You don't have to buy a server just to receive requests.
+- Cloudflare has many nodes, and the hop to the Worker is usually not the bottleneck.
+- When this article was written, the free tier allowed 10,000 calls per day, which is plenty for personal use.
+- You can bind a custom domain, so the address looks like a proper API rather than `*.workers.dev`.
+
+## Prerequisites
+
+- Your own domain
+- A Cloudflare account
+- A bit of patience and hands-on ability
+
+## 1. Host Your Domain on Cloudflare
+
+Open [Cloudflare](https://www.cloudflare.com/), sign up, and follow the prompts on the page to add your domain and change the NS records. Cloudflare's official documentation covers this step clearly, so I won't go into it further.
+
+## 2. Create a Worker
+
+Go back to the Cloudflare home page and click "Create Worker." The wizard will push you to pick a template. Choose Hello World first, then change the code after you get in.
+
+Click "Deploy" once so that the Worker exists.
+
+### Modify the Worker Code
+
+After creating it, go in and change the logic so that the request's Host is rewritten to `api.openai.com`.
+
+```js
+const TELEGRAPH_URL = 'https://api.openai.com';
+
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request))
+})
+
+async function handleRequest(request) {
+  const url = new URL(request.url);
+  url.host = TELEGRAPH_URL.replace(/^https?:\/\//, '');
+  const modifiedRequest = new Request(url.toString(), {
+    headers: request.headers,
+    method: request.method,
+    body: request.body,
+    redirect: 'follow'
+  });
+  const response = await fetch(modifiedRequest);
+  const modifiedResponse = new Response(response.body, response);
+  modifiedResponse.headers.set('Access-Control-Allow-Origin', '*');
+  return modifiedResponse;
+}
+```
+
+After you've made the changes, click "Save and Deploy" in the upper right, then give the Worker a name you'll recognize later.
+
+## 3. Bind a Domain
+
+Open the domain you added. In the left sidebar, go to "Worker Routes," then click "Add Route."
+
+Pick a hostname for the proxy. In this demo, I bound `gptapi.wsyfin.com`, so the route is `gptapi.wsyfin.com/*`, pointing to the Worker you just created.
+
+In DNS, add an A record with the same name, set its content to `2.2.2.2`, and turn on the orange cloud. This IP is a placeholder. Once the orange cloud is on, Cloudflare takes over the traffic.
+
+## Verify the Request Works
+
+Send a request to `/v1/chat/completions` using **your own** bound hostname. Without a key, if you get an OpenAI error back, that means the Worker has reached the official entry point.
+
+That is indeed an error, but it's exactly the signal you want: the path is open, and it's still missing the Bearer token. In your terminal, replace the hostname with the one you bound, and replace `sk-********` with your own key. Don't write a real key into the article.
+
+```bash
+curl --location 'https://YOUR-HOSTNAME/v1/chat/completions' \
+--header 'Authorization: Bearer sk-********' \
+--header 'Content-Type: application/json' \
+--data '{
+   "model": "gpt-3.5-turbo",
+  "messages": [{"role": "user", "content": "鲁迅为什么暴打周树人？"}]
+ }'
+```
+
+Let's see how gpt-3.5-turbo from 2023 handles this question:

@@ -1,0 +1,129 @@
+---
+title: "Dify が動画生成に対応！AI 動画アプリの作り方つき"
+description: "Doubao の動画プラグインを使って、Dify でテキストから動画・画像から動画を生成するアプリを作る方法。インストール、認証、DSL のインポート、Chatflow での一から構築まで。"
+coverWord: "動画生成"
+---
+
+要点だけ知りたい方は、記事末尾の体験リンクへどうぞ。
+
+前置きは抜きにして、まずは完成品をご覧ください。
+
+![テキストから動画へのチャット例：「千軍万馬」と入力すると、拡張されたプロンプト、画像、動画が得られる](/docs/dify-video-plugin/demo-chat-army.png)
+
+アプリのチャット欄にテキストを入力するだけで、動画が出来上がります。一言だけの簡単な文章でも、自動的に詳しい動画用プロンプトに広げられてから生成されます。
+
+この記事では、テキストから動画を体験する方法と、自分で AI 動画生成アプリを作る方法を紹介します。
+
+- 画像から動画までのオールインワン：[https://udify.app/chat/18qSv1wysmRTsw34](https://udify.app/chat/18qSv1wysmRTsw34)
+- テキストから動画：[https://udify.app/chat/y3eBFyaxNJkXDlca](https://udify.app/chat/y3eBFyaxNJkXDlca)
+- 画像から動画（PNG をアップロード）：[https://udify.app/workflow/YY6EdT3ztLfvQiKY](https://udify.app/workflow/YY6EdT3ztLfvQiKY)
+
+生成例（元の WeChat 記事に埋め込まれていた動画のため、ここではカバー画像を残しています。動きのある完全な効果は体験リンクからご覧ください）：
+
+1. 少女と狐（テキストから動画）
+
+![少女と狐のテキストから動画のカバー画像](/docs/dify-video-plugin/video-cover-girl-fox.webp)
+
+2. 千軍万馬が駆けつける（テキストから動画）
+
+![千軍万馬が駆けつけるテキストから動画のカバー画像](/docs/dify-video-plugin/video-cover-army-charge.webp)
+
+3. 王と飛行機（画像から動画）
+
+![王と飛行機の画像から動画のカバー画像](/docs/dify-video-plugin/video-cover-king-plane.webp)
+
+4. 古代の戦馬（画像から動画）
+
+![古代の戦馬の画像から動画のカバー画像](/docs/dify-video-plugin/video-cover-warhorse.webp)
+
+画像から動画までのワークフロー画面のイメージ：
+
+![画像から動画のワークフロー：画像をアップロードして実行すると MP4 が得られる](/docs/dify-video-plugin/demo-img2video-workflow.png)
+
+複雑な登録や認証は必要ありません。あとは想像力を働かせてください。
+
+## 仕組み
+
+この三つのアプリはすべて Dify で作られています。その中心にあるのが、Dify の動画生成プラグインです。
+
+Dify をご存じない方は、AI アプリの遊び場だと思ってください。レゴブロックを組み立てるように、アプリを組み上げられます。公式サイト：[https://dify.ai/](https://dify.ai/)
+
+![Dify の公式サイトとワークフローのプレビュー](/docs/dify-video-plugin/dify-homepage.png)
+
+以下が再現するための完全な手順です。所要時間は約 3 分です。
+
+### 1. Dify に登録してログインする
+
+[https://cloud.dify.ai/](https://cloud.dify.ai/) を開き、メールアドレスで登録してください。右上で言語を切り替えられます。オープンソースのコミュニティ版をインストールすることもできます。
+
+![cloud.dify.ai の右上で言語を切り替える](/docs/dify-video-plugin/register-language-switch.png)
+
+### 2. 動画プラグインをインストールし、認証を完了する
+
+Dify 自体は動画モデルではありません。動画の生成には外部のプラグインを使います。
+
+右上の「プラグイン」→「Explore Marketplace」を選び、「video」を検索して **Doubao Image and Video Generator** を見つけてください。機能は Doubao がベースになっています。
+
+![Marketplace で「video」を検索し、Doubao Image and Video Generator を見つける](/docs/dify-video-plugin/marketplace-search-video.png)
+
+インストール後、ご自身の API キーを入力して認証を完了してください。キーを資料に書いたり、リポジトリにコミットしたりしないよう注意してください。
+
+![プラグインの認証パネル：Volcengine の API キーを入力する](/docs/dify-video-plugin/plugin-authorization.png)
+
+### 3. アプリを作成する
+
+プラットフォームに登録したら、アプリを作成し、そこに動画生成を追加する必要があります。
+
+#### 3.1 既存のアプリをコピーする
+
+Dify のアプリは内部的には DSL で定義されています。Web 画面で「DSL ファイルをインポート」を選び、リンクを貼り付けてください。
+
+![DSL ファイルのインポートダイアログ](/docs/dify-video-plugin/import-dsl-dialog.png)
+
+- テキストから動画：[https://r2.xmsex.net/2025/06/07cd66a9979953c29475dd34dd8663bf.yml](https://r2.xmsex.net/2025/06/07cd66a9979953c29475dd34dd8663bf.yml)
+- 画像から動画までのオールインワン：[https://r2.xmsex.net/2025/06/3334f9aed0fd9dbe00b1872bf931184c.yml](https://r2.xmsex.net/2025/06/3334f9aed0fd9dbe00b1872bf931184c.yml)
+- 画像から動画：[https://r2.xmsex.net/2025/06/6b76198e75d363debeb065bc74f1160d.yml](https://r2.xmsex.net/2025/06/6b76198e75d363debeb065bc74f1160d.yml)
+
+インポートが成功すると、次のようなアプリ画面が表示されます。
+
+![インポート成功後のアプリ画面](/docs/dify-video-plugin/imported-app-ui.png)
+
+#### 3.2 一から作る
+
+空白のアプリを作成し、Chatflow を選んで名前と説明を入力してください。
+
+![空白の Chatflow アプリを作成する](/docs/dify-video-plugin/create-chatflow.png)
+
+ツールノードを追加し、Doubao Generator を選びます。目的の効果に応じて、テキストから画像、テキストから動画、画像から動画のいずれかを選んでください。
+
+![ツールノードを追加して Doubao Generator を選ぶ](/docs/dify-video-plugin/add-doubao-tool.png)
+
+各ツールノードには既定の入出力があります。テキストから動画の場合、入力はプロンプト、出力はプラグインが生成した動画です。
+
+![テキストから動画のツールノードの入出力パラメーター](/docs/dify-video-plugin/tool-io-params.png)
+
+私は入力を、前段の LLM の出力につなげています。ユーザーの入力するプロンプトは詳しくないことが多いため、先にモデルに詳細な動画用プロンプトへ広げてもらい、それを生成ノードに渡すのです。
+
+![LLM で広げたプロンプトを動画生成ノードにつなぐ](/docs/dify-video-plugin/llm-prompt-expand.png)
+
+このプラグインは Agent ノードの中でも使えます。
+
+![Agent ノードで動画プラグインを使う](/docs/dify-video-plugin/agent-node-usage.png)
+
+ワークフローがまだよくわからない方は、先に [Dify Workflow](https://docs.dify.ai/zh-hans/guides/workflow/readme) をご覧ください。
+
+## まとめ
+
+以前は Dify で動画を生成する場合、多くは HTTP ノードで外部 API を呼び出していました。動くにはしても、スマートとは言えず、動画を作りたい人は誰でも設定し直す必要がありました。これは共通のニーズなので、API キーを入力するだけで使えるプラグインにしたほうが良いと考えました。
+
+![プラグインのソースコードと Marketplace のカードのイメージ](/docs/dify-video-plugin/plugin-source-promo.png)
+
+プラグインのソースコード：[AllenWriter/doubao-image-and-video-generator](https://github.com/AllenWriter/doubao-image-and-video-generator)
+
+開発ドキュメント：[Getting started with Dify plugins](https://docs.dify.ai/plugin-dev-en/0111-getting-started-dify-plugin)
+
+Dify で動画生成を試してみたい方や、自分のプラグインを作りたいけれど何から始めればよいかわからない方は、お気軽に WeChat でご相談ください。
+
+![作者の WeChat の QR コード](/docs/dify-video-plugin/contact-wechat-qr.webp)
+
+原文：[https://mp.weixin.qq.com/s/obqH8fliSfFIJC0yH7dqvg](https://mp.weixin.qq.com/s/obqH8fliSfFIJC0yH7dqvg)

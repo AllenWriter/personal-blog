@@ -1,0 +1,309 @@
+---
+title: "Windows Terminal のカスタマイズ"
+description: "Windows Terminal と Oh My Posh で PowerShell を見た目よく整えます。テーマ設定も掲載しています。"
+coverWord: "ターミナル"
+---
+
+![image-20210527065050479](https://img.kuizuo.cn/image-20210527065050479.png)
+
+要するに PowerShell のコマンドウィンドウを見た目よくするだけの話です。カレントディレクトリの言語環境、タグ、時刻などを表示することもできます（ちなみにこの記事は朝6時40分ごろに書いています）。ついでに言うと、Python がもう 3.9.5 まで出ていたのには驚きました。
+
+## インストール
+
+Microsoft Store で Windows Terminal を検索し、インストールをクリックします。
+
+Win + R を押して `wt` と入力すると、Terminal が起動します。
+
+または、フォルダの何もないところで右クリックし、`Open in Windows Terminal` を選びます。
+
+ただし、初期設定では背景が真っ黒です。設定ファイルを開いて変更しましょう。
+
+![image-20210527070628394](https://img.kuizuo.cn/image-20210527070628394.png)
+
+profiles.list の下には、それぞれのターミナルが並んでいます。初期状態では、Windows PowerShell、Command Prompt、Azure Cloud Shell があります。
+
+ここでは主に Windows PowerShell を最適化します。
+
+### PowerShell の変更
+
+以下は私の設定ファイルです。
+
+```
+{
+"acrylicOpacity": 0.69999999999999996,
+"commandline": "powershell.exe -nologo",
+"fontFace": "JetBrainsMono NF",
+"fontSize": 10,
+"guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+"hidden": false,
+"name": "Windows PowerShell",
+"useAcrylic": true
+},
+```
+
+- useAcrylic: `true` すりガラス効果です。背景に画像を使う場合は、すりガラスは使わないほうがよいです。
+- acrylicOpacity: `0.7` 透明度です。
+- fontFace: `JetBrainsMono NF` フォントです。ここでは JetBrains のフォントを使っています。強くおすすめします。
+- fontSize: `10` フォントサイズです。
+
+[フォントのダウンロード](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts)。ただし、ダウンロードには海外サイトへの接続環境（VPN など）が必要と思われます。Windows 用の .ttf をダウンロードして、ダブルクリックでインストールします。
+
+### モジュールのダウンロード
+
+**管理者**として PowerShell を開き、次のコマンドを入力します。
+
+グループの権限を設定しておかないと、必要なモジュールをインストールできません。
+
+```shell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+`oh-my-posh` と `posh-git` のダウンロードにも、おそらく VPN が必要です。そうしないと、ダウンロードできない可能性が高いです。
+
+```shell
+Install-Module oh-my-posh -Scope CurrentUser
+Install-Module posh-git -Scope CurrentUser
+Install-Module Get-ChildItemColor -Scope CurrentUser
+```
+
+確認が出たら、はい（Y）または すべて（A）を選択します。
+
+### テーマのインストール
+
+ダウンロードが終わったら、次のコマンドを入力してテーマをプレビューします。
+
+```shell
+Get-PoshThemes
+```
+
+![image-20210527071827101](https://img.kuizuo.cn/image-20210527071827101.png)
+
+上のテーマの中には、目立たないウォーターマークのような文字が混ざっているものもあるようです。
+
+一時的にテーマを切り替えるには、次のコマンドを使います。
+
+```shell
+Set-PoshPrompt jandedobbeleer
+```
+
+今の私の設定に少し似ています（当時、jandedobbeleer のテーマをベースに改造したからです）。ただし、これは一時的なテーマです。テーマファイルを変更する必要があり、パスは一般的に `C:\Users\用户名\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1` です。
+
+または、次のコマンドを入力して開きます。
+
+```
+$profile
+if (!(Test-Path -Path $PROFILE )) { New-Item -Type File -Path $PROFILE -Force }
+notepad $PROFILE
+```
+
+以下のコードを追加して保存し、Terminal を再起動すれば有効になります。
+
+```shell
+Import-Module Get-ChildItemColor
+$env:PYTHONIOENCODING="utf-8"
+Import-Module posh-git
+Import-Module oh-my-posh
+
+$DefaultUser = 'kuizuo'
+# Set theme
+Set-PoshPrompt jandedobbeleer
+Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+```
+
+### テーマの変更
+
+公式のプリセットテーマでは満足できなかったので、公式ドキュメントを読みに行きました。[Introduction | Oh my Posh](https://ohmyposh.dev/docs/)
+
+まず、公式テーマのあるパスは `C:\Users\用户名\Documents\WindowsPowerShell\Modules\oh-my-posh\3.144.0\themes` です。
+
+`themes` ディレクトリに `xxxx.omp.json` という新しいファイルを作成します。例えば `kuizuo.omp.json` です。
+
+私は jandedobbeleer のテーマをベースに変更したので、少し似ています。ここでは私のテーマファイルの設定を載せておきます。具体的なパラメータは対応する公式ドキュメントを参照してください。ここでは詳しくは説明しません。
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "type": "os",
+          "style": "diamond",
+          "foreground": "#ffffff",
+          "background": "#3A86FF",
+          "leading_diamond": "\uE0B6"
+        },
+        {
+          "type": "session",
+          "style": "powerline",
+          "foreground": "#ffffff",
+          "background": "#3A86FF",
+          "properties": {
+            "postfix": " ",
+            "display_host": false
+          }
+        },
+        {
+          "type": "git",
+          "style": "powerline",
+          "powerline_symbol": "",
+          "foreground": "#193549",
+          "background": "#fffb38",
+          "properties": {
+            "display_stash_count": true,
+            "display_upstream_icon": true,
+            "status_colors_enabled": true,
+            "local_changes_color": "#ff9248",
+            "ahead_and_behind_color": "#f26d50",
+            "behind_color": "#f17c37",
+            "ahead_color": "#89d1dc",
+            "stash_count_icon": "\uF692 "
+          }
+        },
+        {
+          "type": "node",
+          "style": "powerline",
+          "powerline_symbol": "\uE0B0",
+          "foreground": "#ffffff",
+          "background": "#6CA35E",
+          "properties": {
+            "prefix": " \uE718 "
+          }
+        },
+        {
+          "type": "go",
+          "style": "powerline",
+          "powerline_symbol": "",
+          "foreground": "#111111",
+          "background": "#8ED1F7",
+          "properties": {
+            "prefix": " \uE626 ",
+            "display_version": true
+          }
+        },
+        {
+          "type": "python",
+          "style": "powerline",
+          "powerline_symbol": "",
+          "foreground": "#111111",
+          "background": "#FFDE57",
+          "properties": {
+            "prefix": " \uE235 ",
+            "display_version": true,
+            "display_mode": "files",
+            "display_virtual_env": false
+          }
+        },
+        {
+          "type": "path",
+          "style": "powerline",
+          "powerline_symbol": "\uE0B0",
+          "foreground": "#ffffff",
+          "background": "#61AFEF",
+          "properties": {
+            "prefix": " \uE5FF ",
+            "style": "full"
+          }
+        },
+        {
+          "type": "exit",
+          "style": "powerline",
+          "powerline_symbol": "\uE0B0",
+          "foreground": "#ffffff",
+          "background": "#ff8080",
+          "properties": {
+            "prefix": " \uE20F"
+          }
+        }
+      ]
+    },
+    {
+      "type": "rprompt",
+      "segments": [
+        {
+          "type": "ytm",
+          "style": "powerline",
+          "powerline_symbol": "\uE0B2",
+          "invert_powerline": true,
+          "foreground": "#111111",
+          "background": "#1BD760",
+          "properties": {
+            "prefix": " \uF167 ",
+            "paused_icon": " ",
+            "playing_icon": " "
+          }
+        },
+        {
+          "type": "battery",
+          "style": "powerline",
+          "invert_powerline": true,
+          "powerline_symbol": "\uE0B2",
+          "foreground": "#ffffff",
+          "background": "#f36943",
+          "properties": {
+            "battery_icon": "",
+            "discharging_icon": " ",
+            "charging_icon": " ",
+            "charged_icon": " ",
+            "color_background": true,
+            "charged_color": "#4caf50",
+            "charging_color": "#40c4ff",
+            "discharging_color": "#ff5722",
+            "postfix": " "
+          }
+        },
+        {
+          "type": "time",
+          "style": "diamond",
+          "invert_powerline": true,
+          "leading_diamond": "\uE0B2",
+          "trailing_diamond": "\uE0B4",
+          "background": "#2e9599",
+          "foreground": "#111111",
+          "properties": {
+            "time_format": "15:04:05",
+            "prefix": "<#000000> \uf64f </>"
+          }
+        }
+      ]
+    }
+  ],
+  "final_space": true
+}
+```
+
+そのうえで、テーマを設定するコマンドをテーマ名に変更します。例えば
+
+```shell
+ Set-PoshPrompt kuizuo
+```
+
+これで、あなたの PowerShell も私のものと同じになります。
+
+### Git Bash の追加
+
+ここでの `E:/Git` は私の Git のインストール先です。ご自身の環境に合わせて変更してください。
+
+```json
+{
+  "hidden": false,
+  "name": "Git Bash",
+  "commandline": "E:/Git/bin/bash.exe -li",
+  "icon": "E:/Git/mingw64/share/git/git-for-windows.ico",
+  "startingDirectory": "%USERPROFILE%"
+}
+```
+
+## 最後に
+
+技術グループで、ターミナルを美しくカスタマイズしている人を見かけて、自分も試してみました。丸一晩かかりましたが、最終的にはかなり満足のいく仕上がりになりました。Windows デスクトップの見た目をまたいじるかどうかはわかりません。まあ、壁紙を変えるくらいにしておきましょうか。
+
+関連リンクもいくつか貼っておきます。
+
+[究極の見た目改善 posh + terminal – 翻车鱼 (shi1011.cn)](https://blog.shi1011.cn/other/957)
+
+[Windows ターミナルの概要 | Microsoft Docs](https://docs.microsoft.com/zh-cn/windows/terminal/)
+
+[Introduction | Oh my Posh](https://ohmyposh.dev/docs/)

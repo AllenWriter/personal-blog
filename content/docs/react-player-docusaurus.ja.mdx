@@ -1,0 +1,59 @@
+---
+title: "Docusaurusでreact-playerのコントロールを使うには？"
+description: "DocusaurusのMarkdownでReactPlayerを使って動画を埋め込むのは、iframeを並べるよりずっと手軽です。"
+---
+## はじめに
+
+Docusaurusフレームワークでmdファイルに動画を挿入する方法はたくさんあります。ただ、私が一番気に入っているのはReactPlayerコンポーネントです。このコンポーネントは、動画ファイルを直接指定できます。
+
+> この方法の元ネタはStack Overflowです。[元の記事はこちら](https://stackoverflow.com/questions/69179910/docusaurus-2-inclusion-of-a-video-file-in-a-markdown-file)。
+
+## react-playerのコントロールとは？
+
+ReactPlayerはReactコンポーネントで、React アプリケーションに動画を簡単に埋め込めます。YouTube、Vimeo、Dailymotion、SoundCloud、そしてファイル（mp4、ogg、webm）に対応しています。プログレッシブダウンロードにも対応しているので、大きなファイルでも読み込みながら再生できます。
+
+主な特徴は次のとおりです。
+
+- 複数のフォーマットに対応：YouTube、Facebook、Twitch、SoundCloud、Streamable、Vimeoなど主要な動画サイトのリンクに対応し、HLS、DASH形式の動画ストリームにも対応しています。
+- 簡単に使える：動画のリンクやストリームのアドレスを渡すだけで再生できます。
+- レスポンシブ対応：ラッパーを設定して、さまざまなサイズのプレーヤーに合わせられます。
+- 柔軟な設定：自動再生、ループ再生、コントロールバーの表示/非表示などを設定できます。
+- 軽量：サイズが小さく、Reactプロジェクトに簡単に組み込めます。
+- 充実したドキュメント：詳しい[英語のドキュメント](https://www.npmjs.com/package/react-player)とサンプルコードがあります。
+- オープンソースで無料：GitHubで公開されており、MITライセンスです。
+
+## 事前準備
+
+まず、プロジェクトにパッケージをインストールします：`npm install react-player`。次に、CSSファイルに以下のコードを追加します。
+
+```css
+// 引入 ReactPlayer
+.react-player {
+  width: 100% !important;
+  height: auto !important;
+}
+```
+
+## 使い始める
+
+動画を使いたいドキュメントの先頭に、インポート文 `import ReactPlayer from 'react-player'` を挿入します。通常は `---` の下に書きます。
+
+例：
+
+```md
+---
+title: xxxx
+description: xxxx
+---
+
+import ReactPlayer from 'react-player'
+
+## Introduction
+
+Your words.
+```
+
+あとは、ドキュメント内に `<ReactPlayer playing controls url='video.mp4' />` というコードを挿入すれば完了です。
+
+> **secondary**
+> `video.mp4` を実際の動画のパスに置き換えるのを忘れないでください。

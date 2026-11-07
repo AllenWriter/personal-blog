@@ -1,0 +1,309 @@
+---
+title: "Beautifying Windows Terminal"
+description: "Beautifying PowerShell with Windows Terminal + Oh My Posh, with theme configuration included."
+coverWord: "Terminal"
+---
+
+![image-20210527065050479](https://img.kuizuo.cn/image-20210527065050479.png)
+
+Really, this is just about making the PowerShell window look nicer. It can also show the language environment of the current directory, tags, the time (yes, this is an article I wrote around 6:40 in the morning), and so on. (Side note: I didn't expect Python to already be at 3.9.5.)
+
+## Installation
+
+Search for Windows Terminal in the Microsoft Store and click install.
+
+Press win + R and type `wt` to launch Terminal.
+
+Or right-click an empty area in a folder and choose `Open in Windows Terminal`.
+
+By default, though, the background is pure black. To change it, open the configuration file.
+
+![image-20210527070628394](https://img.kuizuo.cn/image-20210527070628394.png)
+
+Under profiles.list are the different terminals. By default there's Windows PowerShell, Command Prompt, and Azure Cloud Shell.
+
+I'm mainly optimizing Windows PowerShell here.
+
+### Changing PowerShell
+
+Here's my configuration file
+
+```
+{
+"acrylicOpacity": 0.69999999999999996,
+"commandline": "powershell.exe -nologo",
+"fontFace": "JetBrainsMono NF",
+"fontSize": 10,
+"guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+"hidden": false,
+"name": "Windows PowerShell",
+"useAcrylic": true
+},
+```
+
+- useAcrylic: `true` frosted glass effect. If you're using a background image, don't use the frosted glass effect.
+- acrylicOpacity: `0.7` transparency
+- fontFace: `JetBrainsMono NF` font. I'm using JetBrains' font here, and I strongly recommend it.
+- fontSize: `10` font size
+
+[Font download](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts). You'll probably need a VPN to download it, though. Download the Windows .ttf file and double-click it to install.
+
+### Installing modules
+
+Open PowerShell as **administrator** and enter the following command.
+
+This sets the group permissions; without it, the required modules can't be installed.
+
+```shell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+To download `oh-my-posh` and `posh-git`, you'll probably also need a VPN, otherwise the download will most likely fail.
+
+```shell
+Install-Module oh-my-posh -Scope CurrentUser
+Install-Module posh-git -Scope CurrentUser
+Install-Module Get-ChildItemColor -Scope CurrentUser
+```
+
+When prompted, choose Yes (Y) or Yes to All (A).
+
+### Installing a theme
+
+After the download finishes, enter the command below to preview the themes.
+
+```shell
+Get-PoshThemes
+```
+
+![image-20210527071827101](https://img.kuizuo.cn/image-20210527071827101.png)
+
+Looks like some of the themes above have a barely visible watermark in them.
+
+To temporarily switch to a theme
+
+```shell
+Set-PoshPrompt jandedobbeleer
+```
+
+It looks a little like mine now (because I based mine on the jandedobbeleer theme). But this is only a temporary theme. To make it permanent, you need to edit the profile file, usually located at `C:\Users\用户名\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1`
+
+Or enter the commands below to open it
+
+```
+$profile
+if (!(Test-Path -Path $PROFILE )) { New-Item -Type File -Path $PROFILE -Force }
+notepad $PROFILE
+```
+
+Add the code below, save, and restart Terminal to apply it.
+
+```shell
+Import-Module Get-ChildItemColor
+$env:PYTHONIOENCODING="utf-8"
+Import-Module posh-git
+Import-Module oh-my-posh
+
+$DefaultUser = 'kuizuo'
+# Set theme
+Set-PoshPrompt jandedobbeleer
+Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+```
+
+### Modifying the theme
+
+The official preset themes didn't satisfy me, so I went to read the official documentation: [Introduction | Oh my Posh](https://ohmyposh.dev/docs/)
+
+First, the official themes live in this path: `C:\Users\用户名\Documents\WindowsPowerShell\Modules\oh-my-posh\3.144.0\themes`
+
+Create a new file named `xxxx.omp.json` in the `themes` directory, for example `kuizuo.omp.json`.
+
+I based mine on the jandedobbeleer theme, so it's similar. Here's my theme file. For the specific parameters, check the corresponding official documentation; I won't go into detail here.
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "type": "os",
+          "style": "diamond",
+          "foreground": "#ffffff",
+          "background": "#3A86FF",
+          "leading_diamond": "\uE0B6"
+        },
+        {
+          "type": "session",
+          "style": "powerline",
+          "foreground": "#ffffff",
+          "background": "#3A86FF",
+          "properties": {
+            "postfix": " ",
+            "display_host": false
+          }
+        },
+        {
+          "type": "git",
+          "style": "powerline",
+          "powerline_symbol": "",
+          "foreground": "#193549",
+          "background": "#fffb38",
+          "properties": {
+            "display_stash_count": true,
+            "display_upstream_icon": true,
+            "status_colors_enabled": true,
+            "local_changes_color": "#ff9248",
+            "ahead_and_behind_color": "#f26d50",
+            "behind_color": "#f17c37",
+            "ahead_color": "#89d1dc",
+            "stash_count_icon": "\uF692 "
+          }
+        },
+        {
+          "type": "node",
+          "style": "powerline",
+          "powerline_symbol": "\uE0B0",
+          "foreground": "#ffffff",
+          "background": "#6CA35E",
+          "properties": {
+            "prefix": " \uE718 "
+          }
+        },
+        {
+          "type": "go",
+          "style": "powerline",
+          "powerline_symbol": "",
+          "foreground": "#111111",
+          "background": "#8ED1F7",
+          "properties": {
+            "prefix": " \uE626 ",
+            "display_version": true
+          }
+        },
+        {
+          "type": "python",
+          "style": "powerline",
+          "powerline_symbol": "",
+          "foreground": "#111111",
+          "background": "#FFDE57",
+          "properties": {
+            "prefix": " \uE235 ",
+            "display_version": true,
+            "display_mode": "files",
+            "display_virtual_env": false
+          }
+        },
+        {
+          "type": "path",
+          "style": "powerline",
+          "powerline_symbol": "\uE0B0",
+          "foreground": "#ffffff",
+          "background": "#61AFEF",
+          "properties": {
+            "prefix": " \uE5FF ",
+            "style": "full"
+          }
+        },
+        {
+          "type": "exit",
+          "style": "powerline",
+          "powerline_symbol": "\uE0B0",
+          "foreground": "#ffffff",
+          "background": "#ff8080",
+          "properties": {
+            "prefix": " \uE20F"
+          }
+        }
+      ]
+    },
+    {
+      "type": "rprompt",
+      "segments": [
+        {
+          "type": "ytm",
+          "style": "powerline",
+          "powerline_symbol": "\uE0B2",
+          "invert_powerline": true,
+          "foreground": "#111111",
+          "background": "#1BD760",
+          "properties": {
+            "prefix": " \uF167 ",
+            "paused_icon": " ",
+            "playing_icon": " "
+          }
+        },
+        {
+          "type": "battery",
+          "style": "powerline",
+          "invert_powerline": true,
+          "powerline_symbol": "\uE0B2",
+          "foreground": "#ffffff",
+          "background": "#f36943",
+          "properties": {
+            "battery_icon": "",
+            "discharging_icon": " ",
+            "charging_icon": " ",
+            "charged_icon": " ",
+            "color_background": true,
+            "charged_color": "#4caf50",
+            "charging_color": "#40c4ff",
+            "discharging_color": "#ff5722",
+            "postfix": " "
+          }
+        },
+        {
+          "type": "time",
+          "style": "diamond",
+          "invert_powerline": true,
+          "leading_diamond": "\uE0B2",
+          "trailing_diamond": "\uE0B4",
+          "background": "#2e9599",
+          "foreground": "#111111",
+          "properties": {
+            "time_format": "15:04:05",
+            "prefix": "<#000000> \uf64f </>"
+          }
+        }
+      ]
+    }
+  ],
+  "final_space": true
+}
+```
+
+Then change the theme command to the theme name, for example
+
+```shell
+ Set-PoshPrompt kuizuo
+```
+
+After that, your PowerShell will look just like mine.
+
+### Adding Git Bash
+
+The `E:/Git` here is my Git installation path. Change it to match yours.
+
+```json
+{
+  "hidden": false,
+  "name": "Git Bash",
+  "commandline": "E:/Git/bin/bash.exe -li",
+  "icon": "E:/Git/mingw64/share/git/git-for-windows.ico",
+  "startingDirectory": "%USERPROFILE%"
+}
+```
+
+## Finally
+
+I saw someone in a tech group showing off terminal beautification, so I went and tinkered with it myself. I spent an entire evening on it, but in the end I'm pretty happy with the result. I don't know whether I'll bother beautifying the Windows desktop again. Nah, I'll just change the wallpaper.
+
+Some related links
+
+[Ultimate beautification with posh + terminal – 翻车鱼 (shi1011.cn)](https://blog.shi1011.cn/other/957)
+
+[Windows Terminal overview | Microsoft Docs](https://docs.microsoft.com/zh-cn/windows/terminal/)
+
+[Introduction | Oh my Posh](https://ohmyposh.dev/docs/)

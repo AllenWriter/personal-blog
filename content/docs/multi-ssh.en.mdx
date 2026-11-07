@@ -1,0 +1,101 @@
+---
+title: "How to Create Multiple SSH Keys on One Machine and Connect to GitHub"
+description: "Configure multiple SSH keys on one machine so you can connect to different GitHub accounts."
+---
+
+## The Problem
+
+When you have multiple GitHub accounts (personal and work) but only one SSH key pair on your machine, you run into trouble. For example, early on you may have generated an SSH key pair to pull company projects and added it to your company GitHub account. Later, when you want to pull repositories back under your personal account and try to add the same SSH key to your personal GitHub account, you get this message: `Key is already in use`.
+
+![](https://r2.xmsex.net/2024/09/25b5f6fa9c131f041572b5f62b94d5c0.png)
+
+## Cause and Solution
+
+GitHub checks whether an SSH key already exists under some GitHub account, and if it does, it won't add it again. So we can generate multiple SSH keys locally and add each one to a different GitHub account.
+
+### 1. Generate Multiple SSH Keys
+
+Open a terminal (Mac/Linux) or Git Bash (Windows). Run the following command, replacing your_email@example.com with your GitHub email address and key_name with a name you want to give this key:
+
+```bash
+ssh-keygen -t ed25519 -C "your_email@example.com" -f ~/.ssh/key_name
+```
+
+For example:
+
+```bash
+ssh-keygen -t ed25519 -C "work@example.com" -f ~/.ssh/github_work
+ssh-keygen -t ed25519 -C "personal@example.com" -f ~/.ssh/github_personal
+```
+
+### 2. Configure the SSH Config File
+
+Run the following command to create or edit the `~/.ssh/config` file:
+
+```bash
+nano ~/.ssh/config
+```
+
+Add the following content, creating one Host entry for each key:
+
+```bash
+Host github-work
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/github_work
+
+Host github-personal
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/github_personal
+```
+
+Save and close the file.
+
+### 3. Add the SSH Keys to the SSH Agent
+
+Start the SSH agent:
+
+`eval "$(ssh-agent -s)"`
+
+Add your SSH keys to the SSH agent:
+
+```bash
+ssh-add ~/.ssh/github_work
+ssh-add ~/.ssh/github_personal
+```
+
+### 4. Add the SSH Keys to Your GitHub Accounts
+
+For each GitHub account:
+
+Copy the public key content:
+`cat ~/.ssh/github_work.pub`
+# or
+`cat ~/.ssh/github_personal.pub`
+
+Log in to the corresponding GitHub account.
+
+Click your avatar in the upper right corner and select "Settings."
+
+In the left menu, click "SSH and GPG keys."
+
+Click "New SSH key" or "Add SSH key."
+
+In the "Title" field, enter a descriptive name for your key.
+
+Paste the copied public key content into the "Key" field.
+
+Click "Add SSH key."
+
+### 5. Test the Connection
+
+Test each SSH connection:
+
+`ssh -T github-work`
+
+`ssh -T github-personal`
+
+If it succeeds, you will see a welcome message.
+
+You can then pull code using the newly added GitHub SSH key.

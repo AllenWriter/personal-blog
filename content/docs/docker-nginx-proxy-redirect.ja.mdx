@@ -1,0 +1,43 @@
+---
+title: "Dockerでリダイレクトを簡単に設定するには？"
+description: "サービスを別のマシンへ移したら、Nginxのコンテナ一つで古いポートから新しいアドレスへ3秒で転送します。"
+---
+
+Dockerは本当に優れたツールです。多くのサービスがDockerでポート番号を一つ占有し、ポートマッピング＋[Nginx Proxy Manager](/docs/nginx-proxy-manager)を通じてサービスを提供しています。複雑なNginxの設定や、宝塔（BT Panel）のようなプラットフォームに悩まされる必要はありません。コマンド一行と設定一行で済んでしまいます。
+
+ところが最近、リダイレクトの問題にぶつかりました。サーバーAの4091ポートのサービスが停止し、サービスがサーバーBへ移行された場合、どうすればよいでしょうか。元のドメインをサーバーBに直接向けたいのですが、サーバーBのポートにはすでにリバースプロキシの設定が入っています。かといって、サーバーAの転送設定を直接変更することはできません。Webのリダイレクトで解決するしかありません。この場合、どう対処すればよいでしょうか。
+
+そういうときは、元の4091ポートでNginxのDockerサービスを起動し、リダイレクト用のHTMLファイルを用意するだけで十分です。
+
+## HTMLの設定
+
+まず、サーバーAに`redirect`というフォルダを作成し、その中に`HTML`のコードファイルを新規作成して、リダイレクトの機能を書きます。
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="3;url=https://your-new-web">
+    <title>Redirecting</title>
+</head>
+<body>
+    <p>xxx 因为什么原因要执行跳转，3s 后自动跳转</p>
+    <script>
+        setTimeout(function() {
+            window.location.href = "https://your-new-web";
+        }, 3000);
+    </script>
+</body>
+</html>
+```
+
+## Dockerの設定
+
+次に、この`HTML`ファイルがあるパスでNginxのDockerサービスを起動し、HTMLファイルをマウントします。コマンドは次のとおりです。
+
+```bash
+docker run --name redirect-container -v /root/redirect:/usr/share/nginx/html:ro -p 4091:80 -d nginx
+```
+
+これで完了です。`http://a-server-ip:4091`にアクセスして、ページが自動的に転送されるかどうかを確認してください！

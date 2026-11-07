@@ -1,0 +1,209 @@
+---
+title: "IDEA Basic Setup"
+description: "Common IntelliJ IDEA plugins, shortcuts, Live Templates, and how to import and export your settings."
+---
+I'm going through Java systematically (mainly backend and Android), so I can't avoid IDEA, the IDE that gets the highest praise in the industry.
+
+I hadn't really used any JetBrains tools before writing this. Mostly I ran things in VS Code with the CodeRun plugin. But VS Code struggles with large projects, especially Java projects. I'll be using GoLand, PyCharm and others later on, so it's worth writing down the basic JetBrains operations.
+
+PS: I've installed most JetBrains products on my local computer. The account I bought on Taobao last year on January 13 for activation has gone a whole year without much use 😂
+
+Here is [my config file](https://pan.kuizuo.cn/s/Bpf0). I'll explain how to import and export the config at the end.
+
+## Plugins
+
+### Theme and Icons
+
+`Atom Material Icons` sets file icons
+
+`Material Theme UI` sets the theme (I usually use the Atom One Dark Theme)
+
+`Rainbow Brackets` colors matching brackets
+
+---
+
+Honestly, IDEA has a lot of useful features built in, such as TODO and Git. Compared with VS Code plugins, some of these are even better in IDEA. (Anyone who has used its Git support says so.) I'll add other plugins only when I need them.
+
+## Shortcuts
+
+[IntelliJ IDEA common shortcuts (Zhihu)](https://zhuanlan.zhihu.com/p/61690346)
+
+### Ctrl
+
+- <kbd>Ctrl</kbd>+<kbd>D</kbd> Duplicate the current line, or duplicate the selection and insert it below the cursor
+
+- <kbd>Ctrl</kbd>+<kbd>W</kbd> Extend selection step by step. It selects the word or paragraph under the cursor, and each extra press expands the selection further
+
+- <kbd>Ctrl</kbd>+<kbd>E</kbd> Show the list of recently opened files
+
+- <kbd>Ctrl</kbd>+<kbd>N</kbd> Find a class file by typing its name
+
+- <kbd>Ctrl</kbd>+<kbd>G</kbd> Jump to a specific line in the current file
+
+- <kbd>Ctrl</kbd>+<kbd>F12</kbd> Show the structure of the current file in a popup. You can type directly in it to filter
+
+- <kbd>Ctrl</kbd>+<kbd>Left Click</kbd> Click the title of an open file to show its file path
+
+### Alt
+
+- <kbd>Alt</kbd>+<kbd>1,2,3…9</kbd> Show the tool window with that number. 1 is Project, the one I use most (essential)
+
+- <kbd>Alt</kbd>+<kbd>Enter</kbd> Show quick-fix options for the problem under the cursor. The results differ depending on where the cursor is
+
+- <kbd>Alt</kbd>+<kbd>Insert</kbd> Auto-generate code, such as getters and setters, constructors, toString(), and so on
+
+- <kbd>Alt</kbd>+<kbd>Left Arrow</kbd> Switch between subviews of the current tool window. For example, the Debug window has Output, Debugger and other subviews, and this shortcut switches between them
+
+- <kbd>Alt</kbd>+<kbd>Right Arrow</kbd> Switch between subviews of the current tool window, the same as above in the other direction
+
+- <kbd>Alt</kbd>+<kbd>Up Arrow</kbd> Jump the cursor to the previous method name in the current file
+
+- <kbd>Alt</kbd>+<kbd>Down Arrow</kbd> Jump the cursor to the next method name in the current file
+
+### Ctrl + Alt
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>L</kbd> Format code. Works on the current file or an entire package directory
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>T</kbd> Wrap the selected code in a block such as if, try, or while
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>O</kbd> Optimize imports. Works on the current file or an entire package directory
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>V</kbd> Quickly introduce a variable
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>S</kbd> Open IntelliJ IDEA's system settings
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Enter</kbd> Insert a blank line above the current line and move the cursor to it
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Left Arrow</kbd> Go back to where the previous action happened
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Right Arrow</kbd> Go forward to the place of the next action
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Up Arrow</kbd> In find mode, jump to the previous file with matches
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Down Arrow</kbd> In find mode, jump to the next file with matches
+
+### Ctrl + Shift
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> Redo (undo the undo)
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>W</kbd> Shrink selection step by step. It removes the selection around the word or paragraph under the cursor, and each extra press shrinks it further
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd> Create a unit test class for the current class, or choose an existing one if there already is one
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd> Copy the file's path on disk to the clipboard
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> Open the popup of recently copied content
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd> Show the popup listing recently edited files
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd> Find actions and settings
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>/</kbd> Block comment
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> Select from the cursor to the opening bracket at the top
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>]</kbd> Select from the cursor to the closing bracket at the bottom
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>+</kbd> Expand all code
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>-</kbd> Collapse all code
+
+- <kbd>F3</kbd> Select the next word
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F7</kbd> Highlight all occurrences of the selected text. Press Esc to clear the highlights
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Space</kbd> Smart code completion
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd> Complete the statement automatically, adding a semicolon at the end of the line
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Backspace</kbd> Go back to the place of the last edit
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Left Click</kbd> Put the cursor on a class variable and press this to jump straight to its definition in that class
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Left Arrow</kbd> In a code file, move the cursor to the start of the current word or Chinese phrase on the left, and select it
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Right Arrow</kbd> In a code file, move the cursor to the start of the current word or Chinese phrase on the right, and select it
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Up Arrow</kbd> Put the cursor on a method name and move the method above the previous one, to reorder methods
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Down Arrow</kbd> Put the cursor on a method name and move the method below the next one, to reorder methods
+
+### Alt + Shift
+
+- <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>Up Arrow</kbd> Move the current line up
+
+- <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>Down Arrow</kbd> Move the current line down
+
+### Debugging
+
+- <kbd>Shift</kbd>+<kbd>F9</kbd> Run in debug mode
+
+- <kbd>F7</kbd> Step into. If the current line with a breakpoint is a method call, enter the method body
+
+- <kbd>F8</kbd> Step over. If the current line with a breakpoint is a method call, don't enter the method body
+
+- <kbd>Shift</kbd>+<kbd>F8</kbd> Step out of the method body you stepped into
+
+- <kbd>F9</kbd> Resume the program. If there's another breakpoint further down, it stops at the next one
+
+### Customization
+
+In VS Code, I usually set up arrow keys, like this:
+
+- <kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>J</kbd> Move cursor left
+- <kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>K</kbd> Move cursor down
+- <kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>L</kbd> Move cursor right
+- <kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>I</kbd> Move cursor up
+- <kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>;</kbd> Move cursor to the end of the line, the same as the End key
+- <kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>H</kbd> Move cursor to the start of the line, the same as the Home key
+
+I set up the same thing in IDEA too.
+
+In settings, find Keymap, then search for the keywords up, down, left, right, home and end, and assign a shortcut to each one. If a shortcut conflicts with an existing one, a prompt asks whether to REMOVE or LEAVE it. Choose REMOVE. These are low-value function keys that can be safely overwritten. If you mind, you can skip this.
+
+Here are a few more shortcuts that I changed to match VS Code:
+
+- Rename `rename Shift+F6` ⇒ `F2`
+- Redo `Ctrl + Shift + Z` ⇒ `Ctrl + Y`
+- Open terminal `Alt + F12` ⇒ Ctrl + ` (based on how often I use the terminal)
+
+If you're used to VS Code shortcuts, you can also install the VSCode Keymap plugin to map IDEA's shortcuts to the VS Code ones. That lowers the cost of switching.
+
+## Other Operations
+
+### Generating Code Quickly
+
+Complete common code by typing an abbreviation or a suffix. Usually, you press Tab or Enter after typing it. Here are some of the most common:
+
+| Code         | Result                       |
+| ------------ | ---------------------------- |
+| psvm         | Generates a main method      |
+| .var         | Automatically declares a variable for an expression |
+| sout / .sout | Output: System.out.println() |
+| .if          | Generates an if statement    |
+| .for         | Generates a loop, the enhanced for loop by default |
+| .try         | Generates a try … catch      |
+
+You can find the matching templates for each language in Settings ⇒ Editor ⇒ Live Templates, and you can also create your own.
+
+![image-20220106052026798](https://img.kuizuo.cn/image-20220106052026798.png)
+
+### Changing the Maven Dependency Repository Location
+
+Maven normally stores downloaded dependencies in `C:\User\{user}\.m2\repository`. You can move them somewhere else using the setting shown below.
+
+![image-20220106052100190](https://img.kuizuo.cn/image-20220106052100190.png)
+
+## Importing and Exporting Settings
+
+Follow the steps below and import or export whatever you need.
+
+![image-20220616135757525](https://img.kuizuo.cn/image-20220616135757525.png)
+
+Export
+
+![image-20220616135810570](https://img.kuizuo.cn/image-20220616135810570.png)
+
+Import
+
+![image-20220616135847464](https://img.kuizuo.cn/image-20220616135847464.png)

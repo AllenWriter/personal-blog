@@ -1,0 +1,228 @@
+---
+title: "Gmailの一括メール送信の方法"
+description: "Gmail APIを使い、無料プラグインでは1日数十通までだった送信数を、公式の上限近くまで引き上げる方法。"
+---
+
+市販の一括メール送信ツールは、ほとんどが有料です。一方、無料のGoogleスプレッドシート連携プラグイン（Googleフォームと組み合わせてメールを送るタイプ）は、上限が50通程度です。Gmail APIの公式の上限は1日500通で、一般の人にはこれでも十分です。1つのアカウントから送りすぎるとリスク管理に引っかかりますが、50通では少なすぎます。Gmail APIをループで呼び出せば、1日最大500通までの一括送信を実現できます。
+
+さあ、始めましょう！
+
+## 目的
+
+目的のGmailアドレスにメールを自動で一括送信し、内容も自由にカスタマイズできるようにします。
+
+## Gmail APIを申請する
+
+Gmailを一括で送信するには、もちろんGoogleアカウントが必要です。まず[Google Cloud](https://console.cloud.google.com/)を有効化してから、下の図を参考に、[Gmail API](https://console.cloud.google.com/marketplace/product/google/gmail.googleapis.com)の有効化を申請してください。私の場合はすでに申請済みなので「管理」と表示されていますが、未申請のアカウントでは「有効にする」と表示されます。
+
+## 開発者アプリに権限を付与する
+
+APIキーを取得するだけでは不十分です。Googleのデータセキュリティポリシーにより、APIをスムーズに呼び出すには、開発者がAPIキーを作成し、OAuth 2.0クライアントを申請し、「同意画面」を設定する必要があります。
+
+### 同意画面を設定する
+
+まずは、いちばん簡単な同意画面の設定から始めましょう。ここでは「外部」を選択します。
+
+案内に従って必須項目を入力し、最後に「保存して続行」をクリックします。
+
+このアプリのテストユーザーに、自分自身を追加します。
+
+### APIキーを作成する
+
+ページ上の「APIキーを作成」をクリックします。
+
+そして、APIキーを控えておいてください。また、悪用を防ぐために、このキーの適用範囲を絞り込むことをおすすめします。たとえば、Gmail APIの呼び出しだけに使うように制限します。
+
+### OAuthクライアントIDを作成する
+
+ページ上の「OAuthクライアントIDを作成」をクリックします。
+
+アプリケーションの種類は「ウェブアプリケーション」を選択すれば大丈夫です。承認済みのリダイレクトURIには `http://localhost:8080/` を入力します。
+
+## 認証情報のJSONをダウンロードする
+
+ここまで終わると、Googleから認証情報の一覧が表示されます。ここで「JSONをダウンロード」をクリックし、ファイルをひとつのフォルダに保存してください。
+
+## メールプロジェクトを作成する
+
+このメールプロジェクトのフォルダ構成は次のとおりです。
+
+```text
+├── image-1.png # 邮件内图片
+├── image-2.png
+├── image-3.png
+├── new-email.html # 邮件代码
+├── pure.csv # 目标邮箱数据库
+├── requirements.txt # 环境依赖
+├── send.py # 核心脚本文件
+├── token.json # 上文从谷歌云下载的授权文件
+```
+
+ちょっと散らかって見えますか。大きく分けると、メール用の画像、メールのコード、コアとなるコード、送信先のメールアドレスのデータベースの4つです。
+
+### メールのコード
+
+メール内のスタイルは、基本的にはHTMLのコードです。いちばん簡単な方法は、Gmailの下書きをコピーして、[テキストをHTMLに変換するツール](http://www.unit-conversion.info/texttools/text-to-html/#data)に貼り付け、メールのソースコードを取得することです。
+
+```html
+<div>Dear , This is Missy,, the promotion manager of makeup TikTok Shop your-company.</div> <div> </div> <div>I'm your fan of tiktok,We like your videos . Would you like you to make videos to promote our products?</div> <div>You can get our free samples as well as commission.</div> <div>Here is the product: 1.Mini Small Ice Cube Trays :</div> <div><a href="https://example.com" target="_blank">https://example.com</a></div> <div></div> <div> </div> <div>2.Ice Cube Tray:</div> <div><a href="https://example.com" target="_blank">https://example.com</a></div> <div></div> <div> <div> <div>3.Square ice tray:</div> <div><strong><a href="https://example.com" target="_blank">https://example.com</a></strong></div> </div> <div> <div class="yj6qo ajU"> <div id=":n6" class="ajR" data-tooltip="隱藏展開的郵件內容"></div> </div> <div class="adL"> </div> </div> <div class="adL"> </div> </div> <div class="adL"> <div class="adm"> </div> <div class="im"> <div> </div> <div><strong>Commission: You will get 15%-20% of the total value of the products you promote</strong></div> <div>Please let me know if you would like to promote my product,Hope to hear from you....</div> <div><strong>The last,</strong></div> <div><strong>Best regards</strong></div> </div> </div>
+```
+VSCodeのプラグインを使えば、このHTMLのコードをプレビュー表示できます。
+
+### コアとなるPythonコード
+
+ここで、強力なPythonを呼び出しましょう。前置きはこのくらいにして、ソースコードをそのまま示します。
+
+```python
+import os
+import pickle
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+import base64
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+from email.utils import formataddr
+import csv
+
+# 获取当前脚本的路径
+current_path = os.path.dirname(os.path.abspath(__file__))
+
+# 设置网络代理
+os.environ['HTTP_PROXY'] = 'http://localhost:7890'
+os.environ['HTTPS_PROXY'] = 'http://localhost:7890'
+
+# OAuth 2.0 客户端 ID 和客户端密钥的文件路径
+CLIENT_SECRET_FILE = 'token.json'
+# Gmail API 的名称和版本
+API_NAME = 'gmail'
+API_VERSION = 'v1'
+# Gmail API 的授权范围
+SCOPES = ['https://mail.google.com/']
+
+creds = None
+# 如果有可用的 token.pickle 文件，就直接加载，不需要重新获取 OAuth2 的授权
+if os.path.exists('token.pickle'):
+    with open('token.pickle', 'rb') as token:
+        creds = pickle.load(token)
+# 如果没有可用的 Credentials，那就通过重新获取 OAuth2 的授权
+if not creds or not creds.valid:
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+    else:
+        flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
+        creds = flow.run_local_server(port=8080)
+    # 保存获取到的 credentials，下次程序启动时可以直接加载
+    with open('token.pickle', 'wb') as token:
+        pickle.dump(creds, token)
+
+# 创建 Gmail API 的 service 对象
+service = build(API_NAME, API_VERSION, credentials=creds)
+
+# 拼接 HTML 文件的路径
+html_file_path = os.path.join(current_path, 'new-email.html')
+
+# 读取 HTML 文件内容
+with open(html_file_path, 'r') as file:
+    html_content = file.read()
+
+# 读取目标邮箱列表
+target_emails = []
+csv_file_path = os.path.join(current_path, 'pure.csv')
+print("CSV 文件路径:", csv_file_path)
+
+with open(csv_file_path, 'r') as csvfile:
+    reader = csv.DictReader(csvfile)
+    print(reader.fieldnames)
+    for row in reader:
+        target_email = row['Target']
+        target_emails.append(target_email)
+        print(target_emails)
+
+# 发送邮件给每个目标邮箱
+for target_email in target_emails:
+
+    # 创建邮件内容
+    msg = MIMEMultipart()
+    msg['to'] = target_email  # 修改这里
+    msg['from'] = formataddr(("发件人姓名", "发件邮箱"))
+    msg['subject'] = "邮箱标题"
+
+    # 读取图片文件并创建图片附件
+    image_files = ['image-1.png', 'image-2.png', 'image-3.png']
+    for image_file in image_files:
+        image_path = os.path.join(current_path, image_file)
+        with open(image_path, 'rb') as file:
+            image_data = file.read()
+        image_attachment = MIMEImage(image_data)
+        image_attachment.add_header('Content-Disposition', 'attachment', filename=image_file)
+        image_attachment.add_header('Content-ID', f'<{image_file}>')  # 添加 Content-ID 头部
+        msg.attach(image_attachment)
+
+    # 将 HTML 内容转换为 MIMEText 对象并添加到邮件中
+    html_part = MIMEText(html_content, 'html')
+    msg.attach(html_part)
+
+    # 将邮件内容编码为 base64url
+    raw_message = base64.urlsafe_b64encode(msg.as_bytes())
+    raw_message = raw_message.decode()
+
+    # 创建一个可以通过 Gmail API 发送的邮件对象
+    message = service.users().messages().send(userId="me", body={"raw": raw_message})
+
+    # 发送邮件
+    try:
+        message.execute()
+    except HttpError as error:
+        print(f'An error occurred: {error}')
+
+# 更新 CSV 文件中的 Status 列为 Done
+
+csv_file_path = os.path.join(current_path, 'pure.csv')
+
+fieldnames = ['Target', 'Status']
+
+with open(csv_file_path, 'r') as csvfile:
+    reader = csv.DictReader(csvfile)
+    rows = list(reader)
+
+for row in rows:
+    row['Status'] = 'Done'
+
+with open(csv_file_path, 'w', newline='') as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(rows)
+```
+
+**依存環境：**
+
+このコードを動かすには、次の依存関係もインストールする必要があります。
+
+```txt
+# 清华源
+-i https://pypi.tuna.tsinghua.edu.cn/simple
+
+# 安装所需的库
+google_auth_oauthlib
+google-auth
+google-api-python-client
+
+# 安装命令 pip install -r requirements.txt
+```
+
+### 送信先メールのデータベース形式
+
+```csv
+Target,Status
+your@gmail.com,
+your@gmail.com,
+your@gmail.com,
+```
+
+## コードを実行する
+
+コードを実行すると、ブラウザが自動的に開き、Googleアカウントを選択する画面が表示されます。
+
+あとは、ログインと認可をひたすら進めるだけです。何も問題がなければ、プログラムは指定したメールアドレスに、一通ずつメールを送信していきます。まずは送信先のアドレスを自分のものに置き換えて、メールの見た目が期待どおりかをテストするのがおすすめです。問題がなければ、そのあとでお客様のアドレスに切り替えてください。

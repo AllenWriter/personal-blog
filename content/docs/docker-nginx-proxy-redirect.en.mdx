@@ -1,0 +1,43 @@
+---
+title: "How to Set Up Redirects Easily with Docker?"
+description: "After a service moves to a new machine, use one Nginx container to redirect the old port to the new address in 3 seconds."
+---
+
+Docker is a really powerful tool. Many services occupy a port number through Docker, and then provide service through port mapping + [Nginx Proxy Manager](/docs/nginx-proxy-manager). There's no need to fuss with complicated Nginx setups or control panels like BT Panel. One command and one line of configuration is all it takes.
+
+Recently, though, I ran into a redirect problem. Suppose the service on port 4091 of server A has stopped, and the service has been migrated to server B. What should you do? You want the original domain to point directly to server B. But server B's port already has a reverse proxy configuration, and you can't directly change the pointing configuration on server A. You have to solve it with a web redirect. So how should you handle this?
+
+In that case, you only need to start an Nginx Docker service on the original port 4091, and write a redirect HTML file.
+
+## HTML configuration
+
+First, create a folder called `redirect` on server A, and then create an `HTML` file inside it with the redirect logic written in.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="3;url=https://your-new-web">
+    <title>Redirecting</title>
+</head>
+<body>
+    <p>xxx 因为什么原因要执行跳转，3s 后自动跳转</p>
+    <script>
+        setTimeout(function() {
+            window.location.href = "https://your-new-web";
+        }, 3000);
+    </script>
+</body>
+</html>
+```
+
+## Docker configuration
+
+Next, start an Nginx Docker service with the path where this `HTML` file is located, and mount the HTML file into it. The command is as follows:
+
+```bash
+docker run --name redirect-container -v /root/redirect:/usr/share/nginx/html:ro -p 4091:80 -d nginx
+```
+
+That's it. Now try visiting `http://a-server-ip:4091` and see whether the page automatically redirects!

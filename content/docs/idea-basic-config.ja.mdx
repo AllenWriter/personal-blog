@@ -1,0 +1,209 @@
+---
+title: "IDEAの基本設定"
+description: "IntelliJ IDEAでよく使うプラグイン、ショートカット、Live Templates、設定のインポートとエクスポート。"
+---
+Javaを体系的に一通り学ぼうと思っていて（主にバックエンドとAndroid）、業界で評価の高いIDE、IDEAを使うことになりました。
+
+この記事を書く前は、JetBrainsのツールはほとんど使ったことがありませんでした。VS Codeで何でもこなせれば、CodeRunプラグインでコードを実行していました。でも大規模なプロジェクト、とくにJavaのプロジェクトでは、VS Codeでは少し厳しくなってきます。今後はGoLandやPyCharmなども使う予定なので、JetBrainsの基本操作を一度まとめておく必要があると思いました。
+
+ps: 手元のパソコンには、JetBrainsの製品をほぼ全部インストールしてあります。アクティベート用に去年の1月13日にタオバオで買ったアカウントは、丸一年ほとんど使っていません😂
+
+私の[設定ファイル](https://pan.kuizuo.cn/s/Bpf0)はこちらにあります。最後に設定のインポートとエクスポートについても説明します。
+
+## プラグイン
+
+### テーマとアイコン
+
+`Atom Material Icons`：ファイルのアイコンを設定します
+
+`Material Theme UI`：テーマを設定します（私は通常Atom One Darkテーマを使っています）
+
+`Rainbow Brackets`：括弧を虹色で表示します
+
+---
+
+正直に言うと、IDEAには便利な機能が最初から多く組み込まれています。たとえばTODOやGitなどです。これらは、VS Codeのプラグインで使うよりも使い心地が良いものさえあります。（Gitを使ったことがある人なら、みんなそう言います。）そのほかのプラグインは、必要になったときに追加していきます。
+
+## ショートカット
+
+[IntelliJ IDEA よく使うショートカット - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/61690346)
+
+### Ctrl
+
+- <kbd>Ctrl</kbd>+<kbd>D</kbd> カーソルのある行を複製します。または選択した内容を複製して、カーソル位置の下に挿入します
+
+- <kbd>Ctrl</kbd>+<kbd>W</kbd> コードブロックを段階的に選択します。カーソル位置の単語や段落を選択でき、続けて押すと、現在の選択範囲をさらに広げていきます
+
+- <kbd>Ctrl</kbd>+<kbd>E</kbd> 最近開いたファイルの一覧を表示します
+
+- <kbd>Ctrl</kbd>+<kbd>N</kbd> 入力した名前やクラス名からクラスファイルを検索します
+
+- <kbd>Ctrl</kbd>+<kbd>G</kbd> 現在のファイル内の指定した行へジャンプします
+
+- <kbd>Ctrl</kbd>+<kbd>F12</kbd> 現在のファイルの構造をポップアップで表示します。ポップアップ上でそのまま入力して絞り込めます
+
+- <kbd>Ctrl</kbd>+<kbd>左クリック</kbd> 開いているファイルのタブをクリックすると、そのファイルのパスが表示されます
+
+### Alt
+
+- <kbd>Alt</kbd>+<kbd>1,2,3…9</kbd> 対応する番号のツールウィンドウを表示します。1はProjectで、もっともよく使うもの（必須）です
+
+- <kbd>Alt</kbd>+<kbd>Enter</kbd> カーソル位置の問題に対して、クイックフィックスの候補を表示します。カーソルの位置によって表示される結果が変わります
+
+- <kbd>Alt</kbd>+<kbd>Insert</kbd> コードを自動生成します。オブジェクトのgetter/setter、コンストラクタ、toString()などです
+
+- <kbd>Alt</kbd>+<kbd>左矢印キー</kbd> 開いているウィンドウのサブビューを切り替えます。たとえばDebugウィンドウにはOutputやDebuggerなどのサブビューがあり、このショートカットで切り替えられます
+
+- <kbd>Alt</kbd>+<kbd>右矢印キー</kbd> 同じく、開いているウィンドウのサブビューを切り替えます（逆方向）
+
+- <kbd>Alt</kbd>+<kbd>上矢印キー</kbd> カーソルを現在のファイル内の一つ前のメソッド名の位置へ移動します
+
+- <kbd>Alt</kbd>+<kbd>下矢印キー</kbd> カーソルを現在のファイル内の一つ後のメソッド名の位置へ移動します
+
+### Ctrl + Alt
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>L</kbd> コードを整形します。現在のファイルとパッケージ全体に使えます
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>T</kbd> コードを選択し、if、try、whileなどのブロックで囲みます
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>O</kbd> インポートを最適化します。現在のファイルとパッケージ全体に使えます
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>V</kbd> 変数を素早く導入します
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>S</kbd> IntelliJ IDEAのシステム設定を開きます
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Enter</kbd> カーソルのある行の上に一行空けて、カーソルを新しい行に移動します
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>左矢印キー</kbd> 前の操作を行った場所へ戻ります
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>右矢印キー</kbd> 次の操作を行った場所へ進みます
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>上矢印キー</kbd> 検索モードで、前に検索したファイルへ移動します
+
+- <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>下矢印キー</kbd> 検索モードで、次に検索したファイルへ移動します
+
+### Ctrl + Shift
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> 取り消しの取り消し（やり直し）
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>W</kbd> コードブロックの選択を段階的に解除します。カーソル位置の単語や段落の選択を解除し、続けて押すと、選択範囲をさらに狭めていきます
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd> 現在のクラスの単体テストクラスを作成します。すでにテストクラスがある場合は、そこから選択できます
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd> 現在のファイルのディスク上のパスをクリップボードにコピーします
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> 最近コピーした内容を管理するポップアップを表示します
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd> 最近編集したファイルの一覧をポップアップで表示します
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>A</kbd> アクションや設定を検索します
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>/</kbd> ブロックコメント
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>[</kbd> カーソル位置から、上にある開き括弧の位置までを選択します
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>]</kbd> カーソル位置から、下にある閉じ括弧の位置までを選択します
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>+</kbd> すべてのコードを展開します
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>-</kbd> すべてのコードを折りたたみます
+
+- <kbd>F3</kbd> 次の単語を選択します
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F7</kbd> 選択したテキストをすべてハイライトします。Escを押すとハイライトが消えます
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Space</kbd> スマートなコード補完
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd> 文を自動的に完成させ、行末にセミコロンを追加します
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Backspace</kbd> 前回編集した場所へ戻ります
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>左クリック</kbd> クラス変数の上にカーソルを置いてこのショートカットを押すと、そのクラス内の定義へ直接移動します
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>左矢印キー</kbd> コードファイル上で、カーソルを現在の単語や中国語の文の左側の先頭へ移動し、同時にそれを選択します
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>右矢印キー</kbd> コードファイル上で、カーソルを現在の単語や中国語の文の右側の先頭へ移動し、同時にそれを選択します
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>上矢印キー</kbd> メソッド名にカーソルを置くと、そのメソッドを一つ前のメソッドの前へ移動し、メソッドの順序を入れ替えます
+
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>下矢印キー</kbd> メソッド名にカーソルを置くと、そのメソッドを一つ後のメソッドの後ろへ移動し、メソッドの順序を入れ替えます
+
+### Alt + Shift
+
+- <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>上矢印キー</kbd> カーソルのある行を上へ移動します
+
+- <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>下矢印キー</kbd> カーソルのある行を下へ移動します
+
+### デバッグ
+
+- <kbd>Shift</kbd>+<kbd>F9</kbd> デバッグモードで実行します
+
+- <kbd>F7</kbd> ステップイン。現在のブレークポイントの行がメソッドであれば、そのメソッドの中に入ります
+
+- <kbd>F8</kbd> ステップオーバー。現在のブレークポイントの行がメソッドであれば、そのメソッドの中には入りません
+
+- <kbd>Shift</kbd>+<kbd>F8</kbd> ステップインしたメソッドから抜けます
+
+- <kbd>F9</kbd> プログラムの実行を再開します。ただし、その下にさらにブレークポイントがあれば、次のブレークポイントで止まります
+
+### カスタマイズ
+
+VS Codeでは通常、カーソルキーを次のように設定しています。
+
+- <kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>J</kbd> カーソルを左に移動
+- <kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>K</kbd> カーソルを下に移動
+- <kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>L</kbd> カーソルを右に移動
+- <kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>I</kbd> カーソルを上に移動
+- <kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>;</kbd> カーソルを行末に移動。Endキーと同じ
+- <kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>H</kbd> カーソルを行頭に移動。Homeキーと同じ
+
+IDEAでも同じように設定します。
+
+設定画面でKeymapを開き、up、down、left、right、home、endというキーワードをそれぞれ検索して、ショートカットを割り当てます。ショートカットが既存のものと衝突すると、REMOVE（削除）かLEAVE（保持）かを聞かれます。REMOVEを選んでください。これらは使用頻度の低い機能キーなので、上書きしても問題ありません。気になる場合は無視してください。
+
+ほかにも、VS Codeに合わせて変更したショートカットがあります。
+
+- 名前の変更 `rename Shift+F6` ⇒ `F2`
+- やり直し `Ctrl + Shift + Z` ⇒ `Ctrl + Y`
+- ターミナルを開く `Alt + F12` ⇒ Ctrl + `（ターミナルの使用頻度に応じて）
+
+VS Codeのショートカットに慣れている場合は、VSCode Keymapプラグインを使えば、IDEAのショートカットをVS Codeのものに対応させることもできます。切り替えの負担が少し減ります。
+
+## その他の操作
+
+### コードを素早く生成する
+
+略語や接尾辞を入力して、よく使うコードを補完します。通常、入力したあとにTabかEnterを押せば完了です。よく使うものを以下に挙げます。
+
+| コード         | 結果                       |
+| ------------ | -------------------------- |
+| psvm         | main メソッドを生成         |
+| .var         | 式に対応する変数の宣言を自動生成 |
+| sout / .sout | 出力：System.out.println() |
+| .if          | if 文を生成                 |
+| .for         | ループを生成。デフォルトは拡張 for 文 |
+| .try         | try … catch を生成         |
+
+Settings ⇒ Editor ⇒ Live Templatesで、言語に応じた対応するテンプレートを生成できます。独自のテンプレートを作成することもできます。
+
+![image-20220106052026798](https://img.kuizuo.cn/image-20220106052026798.png)
+
+### Mavenの依存関係リポジトリの場所を変更する
+
+通常、Mavenでダウンロードした依存関係は`C:\User\{user}\.m2\repository`に保存されます。下の図の場所から、別の場所へ移動できます。
+
+![image-20220106052100190](https://img.kuizuo.cn/image-20220106052100190.png)
+
+## 設定のインポートとエクスポート
+
+次の図の手順に従って、必要に応じてインポートとエクスポートを行ってください。
+
+![image-20220616135757525](https://img.kuizuo.cn/image-20220616135757525.png)
+
+エクスポート
+
+![image-20220616135810570](https://img.kuizuo.cn/image-20220616135810570.png)
+
+インポート
+
+![image-20220616135847464](https://img.kuizuo.cn/image-20220616135847464.png)

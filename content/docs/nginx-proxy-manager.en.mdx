@@ -1,0 +1,55 @@
+---
+title: "Nginx Proxy Manager"
+description: "Using Nginx Proxy Manager to assign domain names to Docker ports, so you don't have to hand-write yet another layer of Nginx."
+---
+
+Nginx Proxy Manager is a handy reverse proxy tool. What does that mean? It's a web management panel that can assign a domain name to any service running on a port on your machine. Visiting the domain is the same as visiting the service on that port.
+
+Nginx Proxy Manager is often abbreviated to NPM. It's especially useful for Docker projects, and we'll be using it many times.
+
+## Prerequisites
+
+A VPS
+
+Docker preinstalled: `docker version > /dev/null || curl -fsSL get.docker.com | bash`
+
+Docker Compose preinstalled: `apt install docker-compose`
+
+A bit of basic Linux knowledge (your brain can't run install commands on its own)
+
+## Installation
+
+Create a `docker-compose.yml` file in any directory and fill in the following:
+
+```yml
+version: '3.8'
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+```
+
+Then run the install command:
+
+```bash
+docker-compose up -d
+
+# If using docker-compose-plugin
+docker compose up -d
+```
+
+Then visit the address: http://127.0.0.1:81/
+
+Once inside, change the account and password. The default account / password is:
+
+```text
+Email:    admin@example.com
+Password: changeme
+```

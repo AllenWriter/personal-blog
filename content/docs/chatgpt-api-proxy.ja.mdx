@@ -1,0 +1,94 @@
+---
+title: "3ステップでChatGPT APIの中継プロキシを構築する"
+description: "Cloudflare Workersでリクエストを api.openai.com へ転送し、自分で設定したドメインからアクセスできるようにする"
+---
+
+## 背景
+
+ChatGPTは、最近では珍しく「双方向のブロック」を受けているサービスです。製品そのものは中国のユーザーに提供されておらず、ウェブ版もリリースされるとすぐにブロックリストに入ってしまいました。スムーズに使うには、海外のクレジットカード、海外のアカウント、海外のIPアドレスがすべて必要で、それでもウェブ版はなお使いにくいままです。
+
+しかし、APIは提供されています。キーが一つあれば呼び出せます。ラップする仕組みを作れる人にとっては、それを自分のプロダクトとして包み込むこともできます。残る問題はネットワークです。中国から `api.openai.com` にアクセスすると不安定で、ときには完全につながらないこともあります。HTTPリクエストはプロキシ経由で送れますし、APIも例外ではありません。
+
+いろいろ探してみましたが、適したチュートリアルはあまり多くありませんでした。比較的わかりやすく書かれていたのはGitHubのプロジェクトで、その考え方を整理して、もっと短い手順にまとめました：[SnowfallC/chatgpt-api-worker-proxy](https://github.com/SnowfallC/chatgpt-api-worker-proxy)。
+
+本記事で扱うのは、Cloudflare Workersを使って **自分用** の中継を立てる方法だけです。他人の個人向けプロキシを公共のサービスのように扱わないでください。公式の入口は今も `https://api.openai.com/v1` のままです。以下では、その部分を自分で設定したホスト名に置き換えます。
+
+## プロキシの仕組み
+
+まずドメインをCloudflareで管理し、Workersでリクエストを転送します。
+
+- Workersは本質的にはバックエンドの関数です。リクエストを受けるためだけにサーバーを購入する必要はありません。
+- Cloudflareのノードは多く、Workerまでの一区間がボトルネックになることは通常ありません。
+- この記事を書いた時点では、無料枠は1日1万回の呼び出しで、個人利用には十分です。
+- カスタムドメインを設定できるので、`*.workers.dev` ではなく、正式なAPIらしいアドレスに見せられます。
+
+## 前提条件
+
+- 自分のドメイン
+- Cloudflareのアカウント
+- 少しの根気と、手を動かす力
+
+## 1. ドメインをCloudflareで管理する
+
+[Cloudflare](https://www.cloudflare.com/) を開いてアカウントを登録し、ページの指示に従ってドメインを追加し、NSを変更します。この手順は公式にも分かりやすく書かれているので、ここでは詳しく触れません。
+
+## 2. Workerを作成する
+
+Cloudflareのホーム画面に戻り、「Workerを作成」をクリックします。ウィザードではテンプレートの選択を求められます。まずは Hello World を選び、中に入ってからコードを書き換えてください。
+
+まず一度「デプロイ」をクリックして、このWorkerを存在させます。
+
+### Workerのコードを修正する
+
+作成が完了したら中に入り、リクエストのHostを `api.openai.com` に書き換えるロジックに変更します。
+
+```js
+const TELEGRAPH_URL = 'https://api.openai.com';
+
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request))
+})
+
+async function handleRequest(request) {
+  const url = new URL(request.url);
+  url.host = TELEGRAPH_URL.replace(/^https?:\/\//, '');
+  const modifiedRequest = new Request(url.toString(), {
+    headers: request.headers,
+    method: request.method,
+    body: request.body,
+    redirect: 'follow'
+  });
+  const response = await fetch(modifiedRequest);
+  const modifiedResponse = new Response(response.body, response);
+  modifiedResponse.headers.set('Access-Control-Allow-Origin', '*');
+  return modifiedResponse;
+}
+```
+
+変更したら、右上の「保存してデプロイ」をクリックし、あとで見分けがつく名前をWorkerに付けてください。
+
+## 3. ドメインを紐付ける
+
+先ほど追加したドメインを開きます。左側の「Workers ルート」から「ルートを追加」を選択します。
+
+プロキシ用のホスト名を決めます。今回のデモでは `gptapi.wsyfin.com` を紐付けたので、ルートは `gptapi.wsyfin.com/*` とし、先ほど作成したWorkerを指定します。
+
+DNSに同じ名前のAレコードを追加し、内容は `2.2.2.2` を入力して、オレンジのクラウド（プロキシ）を有効にします。このIPはプレースホルダーです。オレンジのクラウドを有効にすると、トラフィックはCloudflareが引き受けます。
+
+## リクエストが成功したか確認する
+
+**自分で紐付けたホスト名** を使って `/v1/chat/completions` にリクエストを送ります。キーを付けない場合でも、OpenAIのエラーが返ってくれば、Workerが公式の入口まで到達したことがわかります。
+
+これは確かにエラーですが、まさに求めていたシグナルです。経路は通っていて、あとはBearerが足りないだけなのです。ターミナルでホスト名を自分で紐付けたものに置き換え、`sk-********` を自分のキーに置き換えてください。実際のキーを記事に書き込まないでください。
+
+```bash
+curl --location 'https://YOUR-HOSTNAME/v1/chat/completions' \
+--header 'Authorization: Bearer sk-********' \
+--header 'Content-Type: application/json' \
+--data '{
+   "model": "gpt-3.5-turbo",
+  "messages": [{"role": "user", "content": "鲁迅为什么暴打周树人？"}]
+ }'
+```
+
+2023年の gpt-3.5-turbo がこの質問をどうごまかすか、見てみましょう：

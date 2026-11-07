@@ -1,0 +1,228 @@
+---
+title: "How to Bulk-Send Email with Gmail?"
+description: "Using the Gmail API, raise daily sending volume from the few dozen a free plugin allows to near the official limit."
+---
+
+Most bulk email tools on the market cost money, and the free Google Sheets-plus-email plugins usually cap out at around 50 emails. The official Gmail API quota is 500 emails a day, which is plenty for most people. Sending too many emails from one account will trigger risk controls, but 50 is too few. By calling the Gmail API in a loop, we can send up to 500 emails a day in bulk.
+
+Let's get started!
+
+## Core Goal
+
+Automatically send emails in bulk to target Gmail addresses, with fully customizable content.
+
+## Apply for the Gmail API
+
+To send Gmail in bulk, you obviously need a Google account. Go to [Google Cloud](https://console.cloud.google.com/) to activate it, then, following the screenshot below, apply to enable the [Gmail API](https://console.cloud.google.com/marketplace/product/google/gmail.googleapis.com). I've already applied, which is why mine shows "Manage"; accounts that haven't applied yet will show "Enable."
+
+## Grant Permissions to the Developer App
+
+Getting an API key alone isn't enough. Because of Google's data security policies, to call the API smoothly you need to create an API key, apply for an OAuth 2.0 client, and configure the "consent screen."
+
+### Configure the Consent Screen
+
+Let's start with the simplest step: configuring the consent screen. Choose "External" here.
+
+Fill in the required fields as prompted, then click "Save and Continue."
+
+Add yourself as a test user for this app.
+
+### Create an API Key
+
+Click "Create API Key" on the page.
+
+Then remember your API key. It's also a good idea to limit the key's scope so it can't be abused, for example by restricting it to Gmail API calls only.
+
+### Create an OAuth Client ID
+
+Click "Create OAuth Client ID" on the page.
+
+For application type, choose Web application. Set the authorized redirect URI to `http://localhost:8080/`.
+
+## Download the Credentials JSON
+
+When all of this is done, Google gives you a credentials table. Click "Download JSON" here, and save the file in a folder.
+
+## Create the Email Project
+
+The folder structure of this email project is:
+
+```text
+├── image-1.png # 邮件内图片
+├── image-2.png
+├── image-3.png
+├── new-email.html # 邮件代码
+├── pure.csv # 目标邮箱数据库
+├── requirements.txt # 环境依赖
+├── send.py # 核心脚本文件
+├── token.json # 上文从谷歌云下载的授权文件
+```
+
+Hehe, looks a bit messy? It's mainly divided into email images, email code, core code, and the target email database.
+
+### Email Code
+
+The styling in an email is essentially HTML. The simplest approach is to copy your Gmail draft, paste it into a [text-to-HTML converter](http://www.unit-conversion.info/texttools/text-to-html/#data), and get the email's source code.
+
+```html
+<div>Dear , This is Missy,, the promotion manager of makeup TikTok Shop your-company.</div> <div> </div> <div>I'm your fan of tiktok,We like your videos . Would you like you to make videos to promote our products?</div> <div>You can get our free samples as well as commission.</div> <div>Here is the product: 1.Mini Small Ice Cube Trays :</div> <div><a href="https://example.com" target="_blank">https://example.com</a></div> <div></div> <div> </div> <div>2.Ice Cube Tray:</div> <div><a href="https://example.com" target="_blank">https://example.com</a></div> <div></div> <div> <div> <div>3.Square ice tray:</div> <div><strong><a href="https://example.com" target="_blank">https://example.com</a></strong></div> </div> <div> <div class="yj6qo ajU"> <div id=":n6" class="ajR" data-tooltip="隱藏展開的郵件內容"></div> </div> <div class="adL"> </div> </div> <div class="adL"> </div> </div> <div class="adL"> <div class="adm"> </div> <div class="im"> <div> </div> <div><strong>Commission: You will get 15%-20% of the total value of the products you promote</strong></div> <div>Please let me know if you would like to promote my product,Hope to hear from you....</div> <div><strong>The last,</strong></div> <div><strong>Best regards</strong></div> </div> </div>
+```
+You can preview the HTML in VSCode with a plugin.
+
+### Core Python Code
+
+Now let's summon our powerful Python. Enough chatter, here's the source code:
+
+```python
+import os
+import pickle
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+import base64
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+from email.utils import formataddr
+import csv
+
+# 获取当前脚本的路径
+current_path = os.path.dirname(os.path.abspath(__file__))
+
+# 设置网络代理
+os.environ['HTTP_PROXY'] = 'http://localhost:7890'
+os.environ['HTTPS_PROXY'] = 'http://localhost:7890'
+
+# OAuth 2.0 客户端 ID 和客户端密钥的文件路径
+CLIENT_SECRET_FILE = 'token.json'
+# Gmail API 的名称和版本
+API_NAME = 'gmail'
+API_VERSION = 'v1'
+# Gmail API 的授权范围
+SCOPES = ['https://mail.google.com/']
+
+creds = None
+# 如果有可用的 token.pickle 文件，就直接加载，不需要重新获取 OAuth2 的授权
+if os.path.exists('token.pickle'):
+    with open('token.pickle', 'rb') as token:
+        creds = pickle.load(token)
+# 如果没有可用的 Credentials，那就通过重新获取 OAuth2 的授权
+if not creds or not creds.valid:
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+    else:
+        flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
+        creds = flow.run_local_server(port=8080)
+    # 保存获取到的 credentials，下次程序启动时可以直接加载
+    with open('token.pickle', 'wb') as token:
+        pickle.dump(creds, token)
+
+# 创建 Gmail API 的 service 对象
+service = build(API_NAME, API_VERSION, credentials=creds)
+
+# 拼接 HTML 文件的路径
+html_file_path = os.path.join(current_path, 'new-email.html')
+
+# 读取 HTML 文件内容
+with open(html_file_path, 'r') as file:
+    html_content = file.read()
+
+# 读取目标邮箱列表
+target_emails = []
+csv_file_path = os.path.join(current_path, 'pure.csv')
+print("CSV 文件路径:", csv_file_path)
+
+with open(csv_file_path, 'r') as csvfile:
+    reader = csv.DictReader(csvfile)
+    print(reader.fieldnames)
+    for row in reader:
+        target_email = row['Target']
+        target_emails.append(target_email)
+        print(target_emails)
+
+# 发送邮件给每个目标邮箱
+for target_email in target_emails:
+
+    # 创建邮件内容
+    msg = MIMEMultipart()
+    msg['to'] = target_email  # 修改这里
+    msg['from'] = formataddr(("发件人姓名", "发件邮箱"))
+    msg['subject'] = "邮箱标题"
+
+    # 读取图片文件并创建图片附件
+    image_files = ['image-1.png', 'image-2.png', 'image-3.png']
+    for image_file in image_files:
+        image_path = os.path.join(current_path, image_file)
+        with open(image_path, 'rb') as file:
+            image_data = file.read()
+        image_attachment = MIMEImage(image_data)
+        image_attachment.add_header('Content-Disposition', 'attachment', filename=image_file)
+        image_attachment.add_header('Content-ID', f'<{image_file}>')  # 添加 Content-ID 头部
+        msg.attach(image_attachment)
+
+    # 将 HTML 内容转换为 MIMEText 对象并添加到邮件中
+    html_part = MIMEText(html_content, 'html')
+    msg.attach(html_part)
+
+    # 将邮件内容编码为 base64url
+    raw_message = base64.urlsafe_b64encode(msg.as_bytes())
+    raw_message = raw_message.decode()
+
+    # 创建一个可以通过 Gmail API 发送的邮件对象
+    message = service.users().messages().send(userId="me", body={"raw": raw_message})
+
+    # 发送邮件
+    try:
+        message.execute()
+    except HttpError as error:
+        print(f'An error occurred: {error}')
+
+# 更新 CSV 文件中的 Status 列为 Done
+
+csv_file_path = os.path.join(current_path, 'pure.csv')
+
+fieldnames = ['Target', 'Status']
+
+with open(csv_file_path, 'r') as csvfile:
+    reader = csv.DictReader(csvfile)
+    rows = list(reader)
+
+for row in rows:
+    row['Status'] = 'Done'
+
+with open(csv_file_path, 'w', newline='') as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(rows)
+```
+
+**Dependencies:**
+
+To get this code running, you also need to install the following dependencies:
+
+```txt
+# 清华源
+-i https://pypi.tuna.tsinghua.edu.cn/simple
+
+# 安装所需的库
+google_auth_oauthlib
+google-auth
+google-api-python-client
+
+# 安装命令 pip install -r requirements.txt
+```
+
+### Target Email Database Format
+
+```csv
+Target,Status
+your@gmail.com,
+your@gmail.com,
+your@gmail.com,
+```
+
+## Run the Code
+
+After you run the code, a browser window pops up automatically, and you choose your Google account.
+
+Then it's just a matter of clicking through the login and authorization. If nothing goes wrong, the program will send emails one by one to the addresses you provided. It's best to first replace the target addresses with your own, check that the email's styling looks as expected, and only then switch to the client's addresses.

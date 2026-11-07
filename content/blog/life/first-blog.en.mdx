@@ -1,0 +1,135 @@
+---
+title: "Launch Note"
+description: "The launch note for the Feiniaoji docs center: why I used Docusaurus to build a site that combines a blog and documentation."
+---
+## Launch Note
+
+This is the first document in the Feiniaoji docs center.
+
+## Introduction
+
+This theme is built with Docusaurus. It combines Docusaurus's simplicity and ease of use with other open-source page design solutions. It supports MDX and React, is extensible and customizable, and comes with beautiful designs that combine a blog and documentation in one theme, giving you an excellent personal site solution. The theme is built with 🦖 [Docusaurus](https://docusaurus.io/) and released under the [MIT](./LICENSE) license.
+
+> This is a theme built with docusaurus, which combines the simplicity and ease of use of docusaurus with other open source page design solutions, supports MDX and React, is extensible and customizable, and also has a beautiful design, a blog and documentation integrated theme, providing you with an excellent personal page solution.
+
+## Directory Structure
+
+```bash
+├── blog                           # Blog
+│   ├── first-blog.md
+│   └── authors.yml                # Author information (multiple authors are supported)
+├── docs                           # Docs / notes
+│   └── stack
+│         └──introduction.md       # Introduction to notes
+├── data                           # Project / navigation / friend link data
+│   ├── friend.ts                  # Friend links
+│   ├── project.ts                 # Projects
+│   └── resource.ts                # Resource navigation
+├── i18n                           # Internationalization
+├── src
+│   ├── components                 # Components
+│   ├── css                        # Custom CSS
+│   ├── pages                      # Custom pages
+│   ├── plugin                     # Custom plugins
+│   └── theme                      # Custom theme components
+├── static                         # Static assets
+│   └── assets                     # Static files
+├── docusaurus.config.js           # Site configuration
+├── sidebars.js                    # Docs sidebar
+├── package.json
+└── yarn.lock                      # Recommended to keep, using yarn
+```
+
+## Installation
+
+Clone the repository and install the dependencies:
+```bash
+git clone https://github.com/wrm244/docusaurus-theme-zen.git ./blog
+cd blog
+yarn
+yarn start
+```
+
+Mirror repository in China (backup):
+```bash
+git clone https://gitee.com/wrm244/docusaurus-theme-zen.git ./blog
+cd blog
+yarn
+```
+
+Generate the static site code (./build):
+
+```bash
+yarn run build
+```
+
+Start the server:
+
+```bash
+yarn run serve
+```
+
+## Github Action CI
+This pipeline deploys to both a cloud server and GitHub Pages. To change it, edit the config file at ```/.github/workflows/ci.yml```
+
+```yml
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js v18.5
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.5.0'
+
+      #使用缓存
+      - name: Cache node modules
+        uses: actions/cache@v1
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn install
+
+      - name: Build Project
+        run: |
+          yarn run build
+
+      #使用 SSH 同步到云服务器
+      # - name: SSH Deploy
+      #   uses: easingthemes/ssh-deploy@v2.2.11
+      #   env:
+      #     SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      #     ARGS: '-avzr --delete'
+      #     SOURCE: './build'
+      #     REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+      #     REMOTE_USER: 'root'
+      #     TARGET: '/www/wwwroot/wrm244'
+
+      - name: Github page Deploy
+        uses: wrm244/docusaurus-deploy-action@master #
+        env:
+          PERSONAL_TOKEN: ${{ secrets.PERSION_TOKEN }} # GitHub personal account token
+          PUBLISH_REPOSITORY: wrm244/docusaurus-theme-zen # Public repository, format: GitHub username/repository name
+          BRANCH: gh-pages # Deployment branch
+          PUBLISH_DIR: ./build # Deploy the files in the ./build directory
+
+```
+
+## 📝License
+
+[MIT](./LICENSE) © Heshan 100%

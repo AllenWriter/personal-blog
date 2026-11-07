@@ -1,0 +1,77 @@
+---
+title: "MetaGPT Getting Started and Installation Notes"
+description: "MetaGPT is middleware, not a product. These notes cover Role, Trigger and Callback, plus a local installation that actually runs."
+---
+
+## Background
+
+These are my study notes from DeepWisdom's free public course [*MetaGPT Agent Development Primer*](https://deepwisdom.feishu.cn/docx/RJmTdvZuPozAxFxEpFxcbiPwnQf). I signed up. The repository is [geekan/MetaGPT](https://github.com/geekan/MetaGPT).
+
+## What is MetaGPT?
+
+AI agents were probably the liveliest application direction of 2024: you give it a one-line request and wait for the result. ChatGPT replies with the sentence you just said; an agent fills in the rest on its own. For example, if you say "I want to build 2048," it works out an implementation path by itself instead of just giving you a paragraph.
+
+You can think of MetaGPT as a toolbox with part of the implementation logic already written. You walk into a restaurant and order from a waiter, and the waiter talks to the large language model in the kitchen and brings the dish out once it's ready.
+
+**It is middleware, middleware, middleware.** It is not an AI product. The LLM in the kitchen is something you have to configure yourself. Without a model, nothing gets made. So I struggled with both the concepts and the installation.
+
+## The Three Elements of a Subscription Agent
+
+I was happy when I read the introductory lesson. I process a lot of information every day, and I rely heavily on subscriptions and recommendations. If I could use MetaGPT to build a high-quality information subscription agent, my learning would speed up a lot, and the content quality would match my own standards more closely.
+
+It makes sense to go through the whole course with two goals:
+
+- Master the concept of agents, and be able to read the related source code
+- Use MetaGPT to build richer workflow orchestration than GPTs
+
+Building a subscription agent takes three units: Role, Trigger and Callback, that is, the agent itself, the trigger, and the data callback.
+
+- **Role.** Make a Watcher that follows and analyzes popular open-source projects, and pushes anything worth reading.
+- **Trigger.** Specify when and under what conditions the Watcher fires.
+- **Callback.** Clean up the information the Watcher collects, then send it to WeChat or Discord.
+
+That's the overall shape. Everything after this is just wiring.
+
+## Getting the Repository Local
+
+The first thing to do when working with an open-source project: fork it to your own GitHub, then clone it locally. If that sentence is new to you, learn Git first.
+
+- Project address: [MetaGPT code repository](https://github.com/geekan/MetaGPT)
+- Course document: [MetaGPT Agent Development Primer](https://deepwisdom.feishu.cn/docx/UBoydfLRXodYjdxPKeyc9QWhnvW)
+
+## Installation and Initialization
+
+The dependencies are listed in `requirements.txt`. Your machine needs Python 3. I strongly recommend creating a fresh virtual environment, because MetaGPT has a lot of dependencies and can pollute your existing environment.
+
+```bash
+python -m venv your-name-env
+git clone https://github.com/geekan/MetaGPT.git
+cd /your/path/to/MetaGPT
+pip install -e .
+```
+
+When the terminal starts scrolling line by line, the installation has begun. It's quite satisfying to watch.
+
+On my first install, some dependencies threw errors, and changing versions didn't fix them. Switching to a separate virtual environment solved it.
+
+## Setting Environment Variables
+
+MetaGPT is only the framework. The one actually doing the work is the chef in the kitchen: a model like ChatGPT or Claude. The environment variables are where you enter the keys and model names needed to call them.
+
+Create a new `config` folder, copy `config.yaml` and rename the copy to `key.yaml`, then fill in the fields according to the file. Then:
+
+```bash
+export OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
+export OPENAI_API_MODEL="gpt-4"
+```
+
+Fill in your own key. If the default OpenAI endpoint can't be reached from your network, then set `OPENAI_API_BASE` yourself to point to the gateway you actually use. Don't paste in dubious public proxies into your configuration.
+
+After installing, run it once:
+
+```bash
+cd /your/path/to/MetaGPT/metagpt
+python startup.py --idea "write a cli blackjack game"
+```
+
+If all goes well, you'll see each role print logs step by step. That's what I call "it boots." The second half of the course is about getting these roles to do the things you'd otherwise have to do yourself.

@@ -1,0 +1,171 @@
+---
+title: "Docs Engineering at Dify: How to Build a Knowledge System for the AI Era?"
+description: "The full migration from GitBook to Mintlify: knowledge services for LLMs, framework research, and three kinds of migration problems covering images, syntax and links."
+coverWord: "Docs Engineering"
+---
+
+If docs are part of the product, what kind of reading experience do you want them to give? And what posture should documentation take toward its new reader, the LLM that is everywhere?
+
+![Question on the reading experience of docs for LLMs](/docs/dify-docs-engineering/opening-question.webp)
+
+Hi everyone, I'm Allen, a technical documentation engineer at Dify.
+
+Starting in April 2025, I led and completed a full migration of Dify's help documentation framework, from GitBook to Mintlify. I went through the entire process, from research and selection, demo testing, style compatibility and link restructuring, to the final launch. This was not just a swap of tech stacks. It was a restructuring of the infrastructure for content services in the AI era.
+
+Before and after comparison:
+
+![Before the migration: GitBook docs site](/docs/dify-docs-engineering/docs-before-gitbook.webp)
+
+Original docs (Powered by GitBook)
+
+![After the migration: Mintlify docs site](/docs/dify-docs-engineering/docs-after-mintlify.webp)
+
+Current docs (Powered by Mintlify)
+
+## Knowledge Services in the AI Era
+
+Whether this is worth doing depends on whether you are willing to build a documentation set specifically designed for AI and its reading habits. How should information be reorganized for a knowledge system in the AI era?
+
+Before the AI revolution, all software documentation was designed for humans. Layout had to be beautiful and eye-catching, and reading had to be friendly. Information had to be layered and progress step by step. Even setting SEO aside, documentation for humans usually demands a clean, elegant design and a clear layout. For an LLM, though, all of that is surface. What it needs is enough context. Forget elaborate layout; what matters is that the content is full and detailed.
+
+### Information Retrieval Paths Across Eras
+
+Traditional retrieval: type the problem you ran into, or type the product name plus keywords for the problem → a search engine picks the top-ranked content → a suitable solution is recommended.
+
+User behavior can be abstracted into three paths:
+
+1. Find content through a search engine
+2. Browse the documentation hierarchy
+3. Use the documentation's search feature
+
+[Stripe docs](https://docs.stripe.com/) has taken this path to the extreme. Users in any role on a team can each quickly find the information they need in the docs. For logged-in users, the docs even automatically generate test code specific to their team.
+
+![Stripe docs experience](/docs/dify-docs-engineering/stripe-docs-example.webp)
+
+In the era of LLM interaction, the path to a solution becomes: ask an LLM → the LLM gives a recommended solution → the user asks follow-up questions and gives feedback → the LLM gives detailed, step-by-step instructions. Users don't need to browse through sections or search for specific pages. They turn to an LLM for an instant answer.
+
+## What LLMs Change
+
+Large language models are changing SEO and giving rise to generative engine optimization (GEO). One study predicts that search traffic from LLMs will jump from 0.25% of all search volume in 2024 to 10% by the end of 2025.
+
+Research link: [AI SEO Study 2024](https://previsible.io/seo-strategy/ai-seo-study-2024/)
+
+For all technical documentation designed around how a product is used, this trend will upend the way customers find information and ultimately succeed with a product. The content technical documentation engineers produce will significantly shape how well LLMs understand the target product.
+
+To truly be friendly to LLMs, technical documentation needs one key capability: automatically generating `llms.txt`. `llms.txt` is a pure Markdown file that summarizes the most important content concisely and is organized in a way that is easy for LLMs to read, free of the clutter of HTML, JavaScript or ads.
+
+The goals of the whole upgrade were set accordingly:
+
+- **Friendly to LLM crawling.** Fully compatible with GEO, so the product is more likely to appear in AI's natural-language answers.
+- **Has API documentation.** Complete and clear, with support for online debugging and sample calls.
+- **Supports AI-powered documentation chat.** Ask questions in natural language to get interface descriptions, integration guides or troubleshooting advice.
+
+## Plan Before You Act
+
+### 1. Define the Problem, Drop GitBook
+
+Dify's documentation had been on GitBook. It witnessed the first version of the docs and the open-sourcing of the entire project, but it gradually revealed many underlying problems: hyperlinks that froze, white screens when multiple people edited, a directory structure that was too vertical, API docs that rendered abnormally, automatic rewriting of published content, and no complete, working local preview address.
+
+The root cause is that the platform is designed for business people without programming skills, and most operations depend on a graphical interface. Although it supports pulling the code through an IDE to maintain the docs, the local environment cannot preview the rendered result. GitBook is not a Docs-as-Code product. The rendering in the editor often did not match the final published page.
+
+The team had clearly set a new direction, and the first decision was to stop using GitBook and find a replacement.
+
+### 2. Research Around the Goal
+
+Documentation is part of the product. At the time, Dify's documentation already exceeded 600 articles, with many nested cross-references. The design life of a new framework should be at least three years. I researched and tested the mainstream technical documentation frameworks. The full comparison table is at: [Dify docs restructuring notes](https://docs.pflm.net/zh-hans/insights/dify-docs-restructure).
+
+After deep trials, the candidates narrowed to Mintlify and Docusaurus.
+
+- Mintlify is mature in visual design and in automatic generation of API docs. Its default styles cover most display needs.
+
+![Mintlify product overview](/docs/dify-docs-engineering/mintlify-overview.webp)
+
+- Docusaurus is open source and extensible, but API documentation integration requires extra tools, so it is better suited to teams with React skills.
+
+![Docusaurus product overview](/docs/dify-docs-engineering/docusaurus-overview.webp)
+
+Taking into account later maintenance, out-of-the-box readiness, and the team's investment in AI capabilities, I chose Mintlify.
+
+![Documentation framework comparison table (excerpt)](/docs/dify-docs-engineering/framework-comparison-table.webp)
+
+## Execution
+
+### 1. Get Familiar With the Framework, Iterate in Small Steps
+
+Once the framework was chosen, I first built a demo, held several rounds of discussion, and gradually won the team's agreement. Mintlify uses `.mdx` rather than traditional `.md`. In a context where AI technology is developing quickly, converting content formats is no longer a barrier. What matters more is the extensibility of the structure and its potential to integrate with smart tools.
+
+![Mintlify MDX demo interface (1)](/docs/dify-docs-engineering/mintlify-mdx-demo-1.webp)
+
+![Mintlify MDX demo interface (2)](/docs/dify-docs-engineering/mintlify-mdx-demo-2.webp)
+
+### 2. Tackle Problems One by One
+
+#### Problem 1: Unclear Image Handling
+
+The original system had no unified image host. The repository was bloating, and naming and paths lacked standards. GitBook hosted images privately without a CDN, so loading across regions was unstable.
+
+Solution: a self-built image host with Pico and S3, providing automatic naming and archiving. Images were separated from the main repository and accelerated through a CDN. Historical local images were batch-uploaded with scripts.
+
+![Internal image hosting guide](/docs/dify-docs-engineering/image-host-guide.webp)
+
+#### Problem 2: Inconsistent Syntax
+
+GitBook's hint syntax was neither intuitive nor easy to get along with, since it could conflict with reserved symbols on the front end. Comparison:
+
+GitBook:
+
+```md
+{% hint style="info" %}
+The name Dify comes from Do It For You.
+{% endhint %}
+```
+
+Mintlify:
+
+```mdx
+<Info>
+The name Dify comes from Do It For You.
+</Info>
+```
+
+![GitBook hint vs. Mintlify Info syntax comparison](/docs/dify-docs-engineering/hint-syntax-compare.webp)
+
+Solution: inject the mapping between common styles into a prompt, then use a Dify Chat app to automatically convert GitBook syntax into Mintlify MDX.
+
+![MD-to-MDX assistant app interface](/docs/dify-docs-engineering/md-to-mdx-assistant.webp)
+
+#### Problem 3: Complex Link Structure
+
+Some links were full online URLs, and others were relative paths within the repository. I used a Python script to identify all links, highlight the recommended replacement paths, and then replace them all in one go after manual confirmation.
+
+### 3. Going Live: Ensuring a Smooth Transition
+
+Before launch, I checked redirects page by page. The URL structures of GitBook and Mintlify were different, so redirects could not be ignored. After evaluation, I did not run an A/B gradual rollout. Instead, I focused on the core goals: stable, accessible, and not affecting the user experience. On launch day, the switch was seamless, and most users didn't notice. The API docs went live afterward with help from DevRel colleagues, and each page had a feedback entry embedded at the bottom.
+
+![API docs page after launch](/docs/dify-docs-engineering/api-docs-live.webp)
+
+![Feedback entry at the bottom of docs pages](/docs/dify-docs-engineering/feedback-widget.webp)
+
+## Behind the Docs: Owning the Whole Reading Experience
+
+This migration was not only a technical challenge but also a reshaping of how people understood their roles. Mintlify soon supported a documentation MCP. Related guide: [Chatting with AI in the Dify docs](https://docs.dify.ai/zh-hans/learn-more/extended-reading/dify-docs-mcp).
+
+![Chatting with AI via MCP in the Dify docs](/docs/dify-docs-engineering/docs-mcp-chat.webp)
+
+Mintlify also officially launched built-in AI chat:
+
+![Mintlify built-in AI chat (1)](/docs/dify-docs-engineering/mintlify-ai-chat-1.webp)
+
+![Mintlify built-in AI chat (2)](/docs/dify-docs-engineering/mintlify-ai-chat-2.webp)
+
+Mintlify is now the documentation framework of choice for major AI vendors such as Claude, Cursor and Perplexity.
+
+![AI vendor customers served by Mintlify](/docs/dify-docs-engineering/mintlify-ai-customers.webp)
+
+As a technical documentation engineer, you can do far more than write good docs. Your role should be closer to the owner of a documentation product: providing trustworthy content, a smooth reading experience, and a sustainable path for use.
+
+## References
+
+- [How Generative Engine Optimization is Reshaping Docs](https://mintlify.com/blog/how-geo-is-reshaping-docs)
+
+Original article: [https://mp.weixin.qq.com/s/QBSQ2-_4RWi-Vf7ddT1WHg](https://mp.weixin.qq.com/s/QBSQ2-_4RWi-Vf7ddT1WHg)

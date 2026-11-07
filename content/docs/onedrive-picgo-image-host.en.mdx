@@ -1,0 +1,64 @@
+---
+title: "Building an OneManagor + PicGo Image Host Tutorial"
+description: "Setting up an image host with OneDrive + OneManagor + PicGo, where a screenshot uploads automatically."
+---
+
+When writing a blog, one-click uploading images to an image host is a very common operation. The image host management setup described in this article is made up of OneDrive + OneManagor + PicGo. After taking a screenshot, it uploads automatically to OneDrive and directly generates the image link in Markdown format.
+
+And this setup supports not only images but also all kinds of other files ✅.
+
+## Preparation
+
+Before you start building, you need to get to know these three tools. If you are already familiar with them, you can skip this section.
+
+### OneDrive
+
+> You need to register the account yourself.
+
+OneDrive is the cloud drive service provided by Microsoft. It can store all kinds of files, including images, videos, documents and music. When you have an Office E3 developer account, you unlock a 5 TB drive, and the direct links from this drive go straight through Microsoft's CDN.
+
+A regular personal OneDrive account gets 5 GB of space. If you need 5 TB of cloud storage, contact WeChat: admilk47.
+
+### OneManagor
+
+> You need to set this up manually on a VPS.
+
+Having a OneDrive cloud drive is great, but every time you upload a file, logging into the backend to get the direct link is a hassle. So we can build our own direct-link file management platform in the form of an API plus a front-end panel. That's how the OneManagor project came about. It's an open-source project written in PHP.
+
+> **info**
+> Visit the [GitHub open-source repository](https://github.com/qkqpttgf/OneManager-php) here.
+
+### PicGo
+
+> Download it from GitHub.
+
+PicGo is an open-source image upload tool that can upload screenshots to an image host and generate image links in Markdown format. After installing the [OneManagor image host plugin](https://github.com/laoxinH/picgo-plugin-onemanager), PicGo can read images from the clipboard and upload them automatically, which is very convenient.
+
+> **info**
+> Visit the [GitHub open-source page](https://github.com/PicGo) here.
+
+## Start building OneManagor
+
+Download the zip package and extract it in the Baota panel.
+
+- Download address: [OneManager-php-master.zip](https://github.com/qkqpttgf/OneManager-php)
+
+Give the ``config.php`` file in the `.data` directory 666 permissions.
+
+In the Baota web settings, under `URL Rewrite`, enter the following pseudo-static code:
+
+```nginx
+rewrite ^/(.*) /index.php?/$1 last;
+```
+
+Then visit your domain to open the site. Follow the prompts on the web page and log in to OneDrive to authorize automatically.
+
+Once everything is set up, remember to enable guest access on the OneDrive drive.
+
+## Configure PicGo
+
+First, install the OneManagor plugin in PicGo.
+
+Then, in the OneManagor options, enter the image folder URL (the path you filled in for guest access).
+
+Now you're all set. In PicGo's settings, choose OneManagor as the image host. Then copy an image and click automatic upload. On success, you'll see the following notice.

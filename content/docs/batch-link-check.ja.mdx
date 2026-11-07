@@ -1,0 +1,60 @@
+---
+title: "リンクが開けるかを一括で自動チェックする"
+description: "スクリプトでサイトマップやCSVに含まれるリンクが開けるかを一括で確認し、壊れたリンクを手作業で探す手間を減らします。"
+coverWord: "リンク確認"
+---
+
+## 背景
+
+たとえば、歴史の長いウェブサイトを引き継いだものの、SEOの評価がかなり低いとします。その原因は、壊れたリンクが多すぎることかもしれません。検索エンジンは、そのサイトのサイトマップが信頼できないと判断し、最終的にサイトの評価に影響してしまうのです。
+
+サイトマップのファイルを取り出したら、まさか一つひとつ手作業でクリックしていくわけにもいきませんよね？そこで必要になるのが、サイト内のリンクが開けるかどうかを一括で確認してくれる自動化スクリプトです。
+
+## 前提条件
+
+サイトのサイトマップファイルを取得してください。サイトマップには、そのサイトのすべてのリンクが並んでいます。もちろん、CSVファイルを手動で読み込むこともできます。形式はおおむね次のようになります（要するに、完全なURLが並んだものです）。
+
+```text
+https://estruturarte.com.br/pickup/F1850555
+https://ns.hashva.com/mah.php?wqyaesdppr/sj-371792.html
+https://classbclass.ir/content.php?pickup/K1178460
+https://forexreprogramming.com/pickup/I1752252
+https://eglow.mx/pickup/K1221646
+```
+## コード
+
+このコードはPython環境で実行する必要があります。
+
+```python
+import csv
+import requests
+from tqdm import tqdm
+
+urls_file = 'output_10.csv' # 填写你的文件路径
+result_file = 'result/output-10-result.csv' # 填写检测结果的存放路径
+
+with open(urls_file, 'r') as f:
+    reader = csv.reader(f)
+    urls = [row[0] for row in reader]
+
+results = []
+
+for url in tqdm(urls):
+    try:
+        response = requests.get(url, timeout=5)
+        if response.status_code == 200:
+            result = 'success'
+        else:
+            result = 'fail'
+    except requests.Timeout:
+        result = 'timeout'
+    except:
+        result = 'error'
+
+    results.append([url, result])
+
+with open(result_file, 'w') as f:
+    writer = csv.writer(f)
+    writer.writerow(['URL', 'Result'])
+    writer.writerows(results)
+```

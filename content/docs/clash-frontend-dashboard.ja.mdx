@@ -1,0 +1,208 @@
+---
+title: "Clash購読変換プラットフォームの構築"
+description: "宝塔パネルは使わず、VercelとVPS一台でClash購読変換のフロントエンドを立ち上げる。"
+coverWord: "購読変換"
+---
+
+> **tip**
+> Clashの変換プラットフォームをただ使いたいだけで、仕組みには興味がないなら、以下の手順に沿って変換フロントエンドを自分でデプロイできます。
+
+## [はじめに](#preface)
+
+ネット上には、複雑な宝塔（BaoTa）パネルを使ってClashのフロントエンドを構築するチュートリアルがたくさんあります。しかし、ほぼすべてが宝塔パネルを通すことを前提にしています。初心者はそれに従うこともできますが、それでもまだ「速く」はありません。もしClashが何か分からないなら、まずは[《Clashとは？》](/docs/what-is-clash)をお読みください。
+
+> **caution**
+> 中国版の宝塔パネルでは、携帯電話番号の入力も求められます。
+
+そもそも、これは第一原理に反しています。私の目的ははっきりしています。必要ないサービスを、わざわざ余分にインストールする理由がどこにあるのでしょうか。
+
+今では強力な[Vercelプラットフォーム](https://vercel.com/dashboard)があり、シンプルなWebアプリケーションなら十分すぎるほど対応できます。GitHubリポジトリから直接ワンクリックでデプロイでき、必要なのはフロントエンド用のドメインを設定することと、バックエンド用のコンテナを一つ引っ張ってくることだけです。何より、これは永続的に無料で使えます。
+
+## 前提条件
+
+- GitHubアカウント
+- VPS
+- VPS上にデプロイされた[Nginx Proxy Manager](https://nginxproxymanager.com/)
+- フロントエンド用のドメイン
+- バックエンド用のドメイン
+
+## はじめる
+
+では、変換プラットフォームを構築するには何ステップ必要でしょうか。
+
+1. フロントエンドページを構築する
+2. バックエンドサービスをデプロイする
+3. ドメインを設定する
+
+Clash変換プラットフォームは、主にフロントエンドページとバックエンドサービスで構成されます。フロントエンドページは主に[sub-web](https://github.com/CareyWang/sub-web)が提供し、バックエンドサービスはDockerの形で直接動かせるので、より手軽です。
+
+## 1. フロントエンドページを構築する
+
+では、あらゆる変換プラットフォームの元になっているプロジェクト、有名な[CareyWang/sub-web](https://github.com/CareyWang/sub-web)を探してください。そして右上のForkボタンを軽くクリックします。Forkとは「フォーク（フォークで刺す）」の意味で、自分のお皿に「刺して」持ってくるイメージです。（ちなみにここでのForkは動詞で、専門的には「分岐」、つまり自分のリポジトリに複製することを指します。）
+
+### 設定コードを修正する
+
+自分のドメインと、いくつかの追加設定を設定ファイルのコードに書き込む必要があります。そうすることで、「公共の」オープンソースプロジェクトが「自分だけの」アプリケーションになります。GitHubで`/sub-web/src/views/Subconverter.vue`ファイルを探し、右上の編集ボタンをクリックして修正を始めてください。
+
+298行目の`backendOptions:`にある`url`を、解決済みのドメインに変更します。以下の画像を参考に変更してください。`/sub?`の接尾辞は必ず残してください。
+
+続いて、299行目の`remoteConfig`に以下のパラメータを追加します。これでフロントエンドで選べる変換設定が増えます。
+
+```vue
+{
+            label: "ACL4SSR",
+            options: [
+              {
+                label: "ACL4SSR_Online 標準版 グループが充実（GitHubと同期）",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online.ini"
+              },
+              {
+                label: "ACL4SSR_Online_AdblockPlus 広告ブロックを強化（GitHubと同期）",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_AdblockPlus.ini"
+              },
+              {
+                label: "ACL4SSR_Online_NoAuto 自動スピードテストなし（GitHubと同期）",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_NoAuto.ini"
+              },
+              {
+                label: "ACL4SSR_Online_NoReject 広告ブロックルールなし（GitHubと同期）",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_NoReject.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Mini 軽量版（GitHubと同期）",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Mini_AdblockPlus.ini 軽量版 広告ブロックを強化（GitHubと同期）",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_AdblockPlus.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Mini_NoAuto.ini 軽量版 自動スピードテストなし（GitHubと同期）",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_NoAuto.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Mini_Fallback.ini 軽量版 フェイルオーバー付き（GitHubと同期）",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_Fallback.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Mini_MultiMode.ini 軽量版 自動スピードテスト・フェイルオーバー・負荷分散（GitHubと同期）",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_MultiMode.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Full 全グループ ヘビーユーザー向け（GitHubと同期）",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Full_NoAuto.ini 全グループ 自動スピードテストなし ヘビーユーザー向け（GitHubと同期）",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Full_AdblockPlus 全グループ ヘビーユーザー向け 広告ブロックを強化（GitHubと同期）",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_AdblockPlus.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Full_Netflix 全グループ ヘビーユーザー向け Netflix全量（GitHubと同期）",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_Netflix.ini"
+              },
+              {
+                label: "ACL4SSR ローカル 標準版 グループが充実",
+                value: "config/ACL4SSR.ini"
+              },
+              {
+                label: "ACL4SSR_Mini ローカル 軽量版",
+                value: "config/ACL4SSR_Mini.ini"
+              },
+              {
+                label: "ACL4SSR_Mini_NoAuto.ini ローカル 軽量版＋自動スピードテストなし",
+                value: "config/ACL4SSR_Mini_NoAuto.ini"
+              },
+              {
+                label: "ACL4SSR_Mini_Fallback.ini ローカル 軽量版＋fallback",
+                value: "config/ACL4SSR_Mini_Fallback.ini"
+              },
+              {
+                label: "ACL4SSR_BackCN ローカル 中国本土向け",
+                value: "config/ACL4SSR_BackCN.ini"
+              },
+              {
+                label: "ACL4SSR_NoApple ローカル Appleの振り分けなし",
+                value: "config/ACL4SSR_NoApple.ini"
+              },
+              {
+                label: "ACL4SSR_NoAuto ローカル 自動スピードテストなし ",
+                value: "config/ACL4SSR_NoAuto.ini"
+              },
+              {
+                label: "ACL4SSR_NoAuto_NoApple ローカル 自動スピードテストなし＆Appleの振り分けなし",
+                value: "config/ACL4SSR_NoAuto_NoApple.ini"
+              },
+              {
+                label: "ACL4SSR_NoMicrosoft ローカル Microsoftの振り分けなし",
+                value: "config/ACL4SSR_NoMicrosoft.ini"
+              },
+              {
+                label: "ACL4SSR_WithGFW ローカル GFWリスト",
+                value: "config/ACL4SSR_WithGFW.ini"
+              }
+            ]
+          },
+```
+
+デフォルトのバックエンド変換アドレスを使いたくない場合は、`const defaultBackend`の後のパラメータを自分のドメインに変えてください。例えば次のようになります。
+
+```vue
+const defaultBackend = "https://your-domin.xyz" + '/sub?'
+```
+
+### コードをコミットする
+
+修正が終わったら、GitHubでコミットするのを忘れないでください。
+
+## 2. Vercelに公開する
+
+この手順はとても簡単です。[Vercelプラットフォーム](https://vercel.com/new)にアクセスし、先ほど修正したClashリポジトリをImportします。
+
+それからDeployをクリックします。しばらく待つと、何もなければエラーが出ます。
+
+これはVercelのデフォルトのNodeバージョンが20以上になっているためで、このプロジェクトはそこまで高いNodeバージョンを必要としません。そのため、プロジェクトの設定に入って変更する必要があります。Setting → Generalに進み、Node.js Versionを切り替えてください。
+
+デプロイが完了すると、Vercelは無料のドメインを自動で割り当てます。それでも、Domainsで自分のフロントエンドドメインをバインドすることをお勧めします。この手順はドメイン管理画面で行い、ドメインをVercelから割り当てられたアドレスに向けるだけです。
+
+## 3. バックエンドアプリケーションをデプロイする
+
+VPSで以下のDockerイメージを取得します。
+
+```bash
+docker run -d --restart=always -p 25500:25500 tindy2013/subconverter:latest
+```
+
+イメージのインストールが終わったら、以下のコマンドでサービスが正しく動いているか確認します。
+
+```bash
+curl http://localhost:25500/version
+```
+
+`subconverter vx.x.x backend`が返ってくれば、サービスは起動しています。
+
+## 4. バックエンドのドメインをサービスのポートに向ける
+
+Nginx Proxy Manager（NPM）の管理画面にログインし、`Proxy`を追加して、バックエンドのドメインを入力します。IPの欄には`127.0.0.1`を入れないでください。代わりにVPSのパブリックIPとポート番号を入力します。例えば`214.124.214.25`のように、Forward Portには25500を入力します。
+
+あわせてSSL証明書も有効にします。
+
+バインドが完了したら、バックエンドのドメインにアクセスしてください。Nginxのエラー画面ではないページが表示されれば、バックエンドの構築は成功です。
+
+ここまでできれば、あなた自身のClash購読変換プラットフォームを存分に使えます。

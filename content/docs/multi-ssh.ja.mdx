@@ -1,0 +1,101 @@
+---
+title: "1台のマシンで複数のSSHキーを作成し、GitHubに接続する方法"
+description: "1台のマシンに複数のSSHキーを設定し、異なるGitHubアカウントにそれぞれ接続できるようにします。"
+---
+
+## 問題の説明
+
+GitHubのアカウントを複数（個人用と仕事用）持っていて、手元のマシンにSSHキーのペアが一つしかない場合、問題が起きます。たとえば、初期の段階で会社のプロジェクトを取得するためにSSHキーのペアを生成し、それを会社のGitHubアカウントに追加したとします。その後、同じSSHキーを個人のGitHubアカウントに登録しようとして、リポジトリを個人のアカウント下に戻そうとすると、次のようなメッセージが表示されます：`Key is already in use`。
+
+![](https://r2.xmsex.net/2024/09/25b5f6fa9c131f041572b5f62b94d5c0.png)
+
+## 原因と解決方法
+
+GitHubは、SSHキーがすでにどこかのGitHubアカウントに登録されているかを確認し、存在する場合は再び追加させません。そこで、ローカルで複数のSSHキーを生成し、それぞれを異なるGitHubアカウントに追加すればよいのです。
+
+### 1. 複数のSSHキーを生成する
+
+ターミナル（Mac/Linux）またはGit Bash（Windows）を開きます。次のコマンドを実行します。your_email@example.com は自分のGitHubのメールアドレスに、key_name はこのキーにつけたい名前に置き換えてください：
+
+```bash
+ssh-keygen -t ed25519 -C "your_email@example.com" -f ~/.ssh/key_name
+```
+
+例：
+
+```bash
+ssh-keygen -t ed25519 -C "work@example.com" -f ~/.ssh/github_work
+ssh-keygen -t ed25519 -C "personal@example.com" -f ~/.ssh/github_personal
+```
+
+### 2. SSH設定ファイルを構成する
+
+次のコマンドを実行して、`~/.ssh/config` ファイルを作成または編集します：
+
+```bash
+nano ~/.ssh/config
+```
+
+次の内容を追加し、キーごとに Host を一つずつ作成します：
+
+```bash
+Host github-work
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/github_work
+
+Host github-personal
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/github_personal
+```
+
+ファイルを保存して閉じます。
+
+### 3. SSHキーをSSHエージェントに追加する
+
+SSHエージェントを起動します：
+
+`eval "$(ssh-agent -s)"`
+
+SSHキーをSSHエージェントに追加します：
+
+```bash
+ssh-add ~/.ssh/github_work
+ssh-add ~/.ssh/github_personal
+```
+
+### 4. SSHキーをGitHubアカウントに追加する
+
+GitHubアカウントごとに行います。
+
+公開鍵の内容をコピーします：
+`cat ~/.ssh/github_work.pub`
+# または
+`cat ~/.ssh/github_personal.pub`
+
+対応するGitHubアカウントにログインします。
+
+右上のアバターをクリックし、「Settings」を選びます。
+
+左側のメニューで「SSH and GPG keys」をクリックします。
+
+「New SSH key」または「Add SSH key」をクリックします。
+
+「Title」欄に、このキーを表す分かりやすい名前を入力します。
+
+コピーした公開鍵の内容を「Key」欄に貼り付けます。
+
+「Add SSH key」をクリックします。
+
+### 5. 接続をテストする
+
+それぞれのSSH接続をテストします：
+
+`ssh -T github-work`
+
+`ssh -T github-personal`
+
+成功すると、ウェルカムメッセージが表示されます。
+
+これで、新しく追加したGitHubのSSHキーを使ってコードを取得できるようになります。

@@ -1,0 +1,135 @@
+---
+title: "発刊のことば"
+description: "飛鳥集ドキュメントセンターの発刊のことば。ブログとドキュメントを一体化したサイトを Docusaurus で作った理由。"
+---
+## 発刊のことば
+
+これは飛鳥集ドキュメントセンターの最初のドキュメントです。
+
+## はじめに
+
+このテーマは Docusaurus で作られています。Docusaurus のシンプルさと使いやすさに、他のオープンソースのページデザインの手法を組み合わせたものです。MDX と React に対応し、拡張や カスタマイズも自由にできます。さらに、ブログとドキュメントを一つにまとめた美しいデザインを備えており、個人サイトのための優れたソリューションを提供します。このテーマは 🦖 [Docusaurus](https://docusaurus.io/) を使って作られており、[MIT](./LICENSE) ライセンスで公開されています。
+
+> This is a theme built with docusaurus, which combines the simplicity and ease of use of docusaurus with other open source page design solutions, supports MDX and React, is extensible and customizable, and also has a beautiful design, a blog and documentation integrated theme, providing you with an excellent personal page solution.
+
+## ディレクトリ構成
+
+```bash
+├── blog                           # ブログ
+│   ├── first-blog.md
+│   └── authors.yml                # 著者情報（複数の著者を設定できます）
+├── docs                           # ドキュメント／ノート
+│   └── stack
+│         └──introduction.md       # ノートの紹介
+├── data                           # プロジェクト／ナビゲーション／リンクのデータ
+│   ├── friend.ts                  # 友達リンク
+│   ├── project.ts                 # プロジェクト
+│   └── resource.ts                # リソースナビゲーション
+├── i18n                           # 国際化
+├── src
+│   ├── components                 # コンポーネント
+│   ├── css                        # カスタム CSS
+│   ├── pages                      # カスタムページ
+│   ├── plugin                     # カスタムプラグイン
+│   └── theme                      # カスタムテーマのコンポーネント
+├── static                         # 静的アセット
+│   └── assets                     # 静的ファイル
+├── docusaurus.config.js           # サイトの設定情報
+├── sidebars.js                    # ドキュメントのサイドバー
+├── package.json
+└── yarn.lock                      # yarn の利用を推奨し、保持してください
+```
+
+## インストール
+
+リポジトリをクローンして、依存関係をインストールします。
+```bash
+git clone https://github.com/wrm244/docusaurus-theme-zen.git ./blog
+cd blog
+yarn
+yarn start
+```
+
+中国国内向けのリポジトリのバックアップ：
+```bash
+git clone https://gitee.com/wrm244/docusaurus-theme-zen.git ./blog
+cd blog
+yarn
+```
+
+静的サイトのコードを生成します（./build）。
+
+```bash
+yarn run build
+```
+
+サーバーを起動します。
+
+```bash
+yarn run serve
+```
+
+## GitHub Action CI
+この設定は、クラウドサーバーと GitHub Pages の両方に同時にデプロイします。変更する場合は、```/.github/workflows/ci.yml``` の設定ファイルを編集してください。
+
+```yml
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js v18.5
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.5.0'
+
+      #使用缓存
+      - name: Cache node modules
+        uses: actions/cache@v1
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn install
+
+      - name: Build Project
+        run: |
+          yarn run build
+
+      #使用 SSH 同步到云服务器
+      # - name: SSH Deploy
+      #   uses: easingthemes/ssh-deploy@v2.2.11
+      #   env:
+      #     SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      #     ARGS: '-avzr --delete'
+      #     SOURCE: './build'
+      #     REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+      #     REMOTE_USER: 'root'
+      #     TARGET: '/www/wwwroot/wrm244'
+
+      - name: Github page Deploy
+        uses: wrm244/docusaurus-deploy-action@master #
+        env:
+          PERSONAL_TOKEN: ${{ secrets.PERSION_TOKEN }} # GitHub 個人アカウントのトークン
+          PUBLISH_REPOSITORY: wrm244/docusaurus-theme-zen # 公開リポジトリ。形式：GitHub ユーザー名/リポジトリ名
+          BRANCH: gh-pages # デプロイ先のブランチ
+          PUBLISH_DIR: ./build # ./build ディレクトリ内のファイルをデプロイ
+
+```
+
+## 📝ライセンス
+
+[MIT](./LICENSE) © 河山 100%

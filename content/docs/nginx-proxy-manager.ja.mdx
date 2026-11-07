@@ -1,0 +1,55 @@
+---
+title: "Nginx Proxy Manager"
+description: "Nginx Proxy Manager を使って Docker のポートにドメインを割り当てます。手書きの Nginx を一層減らせます。"
+---
+
+Nginx Proxy Manager は使いやすいリバースプロキシツールです。どういうことかというと、Web 管理パネルを通じて、マシン上の任意のポートで動くサービスにドメインを割り当てられます。ドメインにアクセスすることは、ポートのサービスにアクセスすることと同じになります。
+
+Nginx Proxy Manager は略して NPM とも呼ばれます。特に Docker のプロジェクトで役立つので、今後も何度も使うことになります。
+
+## 前提条件
+
+VPS 1台
+
+Docker のプリインストール：`docker version > /dev/null || curl -fsSL get.docker.com | bash`
+
+Docker Compose のプリインストール：`apt install docker-compose`
+
+少しの Linux の基礎知識（脳はインストールコマンドを勝手には実行してくれません）
+
+## インストール
+
+任意のディレクトリに `docker-compose.yml` ファイルを作成し、次の内容を記入します。
+
+```yml
+version: '3.8'
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+```
+
+次にインストールコマンドを実行します。
+
+```bash
+docker-compose up -d
+
+# If using docker-compose-plugin
+docker compose up -d
+```
+
+そして、次のアドレスにアクセスします。http://127.0.0.1:81/
+
+ログインしたら、アカウントとパスワードを変更してください。デフォルトのアカウント / パスワードは次のとおりです。
+
+```text
+Email:    admin@example.com
+Password: changeme
+```
