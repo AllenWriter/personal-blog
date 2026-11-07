@@ -231,30 +231,36 @@ a:hover { color: var(--seal); }
 .article__cover { margin: 32px auto 0; padding-inline: var(--gutter); max-width: calc(54rem + 2 * var(--gutter)); }
 .article__cover .cover { aspect-ratio: 16 / 9; max-height: 62vh; }
 
-/* One centred reading column; the outline lives in the right margin and
-   never pushes the text off centre. */
+/* Article pages share one centre line: masthead, cover, title, body. */
+.is-article .nameplate { justify-content: center; padding-block: 14px 4px; }
+.is-article .sections { justify-content: center; }
 .article__grid {
   display: grid;
   grid-template-columns: minmax(var(--gutter), 1fr) minmax(0, var(--measure)) minmax(var(--gutter), 1fr);
   margin-top: 36px;
 }
 .article__grid > * { grid-column: 2; min-width: 0; }
-.article__aside { display: none; }
-@media (min-width: 78rem) {
-  .article__aside { display: block; grid-column: 3; grid-row: 2; padding-left: 48px; max-width: 16rem; }
-  .article__aside > * { position: sticky; top: 32px; }
-}
-
+.article__head { text-align: center; }
+/* Break Chinese headlines only at punctuation and spaces, never mid-word. */
+.article__title, .lead__title { word-break: keep-all; overflow-wrap: anywhere; }
+.article__head .kicker, .article__head .byline { justify-content: center; }
 .article__head { margin-bottom: 36px; }
-.article__title { margin: 0 0 14px; font-family: var(--serif); font-weight: 900; font-size: clamp(29px, 5vw, 42px); line-height: 1.32; letter-spacing: 0.01em; text-wrap: balance; }
+.article__title { margin: 0 0 14px; font-family: var(--serif); font-weight: 900; font-size: clamp(27px, 4.6vw, 38px); line-height: 1.32; letter-spacing: 0.01em; text-wrap: balance; }
 .article__dek { margin: 0 0 20px; font-size: 17px; line-height: 1.85; color: var(--ink-2); }
 .article__byline { padding-top: 14px; border-top: 1px solid var(--rule); }
+.article__dek { max-width: 34rem; margin-inline: auto; }
 
-.toc h2, .doc-siblings h2 { margin: 0 0 10px; font-size: 13px; font-weight: 600; color: var(--ink); }
-.toc ol, .doc-siblings ul { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--rule); }
-.toc li a, .doc-siblings li a { display: block; padding: 5px 0 5px 14px; margin-left: -1px; border-left: 1px solid transparent; font-size: 13.5px; line-height: 1.5; color: var(--ink-3); transition: color 0.15s, border-color 0.15s; }
-.toc li a:hover { color: var(--ink); }
-.toc li a.is-active, .doc-siblings a[aria-current='page'] { color: var(--ink); border-left-color: var(--seal); }
+.toc { margin-top: 18px; text-align: left; border: 1px solid var(--rule); border-radius: var(--radius); font-size: 14.5px; }
+.toc summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px; cursor: pointer; list-style: none; font-weight: 600; color: var(--ink); }
+.toc summary::-webkit-details-marker { display: none; }
+.toc summary span { margin-left: auto; font-weight: 400; font-size: 13px; color: var(--ink-3); }
+.toc summary::after { content: ''; width: 7px; height: 7px; border-right: 1.5px solid var(--ink-3); border-bottom: 1.5px solid var(--ink-3); transform: rotate(45deg); margin: -4px 2px 0 0; transition: transform 0.2s var(--ease-out); }
+.toc[open] summary::after { transform: rotate(-135deg); margin-top: 3px; }
+.toc ol { margin: 0; padding: 4px 14px 12px 2.4em; border-top: 1px solid var(--rule); color: var(--ink-3); }
+.toc li { padding-block: 5px; line-height: 1.55; }
+.toc li::marker { font-variant-numeric: tabular-nums; }
+.toc a { color: var(--ink-2); }
+.toc a:hover { color: var(--seal); }
 
 /* The reading column. */
 .prose { font-family: var(--sans); font-size: 17.5px; line-height: 1.95; letter-spacing: 0.01em; color: var(--ink); overflow-wrap: break-word; }
@@ -343,7 +349,7 @@ a:hover { color: var(--seal); }
 }
 
 @media print {
-  .masthead .topline, .sections, .article__aside, .pager, .related, .colophon, .progress { display: none; }
+  .masthead .topline, .sections, .toc, .pager, .related, .colophon, .progress { display: none; }
   body { background: #fff; }
 }
 
@@ -551,3 +557,24 @@ a:hover { color: var(--seal); }
 .grid--docs { grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 32px 24px; }
 .is-docs .card__title { font-family: var(--sans); font-size: 16.5px; font-weight: 700; }
 .is-docs .card__media { margin-bottom: 12px; }
+
+/* ------------------------------------------------------- language switch */
+.langs { display: inline-flex; align-items: center; gap: 2px; }
+.langs a { padding: 2px 7px; border-radius: 999px; color: var(--ink-2); font-size: 12px; }
+.langs a:hover { color: var(--seal); }
+.langs a[aria-current] { background: var(--ink); color: var(--paper); }
+.dh__langs { margin-left: 4px; }
+@media (max-width: 56rem) { .dh__langs { display: none; } }
+
+/* Each language gets its own faces, so kanji render in Japanese forms and
+   Latin text in a Latin serif. */
+:root:lang(ja) {
+  --serif: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', 'Noto Serif JP', 'Noto Serif CJK JP', serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'YuGothic', 'Noto Sans JP', 'Meiryo', sans-serif;
+}
+:root:lang(en) {
+  --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Noto Serif SC', 'Songti SC', serif;
+}
+:root:lang(en) .prose { letter-spacing: 0; line-height: 1.75; }
+:root:lang(en) .article__title, :root:lang(en) .lead__title { letter-spacing: -0.005em; word-break: normal; }
+:root:lang(ja) .prose { letter-spacing: 0.02em; }

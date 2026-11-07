@@ -15,6 +15,6 @@ A personal magazine (blog) by Jens. Chinese-first, static, zero npm dependencies
 - Content is Markdown with YAML-ish frontmatter (`title`, `description`, `date`, `series`, `cover`, `author`, `account`). There is no MDX/JSX.
 - Series live in `site/config.mjs`. `indexed: false` (the `wechat` 剪报 column) keeps posts out of the home page, archive and feeds, and noindex. Only accounts the owner listed in `indexAccounts` may be indexed; don't add others without asking.
 - URLs: posts `/blog/<series>/<slug>`, manuals `/docs/<slug>`. Don't change existing URLs; add a line to `_redirects` (in `site/build.mjs`) if one must move.
-- User-facing copy is Simplified Chinese. Code, comments and commit messages are English.
+- Chinese is the source language. English and Japanese editions are `<slug>.en.mdx` / `<slug>.ja.mdx` files next to the source (see TRANSLATING.md); interface strings for all three live in `site/i18n.mjs`. Code, comments and commit messages are English.
 - Design tokens are CSS custom properties at the top of `site/styles.css`. Light and dark both have to work; check phone width (390px) too.
 - Commits: Conventional Commits, e.g. `feat(blog): add 咖啡期货`.

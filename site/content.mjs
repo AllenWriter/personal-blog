@@ -5,6 +5,7 @@ import { join, basename } from 'node:path'
 import { renderMarkdown } from './markdown.mjs'
 import { imageSize } from './image-size.mjs'
 import { site, series as SERIES, seriesById } from './config.mjs'
+import { LOCALES, DEFAULT_LOCALE, localePath, SERIES_I18N, GROUPS_I18N } from './i18n.mjs'
 
 const ROOT = new URL('..', import.meta.url).pathname
 const CONTENT = join(ROOT, 'content')
@@ -39,8 +40,8 @@ export function sizeImages(html) {
 /** Characters of prose, for reading time. CJK counts per char, Latin per word. */
 function readingMinutes(markdown) {
   const text = markdown.replace(/```[\s\S]*?```/g, '').replace(/!\[[^\]]*\]\([^)]*\)/g, '')
-  const cjk = (text.match(/[一-鿿]/g) ?? []).length
-  const words = (text.replace(/[一-鿿]/g, ' ').match(/[A-Za-z0-9]+/g) ?? []).length
+  const cjk = (text.match(/[一-鿿぀-ヿ]/g) ?? []).length
+  const words = (text.replace(/[一-鿿぀-ヿ]/g, ' ').match(/[A-Za-z0-9]+/g) ?? []).length
   return Math.max(1, Math.round(cjk / 400 + words / 220))
 }
 
@@ -60,7 +61,7 @@ export function loadPosts() {
   for (const seriesId of readdirSync(dir)) {
     if (!seriesById.has(seriesId)) throw new Error(`content/blog/${seriesId}: unknown series (add it to site/config.mjs)`)
     for (const file of readdirSync(join(dir, seriesId))) {
-      if (!/\.mdx?$/.test(file)) continue
+      if (!/\.mdx?$/.test(file) || TRANSLATION.test(file)) continue
       const path = join(dir, seriesId, file)
       const { data, body } = parseFrontmatter(readFileSync(path, 'utf8'), path)
       for (const key of ['title', 'date']) {
@@ -100,7 +101,43 @@ export function loadPosts() {
   // Episode numbers for the show, oldest first.
   const episodes = posts.filter((p) => p.series === 'podcast').reverse()
   episodes.forEach((p, i) => (p.issue = i + 1))
+
+  for (const post of posts) {
+    post.locale = DEFAULT_LOCALE
+    post.alt = { [DEFAULT_LOCALE]: post }
+    for (const locale of LOCALES.slice(1)) {
+      const file = join(dir, post.series, `${post.slug}.${locale}.mdx`)
+      if (!existsSync(file)) continue
+      const { data, body } = parseFrontmatter(readFileSync(file, 'utf8'), file)
+      if (!data.title) throw new Error(`${file}: frontmatter needs "title"`)
+      const rendered = renderMarkdown(body, { baseUrl: site.baseUrl, resolveUrl })
+      const html = sizeImages(rendered.html)
+      post.alt[locale] = {
+        ...post,
+        locale,
+        url: localePath(locale, post.url),
+        title: data.title,
+        fullTitle: data.title,
+        description: data.description ?? excerpt(html),
+        seriesMeta: { ...post.seriesMeta, ...(SERIES_I18N[locale]?.[post.series] ?? {}) },
+        html,
+        headings: rendered.headings,
+        minutes: readingMinutes(body),
+      }
+    }
+  }
   return posts
+}
+
+const TRANSLATION = new RegExp(`\\.(${LOCALES.slice(1).join('|')})\\.mdx?$`)
+
+/** Points internal links in a translation at the same locale when that page exists. */
+export function localizeLinks(item, urls) {
+  if (item.locale === DEFAULT_LOCALE) return
+  item.html = item.html.replace(/href="(\/(?:blog|docs)\/[^"#?]*)([^"]*)"/g, (m, path, rest) => {
+    const target = localePath(item.locale, path)
+    return urls.has(target) ? `href="${target}${rest}"` : m
+  })
 }
 
 const DOC_GROUPS = {
@@ -161,7 +198,33 @@ export function loadDocs() {
   const listed = new Set(order)
   for (const file of readdirSync(dir)) {
     const slug = file.replace(/\.mdx?$/, '')
-    if (/\.mdx?$/.test(file) && !listed.has(slug)) throw new Error(`content/docs/${file}: not listed in content/docs/meta.json`)
+    if (/\.mdx?$/.test(file) && !TRANSLATION.test(file) && !listed.has(slug)) throw new Error(`content/docs/${file}: not listed in content/docs/meta.json`)
+  }
+  const isLatin = (w) => /^[A-Za-z]/.test(w)
+  for (const doc of docs) {
+    doc.locale = DEFAULT_LOCALE
+    doc.alt = { [DEFAULT_LOCALE]: doc }
+    for (const locale of LOCALES.slice(1)) {
+      const file = join(dir, `${doc.slug}.${locale}.mdx`)
+      if (!existsSync(file)) continue
+      const { data, body } = parseFrontmatter(readFileSync(file, 'utf8'), file)
+      if (!data.title) throw new Error(`${file}: frontmatter needs "title"`)
+      const rendered = renderMarkdown(body, { baseUrl: site.baseUrl, resolveUrl })
+      const html = sizeImages(rendered.html)
+      const group = GROUPS_I18N[locale]?.[doc.group] ?? doc.group
+      doc.alt[locale] = {
+        ...doc,
+        locale,
+        url: localePath(locale, doc.url),
+        title: data.title,
+        description: data.description ?? excerpt(html),
+        group,
+        coverWord: data.coverWord ?? (isLatin(doc.coverWord) ? doc.coverWord : group),
+        html,
+        headings: rendered.headings,
+        minutes: readingMinutes(body),
+      }
+    }
   }
   return { docs, groups }
 }

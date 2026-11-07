@@ -10,6 +10,13 @@ walk(DIST)
 const exists = (path) => {
   const clean = decodeURIComponent(path.split(/[?#]/)[0]).replace(/\/+$/, '') || '/'
   if (clean === '/') return true
+  // /en and /ja pages fall back to the Chinese original when untranslated.
+  const edition = clean.match(/^\/(en|ja)(\/.*)?$/)
+  if (edition && !hit(clean)) return hit(edition[2] || '/')
+  return hit(clean)
+}
+const hit = (clean) => {
+  if (clean === '/') return true
   return [clean, `${clean}.html`, `${clean}/index.html`].some((c) => existsSync(join(DIST, c)) && statSync(join(DIST, c)).isFile())
 }
 

@@ -56,12 +56,18 @@ function resolve(pathname) {
 
 createServer((req, res) => {
   const url = new URL(req.url, 'http://localhost')
-  const legacy = url.pathname.match(/^\/(zh-CN|zh-TW|en|ja|ko|ru)(\/.*)?$/)
+  const legacy = url.pathname.match(/^\/(zh-CN|zh-TW|ko|ru)(\/.*)?$/)
   if (legacy) {
     res.writeHead(301, { location: legacy[2] || '/' })
     return res.end()
   }
-  const file = resolve(url.pathname)
+  let file = resolve(url.pathname)
+  const edition = url.pathname.match(/^\/(en|ja)(\/.*)?$/)
+  if (!file && edition) {
+    // Untranslated page: fall back to the Chinese original (same as nginx).
+    res.writeHead(302, { location: edition[2] || '/' })
+    return res.end()
+  }
   if (!file) {
     res.writeHead(404, { 'content-type': TYPES['.html'] })
     return res.end(readFileSync(join(DIST, '404.html')))

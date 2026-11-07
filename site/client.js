@@ -1,3 +1,14 @@
+// Interface text for the page's language.
+var T = (function () {
+  var all = {
+    zh: { code: '代码', copy: '复制', copied: '已复制', copyLink: '复制链接', none: function (q) { return '没有找到「' + q + '」相关的手册' } },
+    en: { code: 'Code', copy: 'Copy', copied: 'Copied', copyLink: 'Copy link', none: function (q) { return 'No manuals match “' + q + '”' } },
+    ja: { code: 'コード', copy: 'コピー', copied: 'コピーしました', copyLink: 'リンクをコピー', none: function (q) { return '「' + q + '」に一致するマニュアルはありません' } },
+  }
+  var lang = (document.documentElement.lang || 'zh').slice(0, 2)
+  return all[lang] || all.zh
+})();
+
 // Small reading aids: progress bar, serif/sans toggle, table-of-contents highlight.
 (function () {
   var root = document.documentElement
@@ -65,14 +76,14 @@
     var bar = document.createElement('div')
     bar.className = 'dcode__bar'
     var lang = document.createElement('span')
-    lang.textContent = pre.dataset.lang || '代码'
+    lang.textContent = pre.dataset.lang || T.code
     var copy = document.createElement('button')
     copy.type = 'button'
     copy.className = 'dcode__copy'
-    copy.textContent = '复制'
+    copy.textContent = T.copy
     copy.addEventListener('click', function () {
       var text = pre.innerText
-      var done = function () { copy.textContent = '已复制'; setTimeout(function () { copy.textContent = '复制' }, 1600) }
+      var done = function () { copy.textContent = T.copied; setTimeout(function () { copy.textContent = T.copy }, 1600) }
       if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () {})
     })
     bar.appendChild(lang)
@@ -86,8 +97,8 @@
   if (copyLink && navigator.clipboard) {
     copyLink.addEventListener('click', function () {
       navigator.clipboard.writeText(location.href.split('#')[0]).then(function () {
-        copyLink.textContent = '已复制'
-        setTimeout(function () { copyLink.textContent = '复制链接' }, 1600)
+        copyLink.textContent = T.copied
+        setTimeout(function () { copyLink.textContent = T.copyLink }, 1600)
       }, function () {})
     })
   }
@@ -120,7 +131,7 @@
 
   function load() {
     if (index) return Promise.resolve(index)
-    return fetch('/docs/search.json').then(function (r) { return r.json() }).then(function (data) { index = data; return data })
+    return fetch(dialog.dataset.index || '/docs/search.json').then(function (r) { return r.json() }).then(function (data) { index = data; return data })
   }
   function escapeHtml(s) {
     return s.replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] })
@@ -165,7 +176,7 @@
     var results = search(input.value)
     selected = 0
     if (!results.length) {
-      list.innerHTML = '<li class="dsearch__empty">没有找到「' + escapeHtml(input.value.trim()) + '」相关的手册</li>'
+      list.innerHTML = '<li class="dsearch__empty">' + escapeHtml(T.none(input.value.trim())) + '</li>'
       return
     }
     list.innerHTML = results.map(function (r, i) {
@@ -208,7 +219,7 @@
 })()
 
 // ------------------------------------------------------------ blind box
-// "拆一个盲盒": pick a random episode and reveal it. Motion only answers the click.
+// Blind box: pick a random episode and reveal it. Motion only answers the click.
 ;(function () {
   var box = document.querySelector('.blindbox')
   var data = document.getElementById('blindbox-data')
@@ -229,11 +240,11 @@
     box.classList.add('is-opening')
     setTimeout(function () { box.classList.remove('is-opening') }, 300)
     result.href = ep.u
-    result.innerHTML = '<span class="blindbox__issue">第 ' + ep.i + ' 期</span><span class="blindbox__title">' + esc(ep.t) + '</span>'
+    result.innerHTML = '<span class="blindbox__issue">' + esc(ep.i) + '</span><span class="blindbox__title">' + esc(ep.t) + '</span>'
     result.hidden = false
     result.classList.remove('is-in')
     void result.offsetWidth
     result.classList.add('is-in')
-    button.textContent = '再拆一个'
+    button.textContent = button.dataset.again || button.textContent
   })
 })()

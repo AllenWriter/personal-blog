@@ -64,6 +64,6 @@ npm run indexnow     # 可选：通知 Bing 等搜索引擎有更新
 - `sitemap.xml`、`robots.txt`、`feed.xml` 都由构建自动生成。
 - 剪报栏目是转载内容，不进首页、往期和 RSS。默认带 `noindex`；`site/config.mjs` 里 `indexAccounts` 列出的公众号（目前是二小姐后花园）例外，可以进谷歌。
 - 旧的多语言地址（`/zh-CN/...`、`/en/...`、`/ja/...`）会 301 跳到新的中文地址。
-- 英文、日文读者用页面顶部的「译」走谷歌翻译，不再维护机翻稿。
+- 英文版和日文版：在原文旁边放 `文件名.en.mdx` / `文件名.ja.mdx`，网站自动生成 `/en/...`、`/ja/...` 页面和语言切换。还没翻译的页面会跳回中文原文。翻译规范见 [`TRANSLATING.md`](TRANSLATING.md)。
 
 收录排查和 Search Console 提交步骤见 [`SEO.md`](SEO.md)。
