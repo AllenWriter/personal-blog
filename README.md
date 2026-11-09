@@ -32,6 +32,7 @@ series: podcast
 - 封面放在 `public/blog/covers/`，正文配图放在 `public/blog/<栏目>/<文章名>/`。
 - 图片下面紧跟一行 `*斜体*`，就会变成图注。
 - 冷知识盲盒的期数按日期自动编号。
+- 没写完的文章在 frontmatter 加 `draft: true`：本地预览能看到，发布时会跳过。
 - 手册（`content/docs/`）的顺序和分组在 `content/docs/meta.json` 里。
 
 ## 发布

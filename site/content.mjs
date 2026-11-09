@@ -64,6 +64,8 @@ export function loadPosts() {
       if (!/\.mdx?$/.test(file) || TRANSLATION.test(file)) continue
       const path = join(dir, seriesId, file)
       const { data, body } = parseFrontmatter(readFileSync(path, 'utf8'), path)
+      // draft: true shows in local preview but is left out of the deployed site.
+      if (data.draft === true && process.env.NODE_ENV === 'production') continue
       for (const key of ['title', 'date']) {
         if (!data[key]) throw new Error(`${path}: frontmatter needs "${key}"`)
       }
